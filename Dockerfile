@@ -11,13 +11,25 @@ RUN apt-get update && apt-get install -y \
 # Update conda
 RUN conda update -n base conda
 
+COPY environment.yml /opt/environment.yml
+
+# Create conda environment
+RUN conda env create -n wps -f /opt/environment.yml
+
+# Install development version of ESMValTool
+
+#Clone GitHub version of ESMValTool
+RUN git clone https://github.com/ESMValGroup/ESMValTool.git /opt/esmvaltool
+
+#Add dependancies of esmvaltool to wps conda environement created earlier
+WORKDIR /opt/esmvaltool
+RUN conda env update -n wps -f environment.yml
+RUN ["/bin/bash", "-c", "source activate wps && pip install -e ."]
+
 # Copy WPS project
 COPY . /opt/wps
 
 WORKDIR /opt/wps
-
-# Create conda environment
-RUN conda env create -n wps -f environment.yml
 
 # Install WPS
 RUN ["/bin/bash", "-c", "source activate wps && python setup.py develop"]
