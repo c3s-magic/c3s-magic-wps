@@ -39,8 +39,8 @@ class PyDemo(Process):
                          default="2001"),
         ]
         outputs = [
-            ComplexOutput('namelist', 'namelist',
-                          abstract='ESMValTool namelist used for processing.',
+            ComplexOutput('recipe', 'recipe',
+                          abstract='ESMValTool recipe used for processing.',
                           as_reference=True,
                           supported_formats=[Format('text/plain')]),
             ComplexOutput('log', 'Log File',
@@ -50,7 +50,7 @@ class PyDemo(Process):
             ComplexOutput('output', 'Output plot',
                           abstract='Generated output plot of ESMValTool processing.',
                           as_reference=True,
-                          supported_formats=[Format('image/png'), Format('application/pdf')]),
+                          supported_formats=[Format('image/png')]),
         ]
 
         super(PyDemo, self).__init__(
@@ -89,24 +89,24 @@ class PyDemo(Process):
             ensemble=request.inputs['ensemble'][0].data,
         )
 
-        # generate namelist
-        response.update_status("generate namelist ...", 10)
-        namelist_file, config_file = runner.generate_namelist(
+        # generate recipe
+        response.update_status("generate recipe ...", 10)
+        recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
             diag='py_demo',
             constraints=constraints,
             start_year=request.inputs['start_year'][0].data,
             end_year=request.inputs['end_year'][0].data,
-            output_format='pdf',
+            output_format='png',
         )
 
         # run diag
         response.update_status("running diag ...", 20)
-        logfile, output_dir = runner.run(namelist_file, config_file)
+        logfile, output_dir = runner.run(recipe_file, config_file)
 
-        # namelist output
-        response.outputs['namelist'].output_format = FORMATS.TEXT
-        response.outputs['namelist'].file = namelist_file
+        # recipe output
+        response.outputs['recipe'].output_format = FORMATS.TEXT
+        response.outputs['recipe'].file = recipe_file
 
         # log output
         response.outputs['log'].output_format = FORMATS.TEXT
@@ -114,11 +114,11 @@ class PyDemo(Process):
 
         # result plot
         response.update_status("collect output plot ...", 90)
-        response.outputs['output'].output_format = Format('application/pdf')
+        response.outputs['output'].output_format = Format('application/png')
         response.outputs['output'].file = runner.get_output(
             output_dir,
-            path_filter=os.path.join('ta_diagnostic', 'test_ta'),
+            path_filter=os.path.join('diagnostic1', 'script1'),
             name_filter="CMIP5*",
-            output_format="pdf")
+            output_format="png")
         response.update_status("done.", 100)
         return response

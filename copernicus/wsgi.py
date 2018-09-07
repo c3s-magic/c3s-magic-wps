@@ -10,8 +10,9 @@ def create_app(cfgfiles=None):
         config_files.extend(cfgfiles)
     if 'PYWPS_CFG' in os.environ:
         config_files.append(os.environ['PYWPS_CFG'])
+    print(config_files)
     service = Service(processes=processes, cfgfiles=config_files)
     return service
 
 
-application = create_app()
+#application = create_app()

@@ -1,5 +1,6 @@
 import os
 import glob
+import sys
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 
@@ -47,6 +48,9 @@ def run(recipe_file, config_file):
         LOGGER.info("esmvaltool ... done.")
     except Exception as err:
         LOGGER.exception('esmvaltool failed!')
+        #For debugging purposes, exit here to keep the temp folder
+        #Should ideally be an option in PyWPS
+        #sys.exit(1)
         raise Exception('esmvaltool failed: {0}'.format(err))
     # find the log
     logfile = os.path.join(cfg['run_dir'], 'main_log.txt')
@@ -88,7 +92,7 @@ def generate_recipe(diag, constraints=None, start_year=2000, end_year=2005, outp
 
 def get_output(output_dir, path_filter, name_filter=None, output_format='pdf'):
     name_filter = name_filter or '*'
-    # output/recipe_20180130_111116/plots/ta_diagnostics/test_ta/ta.pdf
+    # output/recipe_20180130_111116/plots/diagnostic1/script1/MultiModelMean_T3M_ta_2001-2002_mean.pdf
     output_filter = os.path.join(
         output_dir, path_filter, '{0}.{1}'.format(name_filter, output_format))
     LOGGER.debug("output_fitler %s", output_filter)
