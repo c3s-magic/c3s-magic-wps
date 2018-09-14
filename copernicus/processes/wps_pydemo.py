@@ -47,10 +47,14 @@ class PyDemo(Process):
                           abstract='Log File of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[Format('text/plain')]),
-            ComplexOutput('output', 'Output plot',
+            ComplexOutput('plot', 'Output plot',
                           abstract='Generated output plot of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[Format('image/png')]),
+            ComplexOutput('data', 'Data',
+                          abstract='Generated output data of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[FORMATS.NETCDF]),
         ]
 
         super(PyDemo, self).__init__(
@@ -102,7 +106,7 @@ class PyDemo(Process):
 
         # run diag
         response.update_status("running diag ...", 20)
-        logfile, output_dir = runner.run(recipe_file, config_file)
+        logfile, plot_dir, work_dir = runner.run(recipe_file, config_file)
 
         # recipe output
         response.outputs['recipe'].output_format = FORMATS.TEXT
@@ -114,11 +118,21 @@ class PyDemo(Process):
 
         # result plot
         response.update_status("collect output plot ...", 90)
-        response.outputs['output'].output_format = Format('application/png')
-        response.outputs['output'].file = runner.get_output(
-            output_dir,
+        response.outputs['plot'].output_format = Format('application/png')
+        response.outputs['plot'].file = runner.get_output(
+            plot_dir,
             path_filter=os.path.join('diagnostic1', 'script1'),
             name_filter="CMIP5*",
             output_format="png")
+
+
+        response.outputs['data'].output_format = FORMATS.NETCDF
+        response.outputs['data'].file = runner.get_output(
+            work_dir,
+            path_filter=os.path.join('diagnostic1', 'script1'),
+            name_filter="CMIP5*",
+            output_format="nc")
+
+
         response.update_status("done.", 100)
         return response

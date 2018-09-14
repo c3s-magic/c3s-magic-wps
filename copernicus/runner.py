@@ -54,7 +54,7 @@ def run(recipe_file, config_file):
         raise Exception('esmvaltool failed: {0}'.format(err))
     # find the log
     logfile = os.path.join(cfg['run_dir'], 'main_log.txt')
-    return logfile, cfg['plot_dir']
+    return logfile, cfg['plot_dir'], cfg['work_dir']
 
 
 def generate_recipe(diag, constraints=None, start_year=2000, end_year=2005, output_format='pdf', workdir=None):
