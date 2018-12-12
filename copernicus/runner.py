@@ -1,6 +1,7 @@
 import os
 import glob
 import sys
+import zipfile
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 
@@ -26,7 +27,7 @@ def run(recipe_file, config_file):
     # Create run dir
     if os.path.exists(cfg['run_dir']):
         print("ERROR: run_dir {} already exists, aborting to "
-              "prevent data loss".format(cfg['output_dir']))
+              "prevent data loss".format(cfg['run_dir']))
     os.makedirs(cfg['run_dir'])
 
     # configure logging
@@ -54,7 +55,7 @@ def run(recipe_file, config_file):
         raise Exception('esmvaltool failed: {0}'.format(err))
     # find the log
     logfile = os.path.join(cfg['run_dir'], 'main_log.txt')
-    return logfile, cfg['plot_dir'], cfg['work_dir']
+    return logfile, cfg['plot_dir'], cfg['work_dir'], cfg['run_dir']
 
 
 def generate_recipe(diag, constraints=None, start_year=2000, end_year=2005, output_format='pdf', workdir=None):
@@ -104,3 +105,14 @@ def get_output(output_dir, path_filter, name_filter=None, output_format='pdf'):
         LOGGER.warn("more then one output found %s", matches)
     LOGGER.debug("output found=%s", matches[0])
     return matches[0]
+
+def compress_output(output_dir, archive_file):
+    with zipfile.ZipFile(archive_file, 'w', zipfile.ZIP_DEFLATED) as ziph:
+        for root, dirs, files in os.walk(output_dir):
+            for file in files:
+                path = os.path.join(root, file)
+                arcname = os.path.relpath(path, output_dir)
+                ziph.write(path, arcname)
+
+    return archive_file
+

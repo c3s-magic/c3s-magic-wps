@@ -55,6 +55,10 @@ class PyDemo(Process):
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[FORMATS.NETCDF]),
+             ComplexOutput('archive', 'Archive',
+                          abstract='The complete output of the ESMValTool processing as an zip archive.',
+                          as_reference=True,
+                          supported_formats=[Format('application/zip')]),
         ]
 
         super(PyDemo, self).__init__(
@@ -105,8 +109,8 @@ class PyDemo(Process):
         )
 
         # run diag
-        response.update_status("running diag ...", 20)
-        logfile, plot_dir, work_dir = runner.run(recipe_file, config_file)
+        response.update_status("running diagnostic ...", 20)
+        logfile, plot_dir, work_dir, run_dir = runner.run(recipe_file, config_file)
 
         # recipe output
         response.outputs['recipe'].output_format = FORMATS.TEXT
@@ -117,14 +121,13 @@ class PyDemo(Process):
         response.outputs['log'].file = logfile
 
         # result plot
-        response.update_status("collect output plot ...", 90)
+        response.update_status("collecting output ...", 80)
         response.outputs['plot'].output_format = Format('application/png')
         response.outputs['plot'].file = runner.get_output(
             plot_dir,
             path_filter=os.path.join('diagnostic1', 'script1'),
             name_filter="CMIP5*",
             output_format="png")
-
 
         response.outputs['data'].output_format = FORMATS.NETCDF
         response.outputs['data'].file = runner.get_output(
@@ -133,6 +136,10 @@ class PyDemo(Process):
             name_filter="CMIP5*",
             output_format="nc")
 
+        response.update_status("creating archive of diagnostic result ...", 90)
+
+        response.outputs['archive'].output_format = Format('application/zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'), 'diagnostic_result.zip')
 
         response.update_status("done.", 100)
         return response
