@@ -5,11 +5,13 @@ from .wps_perfmetrics import Perfmetrics
 from .wps_rainfarm import RainFarm
 from .wps_rmse import RMSE
 
+#Disabled for now
+# MyDiag(),
+# Perfmetrics(),
+
 processes = [
     Sleep(),
-    MyDiag(),
     PyDemo(),
-    Perfmetrics(),
     RainFarm(),
     RMSE(),
 ]

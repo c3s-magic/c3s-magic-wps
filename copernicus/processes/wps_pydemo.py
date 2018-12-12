@@ -59,7 +59,7 @@ class PyDemo(Process):
 
         super(PyDemo, self).__init__(
             self._handler,
-            identifier="py_demo",
+            identifier="python_demonstrator_metric",
             title="Python Demo",
             version=runner.VERSION,
             abstract="Generates a plot for temperature using ESMValTool."
