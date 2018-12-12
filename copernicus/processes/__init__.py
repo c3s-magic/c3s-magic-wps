@@ -2,6 +2,7 @@ from .wps_sleep import Sleep
 from .wps_python_example import PythonExample
 from .wps_consecdrydays import ConsecDryDays
 from .wps_cvdp import CVDP
+from .wps_ensclus import EnsClus
 from .wps_perfmetrics import Perfmetrics
 from .wps_rainfarm import RainFarm
 from .wps_rmse import RMSE
@@ -15,6 +16,7 @@ processes = [
     PythonExample(),
     ConsecDryDays(),
     CVDP(),
+    EnsClus(),
     RainFarm(),
     RMSE(),
 ]
