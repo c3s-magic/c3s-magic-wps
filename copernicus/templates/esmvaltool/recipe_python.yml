@@ -1,10 +1,8 @@
 ---
 
 datasets:
-  - {dataset: bcc-csm1-1,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: 2001,  end_year: 2002}
-  - {dataset: GFDL-ESM2G,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: 2001,  end_year: 2002}
-  - {dataset: MPI-ESM-LR,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: 2001,  end_year: 2002}
-  - {dataset: ERA-Interim, project: OBS,    tier: 3,    type: reanaly,    version: 1,        start_year: 2001,  end_year: 2002}
+  - {dataset: {{constraints['model']}},  project: CMIP5,  mip: {{constraints['cmor_table']}},  exp: {{constraints['experiment']}},  ensemble: {{constraints['ensemble']}},  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: ERA-Interim, project: OBS,    tier: 3,    type: reanaly,    version: 1,        start_year: {{start_year}},  end_year: {{end_year}}}
 
 preprocessors:
 
@@ -29,7 +27,7 @@ diagnostics:
         field: T3M
         reference_dataset: ERA-Interim
         additional_datasets:
-          - {dataset: NCEP,        project: OBS,    tier: 2,    type: reanaly,    version: 1,        start_year: 2001,  end_year: 2002}
+          - {dataset: NCEP,        project: OBS,    tier: 2,    type: reanaly,    version: 1,        start_year: {{start_year}},  end_year: {{end_year}}}
     scripts:
       script1:
         script: examples/diagnostic.py

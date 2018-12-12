@@ -13,30 +13,32 @@ import logging
 LOGGER = logging.getLogger("PYWPS")
 
 
-class PyDemo(Process):
+class ConsecDryDays(Process):
     def __init__(self):
         inputs = [
             LiteralInput('model', 'Model',
                          abstract='Choose a model like MPI-ESM-LR.',
                          data_type='string',
-                         allowed_values=['MPI-ESM-LR', 'MPI-ESM-MR'],
-                         default='MPI-ESM-LR'),
+                         allowed_values=['bcc-csm1-1-m', 'bcc-csm1-1'],
+                         default='bcc-csm1-1-m',
+			 min_occurs=1,
+			 max_occurs=1),
             LiteralInput('experiment', 'Experiment',
                          abstract='Choose an experiment like historical.',
                          data_type='string',
-                         allowed_values=['historical', 'rcp26', 'rcp45', 'rcp85'],
+                         allowed_values=['historical'],
                          default='historical'),
             LiteralInput('ensemble', 'Ensemble',
                          abstract='Choose an ensemble like r1i1p1.',
                          data_type='string',
-                         allowed_values=['r1i1p1', 'r2i1p1', 'r3i1p1'],
+                         allowed_values=['r1i1p1'],
                          default='r1i1p1'),
-            LiteralInput('start_year', 'Start year', data_type='integer',
+            LiteralInput('start_year', 'Start year (from 1850)', data_type='integer',
                          abstract='Start year of model data.',
-                         default="2000"),
-            LiteralInput('end_year', 'End year', data_type='integer',
-                         abstract='End year of model data.',
                          default="2001"),
+            LiteralInput('end_year', 'End year (till 2012)', data_type='integer',
+                         abstract='End year of model data.',
+                         default="2002"),
         ]
         outputs = [
             ComplexOutput('recipe', 'recipe',
@@ -47,10 +49,10 @@ class PyDemo(Process):
                           abstract='Log File of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[Format('text/plain')]),
-            ComplexOutput('plot', 'Output plot',
-                          abstract='Generated output plot of ESMValTool processing.',
-                          as_reference=True,
-                          supported_formats=[Format('image/png')]),
+#            ComplexOutput('plot', 'Output plot',
+#                          abstract='Generated output plot of ESMValTool processing.',
+#                          as_reference=True,
+#                          supported_formats=[Format('image/png')]),
             ComplexOutput('data', 'Data',
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
@@ -61,14 +63,12 @@ class PyDemo(Process):
                           supported_formats=[Format('application/zip')]),
         ]
 
-        super(PyDemo, self).__init__(
+        super(ConsecDryDays, self).__init__(
             self._handler,
-            identifier="python_demonstrator_metric",
-            title="Python Demo",
+            identifier="recipe_consecdrydays",
+            title="Calculating number of dry days",
             version=runner.VERSION,
-            abstract="Generates a plot for temperature using ESMValTool."
-             " The default run uses the following CMIP5 data:"
-             " project=CMIP5, experiment=historical, ensemble=r1i1p1, variable=ta, model=MPI-ESM-LR, time_frequency=mon",  # noqa
+            abstract="Calculating number of dry days",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
@@ -92,8 +92,8 @@ class PyDemo(Process):
         constraints = dict(
             model=request.inputs['model'][0].data,
             experiment=request.inputs['experiment'][0].data,
-            time_frequency='mon',
-            cmor_table='Amon',
+            time_frequency='day',
+            cmor_table='day',
             ensemble=request.inputs['ensemble'][0].data,
         )
 
@@ -101,7 +101,7 @@ class PyDemo(Process):
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
-            diag='py_demo',
+            diag='consecdrydays',
             constraints=constraints,
             start_year=request.inputs['start_year'][0].data,
             end_year=request.inputs['end_year'][0].data,
@@ -122,12 +122,12 @@ class PyDemo(Process):
 
         # result plot
         response.update_status("collecting output ...", 80)
-        response.outputs['plot'].output_format = Format('application/png')
-        response.outputs['plot'].file = runner.get_output(
-            plot_dir,
-            path_filter=os.path.join('diagnostic1', 'script1'),
-            name_filter="CMIP5*",
-            output_format="png")
+#        response.outputs['plot'].output_format = Format('application/png')
+#        response.outputs['plot'].file = runner.get_output(
+#            plot_dir,
+#            path_filter=os.path.join('diagnostic1', 'script1'),
+#            name_filter="CMIP5*",
+#            output_format="png")
 
         response.outputs['data'].output_format = FORMATS.NETCDF
         response.outputs['data'].file = runner.get_output(

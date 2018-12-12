@@ -1,6 +1,6 @@
 from .wps_sleep import Sleep
-from .wps_mydiag import MyDiag
-from .wps_pydemo import PyDemo
+from .wps_python_example import PythonExample
+from .wps_consecdrydays import ConsecDryDays
 from .wps_perfmetrics import Perfmetrics
 from .wps_rainfarm import RainFarm
 from .wps_rmse import RMSE
@@ -11,7 +11,8 @@ from .wps_rmse import RMSE
 
 processes = [
     Sleep(),
-    PyDemo(),
+    PythonExample(),
+    ConsecDryDays(),
     RainFarm(),
     RMSE(),
 ]
