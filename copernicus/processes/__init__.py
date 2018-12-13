@@ -21,6 +21,4 @@ processes = [
     EnsClus(),
     ShapeSelect(),
     ZonalMeanNAM(),
-    RainFarm(),
-    RMSE(),
 ]
