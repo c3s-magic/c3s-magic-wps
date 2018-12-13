@@ -53,10 +53,10 @@ class PythonExample(Process):
                           abstract='Generated output plot of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[Format('image/png')]),
-#            ComplexOutput('data', 'Data',
-#                          abstract='Generated output data of ESMValTool processing.',
-#                          as_reference=True,
-#                          supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput('data', 'Data',
+                          abstract='Generated output data of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[FORMATS.NETCDF]),
              ComplexOutput('archive', 'Archive',
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
                           as_reference=True,
@@ -131,12 +131,12 @@ class PythonExample(Process):
             name_filter="CMIP5*",
             output_format="png")
 
-#        response.outputs['data'].output_format = FORMATS.NETCDF
-#        response.outputs['data'].file = runner.get_output(
-#            work_dir,
-#            path_filter=os.path.join('diagnostic1', 'script1'),
-#            name_filter="CMIP5*",
-#            output_format="nc")
+        response.outputs['data'].output_format = FORMATS.NETCDF
+        response.outputs['data'].file = runner.get_output(
+            work_dir,
+            path_filter=os.path.join('diagnostic1', 'script1'),
+            name_filter="CMIP5*",
+            output_format="nc")
 
         response.update_status("creating archive of diagnostic result ...", 90)
 

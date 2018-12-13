@@ -51,14 +51,14 @@ diagnostics:
         ## Write only letters or numbers, no punctuation marks!
         ## If you want to leave the field empty write 'no' 
         season: 'JJA'               #seasonal average
-        area: 'Eu'                  #regional average (examples:'EAT':Euro-Atlantic
+        area: '{{options['area']}}'                  #regional average (examples:'EAT':Euro-Atlantic
                                     #                           'PNA': Pacific North American
                                     #                           'NH': Northern Hemisphere)
                                     #                           'Eu': Europe)
-        extreme: '75th_percentile'   #75th_percentile, mean, maximum, std, trend
+        extreme: '{{options['extreme']}}'   #75th_percentile, mean, maximum, std, trend
         #---------------------about cluster analysis------------------------------------------
-        numclus: 3             #number of clusters
+        numclus: {{options['numclus']}}             #number of clusters
         #Either set perc or numpcs:
-        perc: 80               #cluster analysis is applied on a number of PCs such as they explain
+        perc: {{options['perc']}}               #cluster analysis is applied on a number of PCs such as they explain
                                #'perc' of total variance
         numpcs: 'no'           #number of PCs

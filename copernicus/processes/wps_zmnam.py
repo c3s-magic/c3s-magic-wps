@@ -49,14 +49,22 @@ class ZonalMeanNAM(Process):
                           abstract='Log File of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[Format('text/plain')]),
-            ComplexOutput('plot', 'Output plot',
+            ComplexOutput('plot_pdf', 'Output plot PDF',
                           abstract='Generated output plot of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[Format('image/png')]),
-            ComplexOutput('data', 'Data',
-                          abstract='Generated output data of ESMValTool processing.',
+            ComplexOutput('plot_reg', 'Output plot REG',
+                          abstract='Generated output plot of ESMValTool processing.',
                           as_reference=True,
-                          supported_formats=[FORMATS.NETCDF]),
+                          supported_formats=[Format('image/png')]),
+            ComplexOutput('plot_ts', 'Output plot TS',
+                          abstract='Generated output plot of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
+#            ComplexOutput('data', 'Data',
+#                          abstract='Generated output data of ESMValTool processing.',
+#                          as_reference=True,
+#                          supported_formats=[FORMATS.NETCDF]),
              ComplexOutput('archive', 'Archive',
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
                           as_reference=True,
@@ -122,19 +130,33 @@ class ZonalMeanNAM(Process):
 
         # result plot
         response.update_status("collecting output ...", 80)
-        response.outputs['plot'].output_format = Format('application/png')
-        response.outputs['plot'].file = runner.get_output(
+        response.outputs['plot_pdf'].output_format = Format('application/png')
+        response.outputs['plot_pdf'].file = runner.get_output(
             plot_dir,
             path_filter=os.path.join('zmnam', 'main'),
-            name_filter="CMIP5*",
+            name_filter="CMIP5*25000Pa_da_pdf",
             output_format="png")
 
-        response.outputs['data'].output_format = FORMATS.NETCDF
-        response.outputs['data'].file = runner.get_output(
-            work_dir,
+        response.outputs['plot_reg'].output_format = Format('application/png')
+        response.outputs['plot_reg'].file = runner.get_output(
+            plot_dir,
             path_filter=os.path.join('zmnam', 'main'),
-            name_filter="CMIP5*",
-            output_format="nc")
+            name_filter="CMIP5*25000Pa_mo_reg",
+            output_format="png")
+
+        response.outputs['plot_ts'].output_format = Format('application/png')
+        response.outputs['plot_ts'].file = runner.get_output(
+            plot_dir,
+            path_filter=os.path.join('zmnam', 'main'),
+            name_filter="CMIP5*25000Pa_mo_ts",
+            output_format="png")
+
+#        response.outputs['data'].output_format = FORMATS.NETCDF
+#        response.outputs['data'].file = runner.get_output(
+#            work_dir,
+#            path_filter=os.path.join('zmnam', 'main'),
+#            name_filter="CMIP5*",
+#            output_format="nc")
 
         response.update_status("creating archive of diagnostic result ...", 90)
 

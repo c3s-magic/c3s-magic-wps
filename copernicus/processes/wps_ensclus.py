@@ -39,7 +39,27 @@ class EnsClus(Process):
             LiteralInput('end_year', 'End year (till 2005)', data_type='integer',
                          abstract='End year of model data.',
                          default="2005"),
-        ]
+            LiteralInput('area', 'Area',
+                         abstract='Area',
+                         data_type='string',
+                         allowed_values=['Eu', 'EAT', 'PNA'],
+                         default='Eu'),
+            LiteralInput('extreme', 'Extreme',
+                         abstract='Extreme',
+                         data_type='string',
+                         allowed_values=['60th_percentile', '75th_percentile', '90th_percentile', 'mean', 'maximum', 'std'],
+                         default='75th_percentile'),
+            LiteralInput('numclus', 'Number of Clusters',
+                         abstract='Numclus',
+                         data_type='string',
+                         allowed_values=['2', '3', '4'],
+                         default='3'),
+            LiteralInput('perc', 'Percentage',
+                         abstract='Percentage of total Variance',
+                         data_type='string',
+                         allowed_values=['70', '80', '90'],
+                         default='80'),
+            ]
         outputs = [
             ComplexOutput('recipe', 'recipe',
                           abstract='ESMValTool recipe used for processing.',
@@ -57,7 +77,11 @@ class EnsClus(Process):
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[FORMATS.NETCDF]),
-             ComplexOutput('archive', 'Archive',
+            ComplexOutput('statistics', 'Statistics',
+                          abstract='Clustering Statictics',
+                          as_reference=True,
+                          supported_formats=[Format('text/plain')]),
+            ComplexOutput('archive', 'Archive',
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
                           as_reference=True,
                           supported_formats=[Format('application/zip')]),
@@ -99,6 +123,13 @@ class EnsClus(Process):
             ensemble=request.inputs['ensemble'][0].data,
         )
 
+        options = dict(
+            area=request.inputs['area'][0].data,
+	    extreme=request.inputs['extreme'][0].data,
+            numclus=request.inputs['numclus'][0].data,
+            perc=request.inputs['perc'][0].data,
+        )
+
         # generate recipe
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
@@ -108,6 +139,7 @@ class EnsClus(Process):
             start_year=request.inputs['start_year'][0].data,
             end_year=request.inputs['end_year'][0].data,
             output_format='png',
+            options=options,
         )
 
         # run diag
@@ -137,6 +169,14 @@ class EnsClus(Process):
             path_filter=os.path.join('EnsClus', 'main'),
             name_filter="ens*",
             output_format="nc")
+
+        response.outputs['statistics'].output_format = FORMATS.TEXT
+        response.outputs['statistics'].file = runner.get_output(
+            work_dir,
+            path_filter=os.path.join('EnsClus', 'main'),
+            name_filter="statistics*",
+            output_format="txt")
+
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
