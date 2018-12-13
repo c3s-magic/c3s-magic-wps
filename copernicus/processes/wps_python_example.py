@@ -65,7 +65,7 @@ class PythonExample(Process):
 
         super(PythonExample, self).__init__(
             self._handler,
-            identifier="python_demonstrator_metric",
+            identifier="esmvaltool_preprocessor",
             title="Python Demo",
             version=runner.VERSION,
             abstract="Generates a plot for temperature using ESMValTool."

@@ -65,7 +65,7 @@ class CVDP(Process):
 
         super(CVDP, self).__init__(
             self._handler,
-            identifier="recipe_cvdp",
+            identifier="cvdp",
             title="Run the NCAR CVDPackage",
             version=runner.VERSION,
             abstract="Run the NCAR CVDPackage",

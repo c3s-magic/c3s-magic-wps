@@ -51,14 +51,14 @@ def run(recipe_file, config_file):
         LOGGER.exception('esmvaltool failed!')
         #For debugging purposes, exit here to keep the temp folder
         #Should ideally be an option in PyWPS
-        #sys.exit(1)
+        sys.exit(1)
         raise Exception('esmvaltool failed: {0}'.format(err))
     # find the log
     logfile = os.path.join(cfg['run_dir'], 'main_log.txt')
     return logfile, cfg['plot_dir'], cfg['work_dir'], cfg['run_dir']
 
 
-def generate_recipe(diag, constraints=None, start_year=2000, end_year=2005, output_format='pdf', workdir=None):
+def generate_recipe(diag, constraints=None, options=None, start_year=2000, end_year=2005, output_format='pdf', workdir=None):
     constraints = constraints or {}
     workdir = workdir or os.curdir
     workdir = os.path.abspath(workdir)
@@ -84,6 +84,7 @@ def generate_recipe(diag, constraints=None, start_year=2000, end_year=2005, outp
         constraints=constraints,
         start_year=start_year,
         end_year=end_year,
+	options=options,
     )
     recipe_file = os.path.abspath(os.path.join(workdir, "recipe.yml"))
     with open(recipe_file, 'w') as fp:

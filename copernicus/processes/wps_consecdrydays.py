@@ -39,6 +39,16 @@ class ConsecDryDays(Process):
             LiteralInput('end_year', 'End year (till 2012)', data_type='integer',
                          abstract='End year of model data.',
                          default="2002"),
+            LiteralInput('frlim', 'frlim',
+                         abstract='Frlim',
+                         data_type='string',
+                         allowed_values=['2.5', '5', '10'],
+                         default='5'),
+            LiteralInput('plim', 'plim',
+                         abstract='Plim',
+                         data_type='string',
+                         allowed_values=['0.5', '1', '2'],
+                         default='1'),
         ]
         outputs = [
             ComplexOutput('recipe', 'recipe',
@@ -53,11 +63,15 @@ class ConsecDryDays(Process):
 #                          abstract='Generated output plot of ESMValTool processing.',
 #                          as_reference=True,
 #                          supported_formats=[Format('image/png')]),
-            ComplexOutput('data', 'Data',
+            ComplexOutput('drymax', 'Data Drymax',
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[FORMATS.NETCDF]),
-             ComplexOutput('archive', 'Archive',
+            ComplexOutput('dryfreq', 'Data DryFreq',
+                          abstract='Generated output data of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput('archive', 'Archive',
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
                           as_reference=True,
                           supported_formats=[Format('application/zip')]),
@@ -65,7 +79,7 @@ class ConsecDryDays(Process):
 
         super(ConsecDryDays, self).__init__(
             self._handler,
-            identifier="recipe_consecdrydays",
+            identifier="consecdrydays",
             title="Calculating number of dry days",
             version=runner.VERSION,
             abstract="Calculating number of dry days",
@@ -97,6 +111,12 @@ class ConsecDryDays(Process):
             ensemble=request.inputs['ensemble'][0].data,
         )
 
+        #build options
+        options = dict(
+            frlim=request.inputs['frlim'][0].data,
+            plim=request.inputs['plim'][0].data,
+        )
+
         # generate recipe
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
@@ -105,6 +125,7 @@ class ConsecDryDays(Process):
             constraints=constraints,
             start_year=request.inputs['start_year'][0].data,
             end_year=request.inputs['end_year'][0].data,
+	    options=options,
             output_format='png',
         )
 
@@ -129,11 +150,18 @@ class ConsecDryDays(Process):
 #            name_filter="CMIP5*",
 #            output_format="png")
 
-        response.outputs['data'].output_format = FORMATS.NETCDF
-        response.outputs['data'].file = runner.get_output(
+        response.outputs['drymax'].output_format = FORMATS.NETCDF
+        response.outputs['drymax'].file = runner.get_output(
             work_dir,
             path_filter=os.path.join('diagnostic1', 'script1'),
-            name_filter="CMIP5*",
+            name_filter="CMIP5*drymax",
+            output_format="nc")
+
+        response.outputs['dryfreq'].output_format = FORMATS.NETCDF
+        response.outputs['dryfreq'].file = runner.get_output(
+            work_dir,
+            path_filter=os.path.join('diagnostic1', 'script1'),
+            name_filter="CMIP5*dryfreq",
             output_format="nc")
 
         response.update_status("creating archive of diagnostic result ...", 90)

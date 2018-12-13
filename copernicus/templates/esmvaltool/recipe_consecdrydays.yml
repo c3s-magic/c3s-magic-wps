@@ -19,6 +19,8 @@ diagnostics:
          script1:  #conseq dry days
             script: droughtindex/diag_cdd.py
             dryindex: 'cdd'
-            plim: 1
-            frlim: 5
+            #plim: 1
+            #frlim: 5
+            plim: {{options['plim']}}
+            frlim: {{options['frlim']}}
         
