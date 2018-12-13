@@ -39,7 +39,12 @@ class ShapeSelect(Process):
             LiteralInput('end_year', 'End year (till 2005)', data_type='integer',
                          abstract='End year of model data.',
                          default="2001"),
-        ]
+            LiteralInput('shape', 'Shape',
+                         abstract='Shape of the area',
+                         data_type='string',
+                         allowed_values=['MotalaStrom', 'Elbe', 'multicatchment', 'testfile', 'Thames'],
+                         default='MotalaStrom'),
+         ]
         outputs = [
             ComplexOutput('recipe', 'recipe',
                           abstract='ESMValTool recipe used for processing.',
@@ -97,6 +102,10 @@ class ShapeSelect(Process):
             ensemble=request.inputs['ensemble'][0].data,
         )
 
+        options = dict(
+            shape=request.inputs['shape'][0].data,
+        )
+
         # generate recipe
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
@@ -106,6 +115,7 @@ class ShapeSelect(Process):
             start_year=request.inputs['start_year'][0].data,
             end_year=request.inputs['end_year'][0].data,
             output_format='png',
+            options=options,
         )
 
         # run diag
