@@ -16,7 +16,7 @@ max_parallel_tasks: 1
 rootpath:
   CMIP5: {{ archive_root }}
   OBS: {{ obs_root }}
-  default: /tmp
+  default: {{ obs_root }}
 
 drs:
-  CMIP5: DKRZ
+  CMIP5: BADC

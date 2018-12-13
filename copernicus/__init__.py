@@ -2,7 +2,7 @@
 
 """Top-level package for copernicus-wps-demo."""
 
-from .wsgi import application
+#from .wsgi import application
 
 __author__ = """Carsten Ehbrecht"""
 __email__ = 'ehbrecht@dkrz.de'

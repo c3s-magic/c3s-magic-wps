@@ -13,30 +13,32 @@ import logging
 LOGGER = logging.getLogger("PYWPS")
 
 
-class MyDiag(Process):
+class ZonalMeanNAM(Process):
     def __init__(self):
         inputs = [
             LiteralInput('model', 'Model',
-                         abstract='Choose a model like MPI-ESM-LR.',
+                         abstract='Choose a model like MPI-ESM-MR.',
                          data_type='string',
-                         allowed_values=['MPI-ESM-LR', 'MPI-ESM-MR'],
-                         default='MPI-ESM-LR'),
+                         allowed_values=['MPI-ESM-MR'],
+                         default='MPI-ESM-MR',
+			 min_occurs=1,
+			 max_occurs=1),
             LiteralInput('experiment', 'Experiment',
                          abstract='Choose an experiment like historical.',
                          data_type='string',
-                         allowed_values=['historical', 'rcp26', 'rcp45', 'rcp85'],
-                         default='historical'),
+                         allowed_values=['amip', 'historical'],
+                         default='amip'),
             LiteralInput('ensemble', 'Ensemble',
                          abstract='Choose an ensemble like r1i1p1.',
                          data_type='string',
-                         allowed_values=['r1i1p1', 'r2i1p1', 'r3i1p1'],
+                         allowed_values=['r1i1p1'],
                          default='r1i1p1'),
-            LiteralInput('start_year', 'Start year', data_type='integer',
+            LiteralInput('start_year', 'Start year (from 1979)', data_type='integer',
                          abstract='Start year of model data.',
                          default="2000"),
-            LiteralInput('end_year', 'End year', data_type='integer',
+            LiteralInput('end_year', 'End year (till 2005)', data_type='integer',
                          abstract='End year of model data.',
-                         default="2001"),
+                         default="2005"),
         ]
         outputs = [
             ComplexOutput('recipe', 'recipe',
@@ -47,30 +49,36 @@ class MyDiag(Process):
                           abstract='Log File of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[Format('text/plain')]),
-            ComplexOutput('output', 'Output plot',
+            ComplexOutput('plot', 'Output plot',
                           abstract='Generated output plot of ESMValTool processing.',
                           as_reference=True,
-                          supported_formats=[Format('application/pdf')]),
+                          supported_formats=[Format('image/png')]),
+            ComplexOutput('data', 'Data',
+                          abstract='Generated output data of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[FORMATS.NETCDF]),
+             ComplexOutput('archive', 'Archive',
+                          abstract='The complete output of the ESMValTool processing as an zip archive.',
+                          as_reference=True,
+                          supported_formats=[Format('application/zip')]),
         ]
 
-        super(MyDiag, self).__init__(
+        super(ZonalMeanNAM, self).__init__(
             self._handler,
-            identifier="mydiag",
-            title="Simple plot",
+            identifier="zonal_mean_nam",
+            title="Zonal Mean NAM",
             version=runner.VERSION,
-            abstract="Generates a plot for temperature using ESMValTool."
-             " It is a diagnostic used in the ESMValTool tutoriaal doc/toy-diagnostic-tutorial.pdf."
-             " The default run uses the following CMIP5 data:"
-             " project=CMIP5, experiment=historical, ensemble=r1i1p1, variable=ta, model=MPI-ESM-LR, time_frequency=mon",  # noqa
+            abstract="Zonal Mean NAM",  # noqa
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
-                         'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#mydiag',
+                         'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
                          role=util.WPS_ROLE_DOC),
                 Metadata('Media',
-                         util.diagdata_url() + '/mydiag/mydiag_thumbnail.png',
+                         util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
                          role=util.WPS_ROLE_MEDIA),
-                Metadata('ESGF Testdata', 'https://esgf1.dkrz.de/thredds/catalog/esgcet/7/cmip5.output1.MPI-M.MPI-ESM-LR.historical.mon.atmos.Amon.r1i1p1.v20120315.html?dataset=cmip5.output1.MPI-M.MPI-ESM-LR.historical.mon.atmos.Amon.r1i1p1.v20120315.ta_Amon_MPI-ESM-LR_historical_r1i1p1_199001-199912.nc'),  # noqa
+                Metadata('ESGF Testdata',
+                         'https://esgf1.dkrz.de/thredds/catalog/esgcet/7/cmip5.output1.MPI-M.MPI-ESM-LR.historical.mon.atmos.Amon.r1i1p1.v20120315.html?dataset=cmip5.output1.MPI-M.MPI-ESM-LR.historical.mon.atmos.Amon.r1i1p1.v20120315.ta_Amon_MPI-ESM-LR_historical_r1i1p1_199001-199912.nc'),  # noqa
             ],
             inputs=inputs,
             outputs=outputs,
@@ -84,25 +92,25 @@ class MyDiag(Process):
         constraints = dict(
             model=request.inputs['model'][0].data,
             experiment=request.inputs['experiment'][0].data,
-            time_frequency='mon',
-            cmor_table='Amon',
+            time_frequency='day',
+            cmor_table='day',
             ensemble=request.inputs['ensemble'][0].data,
         )
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
-            diag='mydiag',
+            workdir=self.workdir,
+            diag='zmnam',
             constraints=constraints,
             start_year=request.inputs['start_year'][0].data,
             end_year=request.inputs['end_year'][0].data,
-            output_format='pdf',
-            workdir=self.workdir,
+            output_format='png',
         )
 
         # run diag
-        response.update_status("running diag ...", 20)
-        logfile, output_dir = runner.run(recipe_file, config_file)
+        response.update_status("running diagnostic ...", 20)
+        logfile, plot_dir, work_dir, run_dir = runner.run(recipe_file, config_file)
 
         # recipe output
         response.outputs['recipe'].output_format = FORMATS.TEXT
@@ -113,12 +121,25 @@ class MyDiag(Process):
         response.outputs['log'].file = logfile
 
         # result plot
-        response.update_status("collect output plot ...", 90)
-        response.outputs['output'].output_format = Format('application/pdf')
-        response.outputs['output'].file = runner.get_output(
-            output_dir,
-            path_filter=os.path.join('ta_diagnostics', 'test_ta'),
-            name_filter="ta",
-            output_format="pdf")
+        response.update_status("collecting output ...", 80)
+        response.outputs['plot'].output_format = Format('application/png')
+        response.outputs['plot'].file = runner.get_output(
+            plot_dir,
+            path_filter=os.path.join('zmnam', 'main'),
+            name_filter="CMIP5*",
+            output_format="png")
+
+        response.outputs['data'].output_format = FORMATS.NETCDF
+        response.outputs['data'].file = runner.get_output(
+            work_dir,
+            path_filter=os.path.join('zmnam', 'main'),
+            name_filter="CMIP5*",
+            output_format="nc")
+
+        response.update_status("creating archive of diagnostic result ...", 90)
+
+        response.outputs['archive'].output_format = Format('application/zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'), 'diagnostic_result.zip')
+
         response.update_status("done.", 100)
         return response

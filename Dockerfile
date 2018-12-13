@@ -19,7 +19,7 @@ RUN conda env create -n wps -f /opt/environment.yml
 # Install development version of ESMValTool
 
 #Clone GitHub version of ESMValTool
-RUN git clone https://github.com/ESMValGroup/ESMValTool.git /opt/esmvaltool
+RUN git clone -b magic_demo https://github.com/ESMValGroup/ESMValTool.git /opt/esmvaltool
 
 #Add dependancies of esmvaltool to wps conda environement created earlier
 WORKDIR /opt/esmvaltool
@@ -37,7 +37,7 @@ RUN ["/bin/bash", "-c", "source activate wps && python setup.py develop"]
 # Start WPS service on port 5000 on 0.0.0.0
 EXPOSE 5000
 ENTRYPOINT ["/bin/bash", "-c"]
-CMD ["source activate wps && exec copernicus start -b 0.0.0.0 -c /opt/wps/etc/demo.cfg"]
+CMD ["source activate wps && exec copernicus start -b 0.0.0.0 -c /opt/wps/etc/magic-docker.cfg"]
 
 # docker build -t cp4cds/copernicus .
 # docker run -p 5000:5000 cp4cds/copernicus

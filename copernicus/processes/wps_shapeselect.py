@@ -13,54 +13,62 @@ import logging
 LOGGER = logging.getLogger("PYWPS")
 
 
-class PyDemo(Process):
+class ShapeSelect(Process):
     def __init__(self):
         inputs = [
             LiteralInput('model', 'Model',
                          abstract='Choose a model like MPI-ESM-LR.',
                          data_type='string',
-                         allowed_values=['MPI-ESM-LR', 'MPI-ESM-MR'],
-                         default='MPI-ESM-LR'),
+                         allowed_values=['bcc-csm1-1'],
+                         default='bcc-csm1-1',
+			 min_occurs=1,
+			 max_occurs=1),
             LiteralInput('experiment', 'Experiment',
                          abstract='Choose an experiment like historical.',
                          data_type='string',
-                         allowed_values=['historical', 'rcp26', 'rcp45', 'rcp85'],
+                         allowed_values=['historical'],
                          default='historical'),
             LiteralInput('ensemble', 'Ensemble',
                          abstract='Choose an ensemble like r1i1p1.',
                          data_type='string',
-                         allowed_values=['r1i1p1', 'r2i1p1', 'r3i1p1'],
+                         allowed_values=['r1i1p1'],
                          default='r1i1p1'),
-            LiteralInput('start_year', 'Start year', data_type='integer',
+            LiteralInput('start_year', 'Start year (from 1979)', data_type='integer',
                          abstract='Start year of model data.',
                          default="2000"),
-            LiteralInput('end_year', 'End year', data_type='integer',
+            LiteralInput('end_year', 'End year (till 2005)', data_type='integer',
                          abstract='End year of model data.',
                          default="2001"),
         ]
         outputs = [
-            ComplexOutput('namelist', 'namelist',
-                          abstract='ESMValTool namelist used for processing.',
+            ComplexOutput('recipe', 'recipe',
+                          abstract='ESMValTool recipe used for processing.',
                           as_reference=True,
                           supported_formats=[Format('text/plain')]),
             ComplexOutput('log', 'Log File',
                           abstract='Log File of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[Format('text/plain')]),
-            ComplexOutput('output', 'Output plot',
+            ComplexOutput('plot', 'Output plot',
                           abstract='Generated output plot of ESMValTool processing.',
                           as_reference=True,
-                          supported_formats=[Format('image/png'), Format('application/pdf')]),
+                          supported_formats=[Format('image/png')]),
+            ComplexOutput('data', 'Data',
+                          abstract='Generated excel file with precipitation for the selected area',
+                          as_reference=True,
+                          supported_formats=[Format('application/vnd.ms-excel')]),
+             ComplexOutput('archive', 'Archive',
+                          abstract='The complete output of the ESMValTool processing as an zip archive.',
+                          as_reference=True,
+                          supported_formats=[Format('application/zip')]),
         ]
 
-        super(PyDemo, self).__init__(
+        super(ShapeSelect, self).__init__(
             self._handler,
-            identifier="py_demo",
-            title="Python Demo",
+            identifier="shape_select",
+            title="Shape selection metric",
             version=runner.VERSION,
-            abstract="Generates a plot for temperature using ESMValTool."
-             " The default run uses the following CMIP5 data:"
-             " project=CMIP5, experiment=historical, ensemble=r1i1p1, variable=ta, model=MPI-ESM-LR, time_frequency=mon",  # noqa
+            abstract= "Selects data from a region specified by a shape (e.g a catchment)",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
@@ -84,41 +92,54 @@ class PyDemo(Process):
         constraints = dict(
             model=request.inputs['model'][0].data,
             experiment=request.inputs['experiment'][0].data,
-            time_frequency='mon',
-            cmor_table='Amon',
+            time_frequency='day',
+            cmor_table='day',
             ensemble=request.inputs['ensemble'][0].data,
         )
 
-        # generate namelist
-        response.update_status("generate namelist ...", 10)
-        namelist_file, config_file = runner.generate_namelist(
+        # generate recipe
+        response.update_status("generate recipe ...", 10)
+        recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
-            diag='py_demo',
+            diag='shapeselect_py',
             constraints=constraints,
             start_year=request.inputs['start_year'][0].data,
             end_year=request.inputs['end_year'][0].data,
-            output_format='pdf',
+            output_format='png',
         )
 
         # run diag
-        response.update_status("running diag ...", 20)
-        logfile, output_dir = runner.run(namelist_file, config_file)
+        response.update_status("running diagnostic ...", 20)
+        logfile, plot_dir, work_dir, run_dir = runner.run(recipe_file, config_file)
 
-        # namelist output
-        response.outputs['namelist'].output_format = FORMATS.TEXT
-        response.outputs['namelist'].file = namelist_file
+        # recipe output
+        response.outputs['recipe'].output_format = FORMATS.TEXT
+        response.outputs['recipe'].file = recipe_file
 
         # log output
         response.outputs['log'].output_format = FORMATS.TEXT
         response.outputs['log'].file = logfile
 
         # result plot
-        response.update_status("collect output plot ...", 90)
-        response.outputs['output'].output_format = Format('application/pdf')
-        response.outputs['output'].file = runner.get_output(
-            output_dir,
-            path_filter=os.path.join('ta_diagnostic', 'test_ta'),
+        response.update_status("collecting output ...", 80)
+        response.outputs['plot'].output_format = Format('application/png')
+        response.outputs['plot'].file = runner.get_output(
+            plot_dir,
+            path_filter=os.path.join('diagnostic1', 'script1'),
             name_filter="CMIP5*",
-            output_format="pdf")
+            output_format="png")
+
+        response.outputs['data'].output_format = Format('application/vnd.ms-excel')
+        response.outputs['data'].file = runner.get_output(
+            work_dir,
+            path_filter=os.path.join('diagnostic1', 'script1'),
+            name_filter="CMIP5*",
+            output_format="xlsx")
+
+        response.update_status("creating archive of diagnostic result ...", 90)
+
+        response.outputs['archive'].output_format = Format('application/zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'), 'diagnostic_result.zip')
+
         response.update_status("done.", 100)
         return response

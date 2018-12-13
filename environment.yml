@@ -9,5 +9,6 @@ dependencies:
 - jinja2
 - click
 - psutil
+- cdo=1.9.3 #for the zmnam recipe
 # esmvaltool
 #- esmvaltool=2.0a0
