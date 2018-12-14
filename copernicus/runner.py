@@ -51,7 +51,7 @@ def run(recipe_file, config_file):
         LOGGER.exception('esmvaltool failed!')
         #For debugging purposes, exit here to keep the temp folder
         #Should ideally be an option in PyWPS
-        sys.exit(1)
+        #sys.exit(1)
         raise Exception('esmvaltool failed: {0}'.format(err))
     # find the log
     logfile = os.path.join(cfg['run_dir'], 'main_log.txt')
