@@ -28,10 +28,14 @@ template_env = Environment(
 def write_user_config(**kwargs):
     config_templ = template_env.get_template('pywps.cfg')
     rendered_config = config_templ.render(**kwargs)
-    config_file = os.path.abspath(os.path.join(os.path.curdir, ".custom.cfg"))
+    config_file = get_user_config_path()
     with open(config_file, 'w') as fp:
         fp.write(rendered_config)
     return config_file
+
+
+def get_user_config_path():
+    return os.path.abspath(os.path.join(os.path.curdir, ".custom.cfg"))
 
 
 def get_host():
@@ -133,23 +137,31 @@ def stop():
 @click.option('--log-level', metavar='LEVEL', default='INFO', help='log level in PyWPS configuration.')
 @click.option('--log-file', metavar='PATH', default='pywps.log', help='log file in PyWPS configuration.')
 @click.option('--database', default='sqlite:///pywps-logs.sqlite', help='database in PyWPS configuration')
+@click.option('--rootpath', default='/tmp', help='Root path for computation')
 def start(config, bind_host, daemon, hostname, port,
           maxsingleinputsize, maxprocesses, parallelprocesses,
-          log_level, log_file, database):
+          log_level, log_file, database, rootpath):
     """Start PyWPS service.
     This service is by default available at http://localhost:5000/wps
     """
     cfgfiles = []
-    cfgfiles.append(write_user_config(
-        wps_hostname=hostname,
-        wps_port=port,
-        wps_maxsingleinputsize=maxsingleinputsize,
-        wps_maxprocesses=maxprocesses,
-        wps_parallelprocesses=parallelprocesses,
-        wps_log_level=log_level,
-        wps_log_file=log_file,
-        wps_database=database,
-    ))
+
+    if os.path.exists(get_user_config_path()):
+        cfgfiles.append(get_user_config_path())
+    else:
+        cfgfiles.append(write_user_config(
+            wps_hostname=hostname,
+            wps_port=port,
+            wps_maxsingleinputsize=maxsingleinputsize,
+            wps_maxprocesses=maxprocesses,
+            wps_parallelprocesses=parallelprocesses,
+            wps_log_level=log_level,
+            wps_log_file=log_file,
+            wps_database=database,
+            wps_archive_root=os.path.join(rootpath, 'archive'),
+            wps_obs_root=os.path.join(rootpath, 'obs'),
+        ))
+
     if config:
         cfgfiles.append(config)
     app = wsgi.create_app(cfgfiles)
