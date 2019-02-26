@@ -37,6 +37,9 @@ unit_tests/testdata.json
 .pydevproject
 .settings
 
+# Visual Studio Code
+.vscode
+
 # PyCharm
 *.idea
 

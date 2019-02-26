@@ -16,7 +16,7 @@ from .wps_rmse import RMSE
 processes = [
     Sleep(),
     PythonExample(),
-    ConsecDryDays(),
+#    ConsecDryDays(),
     CVDP(),
     EnsClus(),
     ShapeSelect(),

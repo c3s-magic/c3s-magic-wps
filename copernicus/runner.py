@@ -47,15 +47,23 @@ def run(recipe_file, config_file):
         LOGGER.info("run esmvaltool ...")
         process_recipe(recipe_file=recipe_file, config_user=cfg)
         LOGGER.info("esmvaltool ... done.")
+        success = True
     except Exception as err:
         LOGGER.exception('esmvaltool failed!')
         #For debugging purposes, exit here to keep the temp folder
         #Should ideally be an option in PyWPS
         #sys.exit(1)
-        raise Exception('esmvaltool failed: {0}'.format(err))
+        #raise Exception('esmvaltool failed: {0}'.format(err))
+        success = False
     # find the log
     logfile = os.path.join(cfg['run_dir'], 'main_log.txt')
-    return logfile, cfg['plot_dir'], cfg['work_dir'], cfg['run_dir']
+    return {
+        'success': success,
+        'logfile': logfile,
+        'plot_dir': cfg['plot_dir'],
+        'work_dir': cfg['work_dir'],
+        'run_dir': cfg['run_dir']
+    }
 
 
 def generate_recipe(diag, constraints=None, options=None, start_year=2000, end_year=2005, output_format='pdf', workdir=None):
@@ -76,7 +84,7 @@ def generate_recipe(diag, constraints=None, options=None, start_year=2000, end_y
         fp.write(rendered_config)
 
     # write recipe.xml
-    recipe = 'recipe_{0}.yml'.format(diag)
+    recipe = 'recipe_{0}.yml.j2'.format(diag)
     recipe_templ = template_env.get_template(recipe)
     rendered_recipe = recipe_templ.render(
         diag=diag,

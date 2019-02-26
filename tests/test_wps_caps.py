@@ -12,10 +12,19 @@ def test_wps_caps():
                             '/wps:ProcessOfferings'
                             '/wps:Process'
                             '/ows:Identifier')
-    assert sorted(names.split()) == [
-        'mydiag',
+    assert sorted(names.split()) == sorted([
+        'consecdrydays',
+        'cvdp',
+        'ensclus',
+        'esmvaltool_preprocessor',
+        'shape_select',
+        'sleep',
+        'zonal_mean_nam',
         'perfmetrics',
-        'py_demo',
-        'rainfarm',
-        'rmse',
-        'sleep']
+        'blocking',
+        'stratosphere-troposphere',
+        'annularmodes',
+        'teleconnections',
+        'weather_regimes',
+        'preproc',
+    ])

@@ -6,8 +6,8 @@ from pywps import ComplexInput, ComplexOutput
 from pywps import Format, FORMATS
 from pywps.app.Common import Metadata
 
-from copernicus import runner
-from copernicus import util
+from .. import runner
+from .. import util
 
 import logging
 LOGGER = logging.getLogger("PYWPS")
@@ -108,33 +108,40 @@ class CVDP(Process):
             output_format='png',
         )
 
-        # run diag
-        response.update_status("running diagnostic ...", 20)
-        logfile, plot_dir, work_dir, run_dir = runner.run(recipe_file, config_file)
-
         # recipe output
         response.outputs['recipe'].output_format = FORMATS.TEXT
         response.outputs['recipe'].file = recipe_file
+
+        # run diag
+        response.update_status("running diagnostic ...", 20)
+        result = runner.run(recipe_file, config_file)
+        logfile = result['logfile']
+        workdir = result['work_dir']
 
         # log output
         response.outputs['log'].output_format = FORMATS.TEXT
         response.outputs['log'].file = logfile
 
+        if not result['success']:
+            LOGGER.exception('esmvaltool failed!')
+            response.update_status("exception occured: ", 100)
+            return response
+
         # result plot
         response.update_status("collecting output ...", 80)
         response.outputs['plot'].output_format = Format('application/png')
         response.outputs['plot'].file = runner.get_output(
-            work_dir,
+            workdir,
             path_filter=os.path.join('diagnostic1', 'cvdp'),
             name_filter="pr.mean.ann",
             output_format="png")
 
-#        response.outputs['data'].output_format = FORMATS.NETCDF
-#        response.outputs['data'].file = runner.get_output(
-#            work_dir,
-#            path_filter=os.path.join('diagnostic1', 'script1'),
-#            name_filter="CMIP5*",
-#            output_format="nc")
+    #    response.outputs['data'].output_format = FORMATS.NETCDF
+    #    response.outputs['data'].file = runner.get_output(
+    #        work_dir,
+    #        path_filter=os.path.join('diagnostic1', 'script1'),
+    #        name_filter="CMIP5*",
+    #        output_format="nc")
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
