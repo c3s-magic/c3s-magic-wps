@@ -4,21 +4,24 @@ from .wps_consecdrydays import ConsecDryDays
 from .wps_cvdp import CVDP
 from .wps_ensclus import EnsClus
 from .wps_shapeselect import ShapeSelect
-from .wps_zmnam import ZonalMeanNAM
 from .wps_perfmetrics import Perfmetrics
 from .wps_rainfarm import RainFarm
 from .wps_rmse import RMSE
+from .wps_blocking import Blocking
+from .wps_stratosphere_troposphere import StratosphereTroposphere
 
 #Disabled for now
 # MyDiag(),
-# Perfmetrics(),
+# 
+# ConsecDryDays(),
 
 processes = [
     Sleep(),
     PythonExample(),
-#    ConsecDryDays(),
     CVDP(),
     EnsClus(),
     ShapeSelect(),
-    ZonalMeanNAM(),
+    Perfmetrics(),
+    Blocking(),
+    StratosphereTroposphere(),
 ]

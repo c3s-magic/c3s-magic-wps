@@ -1,13 +1,13 @@
 import os
 
-from pywps import Process
-from pywps import LiteralInput, LiteralOutput
-from pywps import ComplexInput, ComplexOutput
-from pywps import Format, FORMATS
+from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process
 from pywps.app.Common import Metadata
+from pywps.response.status import WPS_STATUS
 
-from copernicus import runner
-from copernicus import util
+from .utils import default_outputs, model_experiment_ensemble
+
+from .. import runner
+from .. import util
 
 import logging
 LOGGER = logging.getLogger("PYWPS")
@@ -16,37 +16,16 @@ LOGGER = logging.getLogger("PYWPS")
 class Perfmetrics(Process):
     def __init__(self):
         inputs = [
-            LiteralInput('model', 'Model',
-                         abstract='Choose a model like MPI-ESM-LR.',
-                         data_type='string',
-                         allowed_values=['MPI-ESM-LR', 'MPI-ESM-MR'],
-                         default='MPI-ESM-LR'),
-            LiteralInput('experiment', 'Experiment',
-                         abstract='Choose an experiment like historical.',
-                         data_type='string',
-                         allowed_values=['historical', 'rcp26', 'rcp45', 'rcp85'],
-                         default='historical'),
-            LiteralInput('ensemble', 'Ensemble',
-                         abstract='Choose an ensemble like r1i1p1.',
-                         data_type='string',
-                         allowed_values=['r1i1p1', 'r2i1p1', 'r3i1p1'],
-                         default='r1i1p1'),
-            LiteralInput('start_year', 'Start year', data_type='integer',
-                         abstract='Start year of model data.',
-                         default="2000"),
-            LiteralInput('end_year', 'End year', data_type='integer',
-                         abstract='End year of model data.',
-                         default="2001"),
+            *model_experiment_ensemble(
+                models=['MPI-ESM-LR', 'MPI-ESM-MR'],
+                experiments=['historical', 'rcp26', 'rcp45', 'rcp85'],
+                ensembles=['r1i1p1', 'r2i1p1', 'r3i1p1'],
+                start_end_year=(1850, 2005),
+                start_end_defaults=(2000, 2001)
+            ),
         ]
         outputs = [
-            ComplexOutput('namelist', 'namelist',
-                          abstract='ESMValTool namelist used for processing.',
-                          as_reference=True,
-                          supported_formats=[Format('text/plain')]),
-            ComplexOutput('log', 'Log File',
-                          abstract='Log File of ESMValTool processing.',
-                          as_reference=True,
-                          supported_formats=[Format('text/plain')]),
+            *default_outputs(),
             ComplexOutput('output', 'Output plot',
                           abstract='Generated output plot of ESMValTool processing.',
                           as_reference=True,
@@ -99,34 +78,44 @@ class Perfmetrics(Process):
             ensemble=request.inputs['ensemble'][0].data,
         )
 
-        # generate namelist
-        response.update_status("generate namelist ...", 10)
-        namelist_file, config_file = runner.generate_namelist(
+        # generate recipy
+        response.update_status("generate recipy ...", 10)
+        recipe_file, config_file = runner.generate_recipe(
+            workdir=self.workdir,
             diag='perfmetrics',
             constraints=constraints,
             start_year=request.inputs['start_year'][0].data,
             end_year=request.inputs['end_year'][0].data,
-            output_format='pdf',
-            workdir=self.workdir,
+            output_format='pdf'
         )
 
-        # run diag
-        response.update_status("running diag ...", 20)
-        logfile, output_dir = runner.run(namelist_file, config_file)
+        # recipe output
+        response.outputs['recipe'].output_format = FORMATS.TEXT
+        response.outputs['recipe'].file = recipe_file
 
-        # namelist output
-        response.outputs['namelist'].output_format = FORMATS.TEXT
-        response.outputs['namelist'].file = namelist_file
+        # run diag
+        response.update_status("running diagnostic ...", 20)
+        result = runner.run(recipe_file, config_file)
+        logfile = result['logfile']
+        work_dir = result['work_dir']
 
         # log output
         response.outputs['log'].output_format = FORMATS.TEXT
         response.outputs['log'].file = logfile
 
+        response.outputs['success'].data = result['success']
+
+        if not result['success']:
+            LOGGER.exception('esmvaltool failed!')
+            response.update_status("exception occured: " + result['exception'], 100)
+            response.status = WPS_STATUS.FAILED
+            return response
+
         # result plot
         response.update_status("collect output plot ...", 90)
         response.outputs['output'].output_format = Format('application/pdf')
         response.outputs['output'].file = runner.get_output(
-            output_dir,
+            work_dir,
             path_filter=os.path.join('ta850', 'cycle'),
             name_filter="ta_cycle_monthlyclim__Glob",
             output_format="pdf")

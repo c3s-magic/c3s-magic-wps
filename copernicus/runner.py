@@ -43,6 +43,7 @@ def run(recipe_file, config_file):
 
     cfg['synda_download'] = False
 
+    exception = None
     try:
         LOGGER.info("run esmvaltool ...")
         process_recipe(recipe_file=recipe_file, config_user=cfg)
@@ -55,10 +56,12 @@ def run(recipe_file, config_file):
         #sys.exit(1)
         #raise Exception('esmvaltool failed: {0}'.format(err))
         success = False
+        exception = str(err)
     # find the log
     logfile = os.path.join(cfg['run_dir'], 'main_log.txt')
     return {
         'success': success,
+        'exception': exception,
         'logfile': logfile,
         'plot_dir': cfg['plot_dir'],
         'work_dir': cfg['work_dir'],

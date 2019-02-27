@@ -13,18 +13,31 @@ documentation:
     - arno_en
     - cagn_ch  
 
-  references:
+  maintainer:
+    - serv_fe
+
+  references: 
     - baldwin09qjrms
 
   projects:
     - c3s-magic
 
 datasets:
-  - {dataset: {{constraints['model']}},  project: CMIP5,  mip: {{constraints['cmor_table']}},  exp: {{constraints['experiment']}},  ensemble: {{constraints['ensemble']}},  start_year: {{start_year}},  end_year: {{end_year}}}
-
-#original recipe settings
-#  - {dataset: MPI-ESM-MR, project: CMIP5, mip: day, exp: amip, ensemble: r1i1p1, start_year: 2005, end_year: 2008}
-#- {model: MPI-ESM-MR, project: CMIP5, mip: day, exp: historical, ensemble: r1i1p1, start_year: 1979, end_year: 2008}
+  - dataset: {{constraints['model']}}, 
+    project: CMIP5
+    mip: day
+    exp: {{constraints['experiment']}},
+    ensemble: {{constraints['ensemble']}},
+    start_year: {{start_year}},
+    end_year: {{end_year}}
+  {# - dataset: MPI-ESM-MR
+    project: CMIP5
+    mip: day
+    exp: amip
+    ensemble: r1i1p1
+    start_year: 1979
+    end_year: 2008 #}
+    #- {model: MPI-ESM-MR, project: CMIP5, mip: day, exp: historical, ensemble: r1i1p1, start_year: 1979, end_year: 2008} #}
 
 preprocessors:
   preproc:
@@ -33,7 +46,7 @@ preprocessors:
       scheme: nearest
     regrid:  
       target_grid: 3x3 
-      scheme: linear
+      scheme: area_weighted
     extract_region:
       start_longitude: 0.
       end_longitude: 360.

@@ -1,54 +1,35 @@
+import logging
 import os
 
-from pywps import Process
-from pywps import LiteralInput, LiteralOutput
-from pywps import ComplexInput, ComplexOutput
-from pywps import Format, FORMATS
+from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process
 from pywps.app.Common import Metadata
+from pywps.response.status import WPS_STATUS
 
-from copernicus import runner
-from copernicus import util
+from .utils import default_outputs, model_experiment_ensemble
 
-import logging
+from .. import runner, util
+
 LOGGER = logging.getLogger("PYWPS")
 
 
-class ZonalMeanNAM(Process):
+class StratosphereTroposphere(Process):
     def __init__(self):
         inputs = [
-            LiteralInput('model', 'Model',
-                         abstract='Choose a model like MPI-ESM-MR.',
+            *model_experiment_ensemble(
+                models=['EC-EARTH'],
+                experiments=['historical'],
+                ensembles=['r2i1p1'],
+                start_end_year=(1850, 2005),
+                start_end_defaults=(1980, 1989)
+            ),
+            LiteralInput('season', 'Season',
+                         abstract='Choose a season like DJF.',
                          data_type='string',
-                         allowed_values=['MPI-ESM-MR'],
-                         default='MPI-ESM-MR',
-			 min_occurs=1,
-			 max_occurs=1),
-            LiteralInput('experiment', 'Experiment',
-                         abstract='Choose an experiment like historical.',
-                         data_type='string',
-                         allowed_values=['amip', 'historical'],
-                         default='amip'),
-            LiteralInput('ensemble', 'Ensemble',
-                         abstract='Choose an ensemble like r1i1p1.',
-                         data_type='string',
-                         allowed_values=['r1i1p1'],
-                         default='r1i1p1'),
-            LiteralInput('start_year', 'Start year (from 1979)', data_type='integer',
-                         abstract='Start year of model data.',
-                         default="2000"),
-            LiteralInput('end_year', 'End year (till 2005)', data_type='integer',
-                         abstract='End year of model data.',
-                         default="2005"),
+                         allowed_values=['DJF', 'MAM', 'JJA', 'SON', 'ALL'],
+                         default='DJF'),
         ]
         outputs = [
-            ComplexOutput('recipe', 'recipe',
-                          abstract='ESMValTool recipe used for processing.',
-                          as_reference=True,
-                          supported_formats=[Format('text/plain')]),
-            ComplexOutput('log', 'Log File',
-                          abstract='Log File of ESMValTool processing.',
-                          as_reference=True,
-                          supported_formats=[Format('text/plain')]),
+            *default_outputs(),
             ComplexOutput('plot_pdf', 'Output plot PDF',
                           abstract='Generated output plot of ESMValTool processing.',
                           as_reference=True,
@@ -61,22 +42,18 @@ class ZonalMeanNAM(Process):
                           abstract='Generated output plot of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[Format('image/png')]),
-#            ComplexOutput('data', 'Data',
-#                          abstract='Generated output data of ESMValTool processing.',
-#                          as_reference=True,
-#                          supported_formats=[FORMATS.NETCDF]),
-             ComplexOutput('archive', 'Archive',
-                          abstract='The complete output of the ESMValTool processing as an zip archive.',
-                          as_reference=True,
-                          supported_formats=[Format('application/zip')]),
+            ComplexOutput('archive', 'Archive',
+                        abstract='The complete output of the ESMValTool processing as an zip archive.',
+                        as_reference=True,
+                        supported_formats=[Format('application/zip')]),
         ]
 
-        super(ZonalMeanNAM, self).__init__(
+        super(StratosphereTroposphere, self).__init__(
             self._handler,
-            identifier="zonal_mean_nam",
-            title="Zonal Mean NAM",
+            identifier="stratosphere-troposphere",
+            title="Stratosphere-troposphere coupling and annular modes indices (ZMNAM)",
             version=runner.VERSION,
-            abstract="Zonal Mean NAM",  # noqa
+            abstract="Stratosphere-troposphere coupling and annular modes indices (ZMNAM)",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
@@ -100,8 +77,6 @@ class ZonalMeanNAM(Process):
         constraints = dict(
             model=request.inputs['model'][0].data,
             experiment=request.inputs['experiment'][0].data,
-            time_frequency='day',
-            cmor_table='day',
             ensemble=request.inputs['ensemble'][0].data,
         )
 
@@ -116,17 +91,27 @@ class ZonalMeanNAM(Process):
             output_format='png',
         )
 
-        # run diag
-        response.update_status("running diagnostic ...", 20)
-        logfile, plot_dir, work_dir, run_dir = runner.run(recipe_file, config_file)
-
         # recipe output
         response.outputs['recipe'].output_format = FORMATS.TEXT
         response.outputs['recipe'].file = recipe_file
 
+        # run diag
+        response.update_status("running diagnostic ...", 20)
+        result = runner.run(recipe_file, config_file)
+        logfile = result['logfile']
+        plot_dir = result['plot_dir']
+
+        response.outputs['success'].data = result['success']
+
         # log output
         response.outputs['log'].output_format = FORMATS.TEXT
         response.outputs['log'].file = logfile
+
+        if not result['success']:
+            LOGGER.exception('esmvaltool failed!')
+            response.update_status("exception occured: " + result['exception'], 100)
+            response.status = WPS_STATUS.FAILED
+            return response
 
         # result plot
         response.update_status("collecting output ...", 80)
@@ -150,13 +135,6 @@ class ZonalMeanNAM(Process):
             path_filter=os.path.join('zmnam', 'main'),
             name_filter="CMIP5*25000Pa_mo_ts",
             output_format="png")
-
-#        response.outputs['data'].output_format = FORMATS.NETCDF
-#        response.outputs['data'].file = runner.get_output(
-#            work_dir,
-#            path_filter=os.path.join('zmnam', 'main'),
-#            name_filter="CMIP5*",
-#            output_format="nc")
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
