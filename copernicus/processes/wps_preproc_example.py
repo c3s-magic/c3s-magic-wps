@@ -17,8 +17,28 @@ class PreprocessExample(Process):
         inputs = [
             *model_experiment_ensemble(
                 models=['EC-EARTH'],
+                model_name='model1',
                 experiments=['historical'],
                 ensembles=['r1i1p1'],
+                ensemble_name='ensemble1',
+                start_end_year=(1850, 2005),
+                start_end_defaults=(1980, 1989)
+            ),
+            *model_experiment_ensemble(
+                models=['EC-EARTH'],
+                model_name='model2',
+                experiments=['historical'],
+                ensembles=['r1i1p1'],
+                ensemble_name='ensemble2',
+                start_end_year=(1850, 2005),
+                start_end_defaults=(1980, 1989)
+            ),
+            *model_experiment_ensemble(
+                models=['EC-EARTH'],
+                model_name='model3',
+                experiments=['historical'],
+                ensembles=['r1i1p1'],
+                ensemble_name='ensemble3',
                 start_end_year=(1850, 2005),
                 start_end_defaults=(1980, 1989)
             ),
@@ -47,7 +67,7 @@ class PreprocessExample(Process):
         super(PreprocessExample, self).__init__(
             self._handler,
             identifier="preproc",
-            title="Python Demo",
+            title="Preprocessing Demo",
             version=runner.VERSION,
             abstract="Generates a plot for temperature using ESMValTool."
              " The default run uses the following CMIP5 data:"
@@ -90,7 +110,7 @@ class PreprocessExample(Process):
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
-            diag='python',
+            diag='preproc',
             constraints=constraints,
             start_year=request.inputs['start_year'][0].data,
             end_year=request.inputs['end_year'][0].data,

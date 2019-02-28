@@ -19,13 +19,13 @@ from .wps_weather_regimes import WeatherRegimes
 # RainFarm(),
 # RMSE(),
 # ConsecDryDays(),
+# ShapeSelect(),
+# Perfmetrics(),
 
 processes = [
     CVDP(),
     EnsClus(),
-    ShapeSelect(),
     Sleep(),
-    Perfmetrics(),
     Blocking(),
     PreprocessExample(),
     StratosphereTroposphere(),

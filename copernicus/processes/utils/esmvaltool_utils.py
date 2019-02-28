@@ -46,14 +46,17 @@ def default_outputs():
 
 
 def model_experiment_ensemble(models=['MPI-ESM-LR'],
+                              model_name='Model',
                               experiments=['historical'],
+                              experiment_name='Experiment',
                               ensembles=['r1i1p1'],
+                              ensemble_name='Ensemble',
                               start_end_year=(1850, 2005),
                               start_end_defaults=(1950, 2005)):
     return (
         LiteralInput(
-            'model',
-            'Model',
+            model_name.lower(),
+            model_name,
             abstract='Choose a model like {}.'.format(models[0]),
             data_type='string',
             allowed_values=models,
@@ -61,16 +64,16 @@ def model_experiment_ensemble(models=['MPI-ESM-LR'],
             min_occurs=1,
             max_occurs=1),
         LiteralInput(
-            'experiment',
-            'Experiment',
+            experiment_name.lower(),
+            experiment_name,
             abstract='Choose an experiment like {}.'.format(
                 experiments[0]),
             data_type='string',
             allowed_values=experiments,
             default=experiments[0]),
         LiteralInput(
-            'ensemble',
-            'Ensemble',
+            ensemble_name.lower(),
+            ensemble_name,
             abstract='Choose an ensemble like {}.'.format(ensembles[0]),
             data_type='string',
             allowed_values=ensembles,

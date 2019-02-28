@@ -13,13 +13,13 @@ def test_wps_caps():
                             '/wps:Process'
                             '/ows:Identifier')
     # 'consecdrydays',
+    # 'shape_select',
+    # 'perfmetrics',
     expected_caps = sorted([
         'cvdp',
         'ensclus',
         'preproc',
-        'shape_select',
         'sleep',
-        'perfmetrics',
         'blocking',
         'stratosphere-troposphere',
         'annularmodes',
