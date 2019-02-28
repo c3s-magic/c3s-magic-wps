@@ -11,18 +11,15 @@ import click
 from jinja2 import Environment, PackageLoader
 from pywps import configuration
 
-from . import wsgi
+from copernicus import wsgi
 from six.moves.urllib.parse import urlparse
-
 
 PID_FILE = os.path.abspath(os.path.join(os.path.curdir, "pywps.pid"))
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
 template_env = Environment(
-    loader=PackageLoader('copernicus', 'templates'),
-    autoescape=True
-)
+    loader=PackageLoader('copernicus', 'templates'), autoescape=True)
 
 
 def write_user_config(**kwargs):
@@ -125,22 +122,57 @@ def stop():
 
 
 @cli.command()
-@click.option('--config', '-c', metavar='PATH', help='path to pywps configuration file.')
-@click.option('--bind-host', '-b', metavar='IP-ADDRESS', default='127.0.0.1',
-              help='IP address used to bind service.')
+@click.option(
+    '--config', '-c', metavar='PATH', help='path to pywps configuration file.')
+@click.option(
+    '--bind-host',
+    '-b',
+    metavar='IP-ADDRESS',
+    default='127.0.0.1',
+    help='IP address used to bind service.')
 @click.option('--daemon', '-d', is_flag=True, help='run in daemon mode.')
-@click.option('--hostname', metavar='HOSTNAME', default='localhost', help='hostname in PyWPS configuration.')
-@click.option('--port', metavar='PORT', default='5000', help='port in PyWPS configuration.')
-@click.option('--maxsingleinputsize', default='200mb', help='maxsingleinputsize in PyWPS configuration.')
-@click.option('--maxprocesses', metavar='INT', default='10', help='maxprocesses in PyWPS configuration.')
-@click.option('--parallelprocesses', metavar='INT', default='2', help='parallelprocesses in PyWPS configuration.')
-@click.option('--log-level', metavar='LEVEL', default='INFO', help='log level in PyWPS configuration.')
-@click.option('--log-file', metavar='PATH', default='pywps.log', help='log file in PyWPS configuration.')
-@click.option('--database', default='sqlite:///pywps-logs.sqlite', help='database in PyWPS configuration')
+@click.option(
+    '--hostname',
+    metavar='HOSTNAME',
+    default='localhost',
+    help='hostname in PyWPS configuration.')
+@click.option(
+    '--port',
+    metavar='PORT',
+    default='5000',
+    help='port in PyWPS configuration.')
+@click.option(
+    '--maxsingleinputsize',
+    default='200mb',
+    help='maxsingleinputsize in PyWPS configuration.')
+@click.option(
+    '--maxprocesses',
+    metavar='INT',
+    default='10',
+    help='maxprocesses in PyWPS configuration.')
+@click.option(
+    '--parallelprocesses',
+    metavar='INT',
+    default='2',
+    help='parallelprocesses in PyWPS configuration.')
+@click.option(
+    '--log-level',
+    metavar='LEVEL',
+    default='INFO',
+    help='log level in PyWPS configuration.')
+@click.option(
+    '--log-file',
+    metavar='PATH',
+    default='pywps.log',
+    help='log file in PyWPS configuration.')
+@click.option(
+    '--database',
+    default='sqlite:///pywps-logs.sqlite',
+    help='database in PyWPS configuration')
 @click.option('--rootpath', default='/tmp', help='Root path for computation')
-def start(config, bind_host, daemon, hostname, port,
-          maxsingleinputsize, maxprocesses, parallelprocesses,
-          log_level, log_file, database, rootpath):
+def start(config, bind_host, daemon, hostname, port, maxsingleinputsize,
+          maxprocesses, parallelprocesses, log_level, log_file, database,
+          rootpath):
     """Start PyWPS service.
     This service is by default available at http://localhost:5000/wps
     """
@@ -149,18 +181,19 @@ def start(config, bind_host, daemon, hostname, port,
     if os.path.exists(get_user_config_path()):
         cfgfiles.append(get_user_config_path())
     else:
-        cfgfiles.append(write_user_config(
-            wps_hostname=hostname,
-            wps_port=port,
-            wps_maxsingleinputsize=maxsingleinputsize,
-            wps_maxprocesses=maxprocesses,
-            wps_parallelprocesses=parallelprocesses,
-            wps_log_level=log_level,
-            wps_log_file=log_file,
-            wps_database=database,
-            wps_archive_root=os.path.join(rootpath, 'archive'),
-            wps_obs_root=os.path.join(rootpath, 'obs'),
-        ))
+        cfgfiles.append(
+            write_user_config(
+                wps_hostname=hostname,
+                wps_port=port,
+                wps_maxsingleinputsize=maxsingleinputsize,
+                wps_maxprocesses=maxprocesses,
+                wps_parallelprocesses=parallelprocesses,
+                wps_log_level=log_level,
+                wps_log_file=log_file,
+                wps_database=database,
+                wps_archive_root=os.path.join(rootpath, 'archive'),
+                wps_obs_root=os.path.join(rootpath, 'obs'),
+            ))
 
     if config:
         cfgfiles.append(config)
@@ -189,3 +222,7 @@ def start(config, bind_host, daemon, hostname, port,
     else:
         # no daemon
         _run(app, bind_host=bind_host)
+
+
+if __name__ == "__main__":
+    start()

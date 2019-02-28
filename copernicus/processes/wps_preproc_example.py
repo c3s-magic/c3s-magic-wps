@@ -118,7 +118,6 @@ class PreprocessExample(Process):
         if not result['success']:
             LOGGER.exception('esmvaltool failed!')
             response.update_status("exception occured: " + result['exception'], 100)
-            response.status = WPS_STATUS.FAILED
             return response
 
         # result plot

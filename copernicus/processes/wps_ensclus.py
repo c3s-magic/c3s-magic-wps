@@ -163,7 +163,6 @@ class EnsClus(Process):
             LOGGER.exception('esmvaltool failed!')
             response.update_status("exception occured: " + result['exception'],
                                    100)
-            response.status = WPS_STATUS.FAILED
             return response
 
         # result plot
