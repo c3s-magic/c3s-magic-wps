@@ -5,14 +5,14 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from copernicus.processes.utils import default_outputs, model_experiment_ensemble
+from .utils import default_outputs, model_experiment_ensemble
 
 from .. import runner, util
 
 LOGGER = logging.getLogger("PYWPS")
 
 
-class Teleconnections(Process):
+class WeatherRegimes(Process):
     def __init__(self):
         inputs = [
             *model_experiment_ensemble(
@@ -29,7 +29,7 @@ class Teleconnections(Process):
                          default='DJF'),
             LiteralInput('nclusters', 'nclusters',
                          abstract='Choose a number of clusters.',
-                         data_type='string',
+                         data_type='integer',
                          allowed_values=[4],
                          default=4),
         ]
@@ -45,7 +45,7 @@ class Teleconnections(Process):
                         supported_formats=[Format('application/zip')]),
         ]
 
-        super(Teleconnections, self).__init__(
+        super(WeatherRegimes, self).__init__(
             self._handler,
             identifier="weather_regimes",
             title="Run the teleconnections (eof) R scripts",

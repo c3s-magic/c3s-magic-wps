@@ -12,7 +12,7 @@ from .. import runner, util
 LOGGER = logging.getLogger("PYWPS")
 
 
-class Blocking(Process):
+class AnnularModes(Process):
     def __init__(self):
         inputs = [
             *model_experiment_ensemble(
@@ -22,15 +22,18 @@ class Blocking(Process):
                 start_end_year=(1850, 2005),
                 start_end_defaults=(1980, 1989)
             ),
-            LiteralInput('season', 'Season',
-                         abstract='Choose a season like DJF.',
-                         data_type='string',
-                         allowed_values=['DJF', 'MAM', 'JJA', 'SON', 'ALL'],
-                         default='DJF'),
         ]
         outputs = [
             *default_outputs(),
-            ComplexOutput('plot', 'Output plot',
+            ComplexOutput('plot_pdf', 'Output plot PDF',
+                          abstract='Generated output plot of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
+            ComplexOutput('plot_reg', 'Output plot REG',
+                          abstract='Generated output plot of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
+            ComplexOutput('plot_ts', 'Output plot TS',
                           abstract='Generated output plot of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[Format('image/png')]),
@@ -40,12 +43,12 @@ class Blocking(Process):
                         supported_formats=[Format('application/zip')]),
         ]
 
-        super(Blocking, self).__init__(
+        super(AnnularModes, self).__init__(
             self._handler,
-            identifier="blocking",
-            title="Run the blocking R scripts",
+            identifier="annularmodes",
+            title="Stratosphere-troposphere coupling and annular modes indices (ZMNAM)",
             version=runner.VERSION,
-            abstract="Run the blocking R scripts",
+            abstract="Stratosphere-troposphere coupling and annular modes indices (ZMNAM)",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
@@ -72,17 +75,12 @@ class Blocking(Process):
             ensemble=request.inputs['ensemble'][0].data,
         )
 
-        options = dict(
-            season=request.inputs['season'][0].data
-        )
-
         # generate recipe
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
-            diag='blocking',
+            diag='zmnam',
             constraints=constraints,
-            options=options,
             start_year=request.inputs['start_year'][0].data,
             end_year=request.inputs['end_year'][0].data,
             output_format='png',
@@ -96,7 +94,7 @@ class Blocking(Process):
         response.update_status("running diagnostic ...", 20)
         result = runner.run(recipe_file, config_file)
         logfile = result['logfile']
-        workdir = result['work_dir']
+        plot_dir = result['plot_dir']
 
         response.outputs['success'].data = result['success']
 
@@ -112,11 +110,25 @@ class Blocking(Process):
 
         # result plot
         response.update_status("collecting output ...", 80)
-        response.outputs['plot'].output_format = Format('application/png')
-        response.outputs['plot'].file = runner.get_output(
-            workdir,
-            path_filter=os.path.join('miles_diagnostics', 'miles_block'),
-            name_filter="*",
+        response.outputs['plot_pdf'].output_format = Format('application/png')
+        response.outputs['plot_pdf'].file = runner.get_output(
+            plot_dir,
+            path_filter=os.path.join('zmnam', 'main'),
+            name_filter="CMIP5*25000Pa_da_pdf",
+            output_format="png")
+
+        response.outputs['plot_reg'].output_format = Format('application/png')
+        response.outputs['plot_reg'].file = runner.get_output(
+            plot_dir,
+            path_filter=os.path.join('zmnam', 'main'),
+            name_filter="CMIP5*25000Pa_mo_reg",
+            output_format="png")
+
+        response.outputs['plot_ts'].output_format = Format('application/png')
+        response.outputs['plot_ts'].file = runner.get_output(
+            plot_dir,
+            path_filter=os.path.join('zmnam', 'main'),
+            name_filter="CMIP5*25000Pa_mo_ts",
             output_format="png")
 
         response.update_status("creating archive of diagnostic result ...", 90)

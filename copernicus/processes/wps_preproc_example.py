@@ -1,54 +1,35 @@
+import logging
 import os
 
-from pywps import Process
-from pywps import LiteralInput, LiteralOutput
-from pywps import ComplexInput, ComplexOutput
-from pywps import Format, FORMATS
+from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process
+from pywps.inout.literaltypes import make_allowedvalues
 from pywps.app.Common import Metadata
+from pywps.response.status import WPS_STATUS
 
-from copernicus import runner
-from copernicus import util
+from copernicus import runner, util
+from copernicus.processes.utils import default_outputs, model_experiment_ensemble
 
-import logging
 LOGGER = logging.getLogger("PYWPS")
 
 
-class PythonExample(Process):
+class PreprocessExample(Process):
     def __init__(self):
         inputs = [
-            LiteralInput('model', 'Model',
-                         abstract='Choose a model like MPI-ESM-LR.',
-                         data_type='string',
-                         allowed_values=['bcc-csm1-1', 'MPI-ESM-LR', 'GFDL-ESM2G'],
-                         default='MPI-ESM-LR',
-			 min_occurs=1,
-			 max_occurs=1),
-            LiteralInput('experiment', 'Experiment',
-                         abstract='Choose an experiment like historical.',
-                         data_type='string',
-                         allowed_values=['historical'],
-                         default='historical'),
-            LiteralInput('ensemble', 'Ensemble',
-                         abstract='Choose an ensemble like r1i1p1.',
-                         data_type='string',
-                         allowed_values=['r1i1p1'],
-                         default='r1i1p1'),
-            LiteralInput('start_year', 'Start year (from 1979)', data_type='integer',
-                         abstract='Start year of model data.',
-                         default="2000"),
-            LiteralInput('end_year', 'End year (till 2005)', data_type='integer',
-                         abstract='End year of model data.',
-                         default="2001"),
+            *model_experiment_ensemble(
+                models=['EC-EARTH'],
+                experiments=['historical'],
+                ensembles=['r1i1p1'],
+                start_end_year=(1850, 2005),
+                start_end_defaults=(1980, 1989)
+            ),
+            LiteralInput('extract_levels', 'Extraction levels',
+                         abstract='Choose an extraction level for the preprocessor.',
+                         data_type='float',
+                         #allowed_values=make_allowedvalues([0.0, 110000.0]),
+                         default=85000.0),
         ]
         outputs = [
-            ComplexOutput('recipe', 'recipe',
-                          abstract='ESMValTool recipe used for processing.',
-                          as_reference=True,
-                          supported_formats=[Format('text/plain')]),
-            ComplexOutput('log', 'Log File',
-                          abstract='Log File of ESMValTool processing.',
-                          as_reference=True,
-                          supported_formats=[Format('text/plain')]),
+            *default_outputs(),
             ComplexOutput('plot', 'Output plot',
                           abstract='Generated output plot of ESMValTool processing.',
                           as_reference=True,
@@ -63,9 +44,9 @@ class PythonExample(Process):
                           supported_formats=[Format('application/zip')]),
         ]
 
-        super(PythonExample, self).__init__(
+        super(PreprocessExample, self).__init__(
             self._handler,
-            identifier="esmvaltool_preprocessor",
+            identifier="preproc",
             title="Python Demo",
             version=runner.VERSION,
             abstract="Generates a plot for temperature using ESMValTool."
@@ -92,11 +73,17 @@ class PythonExample(Process):
 
         # build esgf search constraints
         constraints = dict(
-            model=request.inputs['model'][0].data,
+            model1=request.inputs['model1'][0].data,
+            ensemble1=request.inputs['ensemble1'][0].data,
+            model2=request.inputs['model2'][0].data,
+            ensemble2=request.inputs['ensemble2'][0].data,
+            model3=request.inputs['model3'][0].data,
+            ensemble3=request.inputs['ensemble3'][0].data,
             experiment=request.inputs['experiment'][0].data,
-            time_frequency='mon',
-            cmor_table='Amon',
-            ensemble=request.inputs['ensemble'][0].data,
+        )
+
+        options = dict(
+            extract_levels=request.inputs['extract_levels'][0].data
         )
 
         # generate recipe
@@ -108,19 +95,31 @@ class PythonExample(Process):
             start_year=request.inputs['start_year'][0].data,
             end_year=request.inputs['end_year'][0].data,
             output_format='png',
+            options=options
         )
-
-        # run diag
-        response.update_status("running diagnostic ...", 20)
-        logfile, plot_dir, work_dir, run_dir = runner.run(recipe_file, config_file)
 
         # recipe output
         response.outputs['recipe'].output_format = FORMATS.TEXT
         response.outputs['recipe'].file = recipe_file
 
+        # run diag
+        response.update_status("running diagnostic ...", 20)
+        result = runner.run(recipe_file, config_file)
+        logfile = result['logfile']
+        work_dir = result['work_dir']
+        plot_dir = result['plot_dir']
+
+        response.outputs['success'].data = result['success']
+
         # log output
         response.outputs['log'].output_format = FORMATS.TEXT
         response.outputs['log'].file = logfile
+
+        if not result['success']:
+            LOGGER.exception('esmvaltool failed!')
+            response.update_status("exception occured: " + result['exception'], 100)
+            response.status = WPS_STATUS.FAILED
+            return response
 
         # result plot
         response.update_status("collecting output ...", 80)

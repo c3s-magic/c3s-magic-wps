@@ -22,11 +22,6 @@ class StratosphereTroposphere(Process):
                 start_end_year=(1850, 2005),
                 start_end_defaults=(1980, 1989)
             ),
-            LiteralInput('season', 'Season',
-                         abstract='Choose a season like DJF.',
-                         data_type='string',
-                         allowed_values=['DJF', 'MAM', 'JJA', 'SON', 'ALL'],
-                         default='DJF'),
         ]
         outputs = [
             *default_outputs(),

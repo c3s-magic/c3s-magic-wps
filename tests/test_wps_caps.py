@@ -12,19 +12,20 @@ def test_wps_caps():
                             '/wps:ProcessOfferings'
                             '/wps:Process'
                             '/ows:Identifier')
-    assert sorted(names.split()) == sorted([
-        'consecdrydays',
+    # 'consecdrydays',
+    expected_caps = sorted([
         'cvdp',
         'ensclus',
-        'esmvaltool_preprocessor',
+        'preproc',
         'shape_select',
         'sleep',
-        'zonal_mean_nam',
         'perfmetrics',
         'blocking',
         'stratosphere-troposphere',
         'annularmodes',
         'teleconnections',
         'weather_regimes',
-        'preproc',
     ])
+    print(sorted(names.split()))
+    print(expected_caps)
+    assert sorted(names.split()) == expected_caps
