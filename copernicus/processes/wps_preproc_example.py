@@ -22,7 +22,7 @@ class PreprocessExample(Process):
                 ensembles=['r2i1p1'],
                 ensemble_name='ensemble1',
                 start_end_year=(1850, 2005),
-                start_end_defaults=(1980, 1989)
+                start_end_defaults=(2000, 2005)
             ),
             *model_experiment_ensemble(
                 models=['bcc-csm1-1'],
@@ -31,7 +31,7 @@ class PreprocessExample(Process):
                 ensembles=['r1i1p1'],
                 ensemble_name='ensemble2',
                 start_end_year=(1850, 2005),
-                start_end_defaults=(1980, 1989)
+                start_end_defaults=(2000, 2005)
             ),
             *model_experiment_ensemble(
                 models=['MPI-ESM-LR'],
@@ -40,7 +40,7 @@ class PreprocessExample(Process):
                 ensembles=['r1i1p1'],
                 ensemble_name='ensemble3',
                 start_end_year=(1850, 2005),
-                start_end_defaults=(1980, 1989)
+                start_end_defaults=(2000, 2005)
             ),
             LiteralInput('extract_levels', 'Extraction levels',
                          abstract='Choose an extraction level for the preprocessor.',
