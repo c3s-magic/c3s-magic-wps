@@ -45,6 +45,12 @@ def default_outputs():
             abstract='Log File of ESMValTool processing.',
             as_reference=True,
             supported_formats=[Format('text/plain')]),
+        ComplexOutput(
+            'debug_log',
+            'ESMValTool Debug File',
+            abstract='Debug Log File of ESMValTool processing.',
+            as_reference=True,
+            supported_formats=[Format('text/plain')]),
     )
 
 

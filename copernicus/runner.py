@@ -59,10 +59,12 @@ def run(recipe_file, config_file):
         exception = str(err)
     # find the log
     logfile = os.path.join(cfg['run_dir'], 'main_log.txt')
+    debug_logfile = os.path.join(cfg['run_dir'], 'main_log_debug.txt')
     return {
         'success': success,
         'exception': exception,
         'logfile': logfile,
+        'debug_logfile': debug_logfile,
         'plot_dir': cfg['plot_dir'],
         'work_dir': cfg['work_dir'],
         'run_dir': cfg['run_dir']

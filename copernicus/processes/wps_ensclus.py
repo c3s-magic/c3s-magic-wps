@@ -157,6 +157,10 @@ class EnsClus(Process):
         response.outputs['log'].output_format = FORMATS.TEXT
         response.outputs['log'].file = logfile
 
+        # debug log output
+        response.outputs['debug_log'].output_format = FORMATS.TEXT
+        response.outputs['debug_log'].file = result['debug_logfile']
+
         response.outputs['success'].data = result['success']
 
         if not result['success']:

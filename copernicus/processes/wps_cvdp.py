@@ -108,6 +108,10 @@ class CVDP(Process):
         response.outputs['log'].output_format = FORMATS.TEXT
         response.outputs['log'].file = logfile
 
+        # debug log output
+        response.outputs['debug_log'].output_format = FORMATS.TEXT
+        response.outputs['debug_log'].file = result['debug_logfile']
+
         if not result['success']:
             LOGGER.exception('esmvaltool failed!')
             response.update_status("exception occured!", 100)
