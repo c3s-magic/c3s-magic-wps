@@ -16,11 +16,11 @@ class StratosphereTroposphere(Process):
     def __init__(self):
         inputs = [
             *model_experiment_ensemble(
-                models=['EC-EARTH'],
-                experiments=['historical'],
-                ensembles=['r2i1p1'],
+                models=['MPI-ESM-MR'],
+                experiments=['amip'],
+                ensembles=['r1i1p1'],
                 start_end_year=(1850, 2005),
-                start_end_defaults=(1980, 1989)
+                start_end_defaults=(1979, 2008)
             ),
         ]
         outputs = [
@@ -57,8 +57,6 @@ class StratosphereTroposphere(Process):
                 Metadata('Media',
                          util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
                          role=util.WPS_ROLE_MEDIA),
-                Metadata('ESGF Testdata',
-                         'https://esgf1.dkrz.de/thredds/catalog/esgcet/7/cmip5.output1.MPI-M.MPI-ESM-LR.historical.mon.atmos.Amon.r1i1p1.v20120315.html?dataset=cmip5.output1.MPI-M.MPI-ESM-LR.historical.mon.atmos.Amon.r1i1p1.v20120315.ta_Amon_MPI-ESM-LR_historical_r1i1p1_199001-199912.nc'),  # noqa
             ],
             inputs=inputs,
             outputs=outputs,
