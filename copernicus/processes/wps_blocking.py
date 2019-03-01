@@ -110,15 +110,6 @@ class Blocking(Process):
         response.outputs['debug_log'].output_format = FORMATS.TEXT
         response.outputs['debug_log'].file = result['debug_logfile']
 
-        # Script log
-        response.outputs['script_log'].output_format = FORMATS.TEXT
-        response.outputs['script_log'].file = runner.get_output(
-            workdir,
-            path_filter=os.path.join('miles_diagnostics', 'miles_block'),
-            name_filter="log",
-            output_format="txt")
-
-
         if not result['success']:
             LOGGER.exception('esmvaltool failed!')
             response.update_status("exception occured: " + result['exception'], 100)

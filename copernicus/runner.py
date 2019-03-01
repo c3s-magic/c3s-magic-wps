@@ -110,11 +110,11 @@ def get_output(output_dir, path_filter, name_filter=None, output_format='pdf'):
     # output/recipe_20180130_111116/plots/diagnostic1/script1/MultiModelMean_T3M_ta_2001-2002_mean.pdf
     output_filter = os.path.join(
         output_dir, path_filter, '{0}.{1}'.format(name_filter, output_format))
-    LOGGER.debug("output_fitler %s", output_filter)
+    LOGGER.debug("output_filter %s", output_filter)
     matches = glob.glob(output_filter)
     if len(matches) == 0:
         LOGGER.info("output_dir=%s", output_dir)
-        raise Exception("no output found in output dir.")
+        raise Exception("no output found in output dir")
     elif len(matches) > 1:
         LOGGER.warn("more then one output found %s", matches)
     LOGGER.debug("output found=%s", matches[0])
