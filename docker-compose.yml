@@ -5,6 +5,8 @@ services:
     image: cp4cds/copernicus-wps-demo
     ports:
       - "5000:5000"
+    environment:
+      - "WPS_OUTPUT_URL=http://localhost:5000/wps"
 
 
 # docker-compose build

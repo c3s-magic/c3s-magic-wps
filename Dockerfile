@@ -30,6 +30,7 @@ RUN ["/bin/bash", "-c", "source activate wps && pip install -e ."]
 COPY . /opt/wps
 
 WORKDIR /opt/wps
+RUN rm .custom.cfg
 
 # Install WPS
 RUN ["/bin/bash", "-c", "source activate wps && python setup.py develop"]
@@ -37,7 +38,7 @@ RUN ["/bin/bash", "-c", "source activate wps && python setup.py develop"]
 # Start WPS service on port 5000 on 0.0.0.0
 EXPOSE 5000
 ENTRYPOINT ["/bin/bash", "-c"]
-CMD ["source activate wps && exec copernicus start -b 0.0.0.0 -c /opt/wps/etc/magic-docker.cfg"]
+CMD ["source activate wps && j2 /opt/wps/etc/magic-docker.cfg.j2 > /opt/wps/etc/magic-docker.cfg && exec copernicus start -b 0.0.0.0 -c /opt/wps/etc/magic-docker.cfg"]
 
 # docker build -t cp4cds/copernicus .
 # docker run -p 5000:5000 cp4cds/copernicus
