@@ -30,14 +30,14 @@ class Blocking(Process):
         ]
         outputs = [
             *default_outputs(),
-            ComplexOutput('plot', 'Output plot',
+            ComplexOutput('tm90_plot', 'Output plot',
                           abstract='Generated output plot of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[Format('image/png')]),
-            ComplexOutput('script_log', 'Script Log',
-                        abstract='Log of the blocking R script.',
-                        as_reference=True,
-                        supported_formats=[Format('text/plain')]),
+            ComplexOutput('blocking_plot', 'Blocking Events Frequency Plot',
+                          abstract='Generated output plot of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
             ComplexOutput('archive', 'Archive',
                         abstract='The complete output of the ESMValTool processing as an zip archive.',
                         as_reference=True,
@@ -117,11 +117,18 @@ class Blocking(Process):
 
         # result plot
         response.update_status("collecting output ...", 80)
-        response.outputs['plot'].output_format = Format('application/png')
-        response.outputs['plot'].file = runner.get_output(
-            workdir,
+        response.outputs['tm90_plot'].output_format = Format('application/png')
+        response.outputs['tm90_plot'].file = runner.get_output(
+            result['plot_dir'],
             path_filter=os.path.join('miles_diagnostics', 'miles_block'),
-            name_filter="*",
+            name_filter="TM90*",
+            output_format="png")
+        
+        response.outputs['blocking_plot'].output_format = Format('application/png')
+        response.outputs['blocking_plot'].file = runner.get_output(
+            result['plot_dir'],
+            path_filter=os.path.join('miles_diagnostics', 'miles_block'),
+            name_filter="BlockEvents*",
             output_format="png")
 
         response.update_status("creating archive of diagnostic result ...", 90)
