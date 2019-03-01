@@ -34,6 +34,10 @@ class Blocking(Process):
                           abstract='Generated output plot of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[Format('image/png')]),
+            ComplexOutput('script_log', 'Script Log',
+                        abstract='Log of the blocking R script.',
+                        as_reference=True,
+                        supported_formats=[Format('text/plain')]),
             ComplexOutput('archive', 'Archive',
                         abstract='The complete output of the ESMValTool processing as an zip archive.',
                         as_reference=True,
@@ -105,6 +109,15 @@ class Blocking(Process):
         # debug log output
         response.outputs['debug_log'].output_format = FORMATS.TEXT
         response.outputs['debug_log'].file = result['debug_logfile']
+
+        # Script log
+        response.outputs['script_log'].output_format = FORMATS.TEXT
+        response.outputs['script_log'].file = runner.get_output(
+            workdir,
+            path_filter=os.path.join('miles_diagnostics', 'miles_block'),
+            name_filter="log",
+            output_format="txt")
+
 
         if not result['success']:
             LOGGER.exception('esmvaltool failed!')
