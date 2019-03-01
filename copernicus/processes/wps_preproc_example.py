@@ -19,13 +19,13 @@ class PreprocessExample(Process):
                 models=['EC-EARTH'],
                 model_name='model1',
                 experiments=['historical'],
-                ensembles=['r1i1p1'],
+                ensembles=['r2i1p1'],
                 ensemble_name='ensemble1',
                 start_end_year=(1850, 2005),
                 start_end_defaults=(1980, 1989)
             ),
             *model_experiment_ensemble(
-                models=['EC-EARTH'],
+                models=['bcc-csm1-1'],
                 model_name='model2',
                 experiments=['historical'],
                 ensembles=['r1i1p1'],
@@ -34,7 +34,7 @@ class PreprocessExample(Process):
                 start_end_defaults=(1980, 1989)
             ),
             *model_experiment_ensemble(
-                models=['EC-EARTH'],
+                models=['MPI-ESM-LR'],
                 model_name='model3',
                 experiments=['historical'],
                 ensembles=['r1i1p1'],

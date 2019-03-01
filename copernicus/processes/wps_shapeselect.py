@@ -17,7 +17,7 @@ class ShapeSelect(Process):
     def __init__(self):
         inputs = [
             LiteralInput('model', 'Model',
-                         abstract='Choose a model like MPI-ESM-LR.',
+                         abstract='Choose a model like bcc-csm1-1.',
                          data_type='string',
                          allowed_values=['bcc-csm1-1'],
                          default='bcc-csm1-1',

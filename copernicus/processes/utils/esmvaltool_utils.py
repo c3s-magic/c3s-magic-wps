@@ -29,7 +29,10 @@ def year_ranges(start_end_year, start_end_defaults):
 
 def default_outputs():
     return (
-        LiteralOutput('success', 'Success', data_type='string'),
+        LiteralOutput(
+            'success',
+            'Success',
+            data_type='string'),
         ComplexOutput(
             'recipe',
             'recipe',

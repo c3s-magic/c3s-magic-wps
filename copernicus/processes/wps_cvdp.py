@@ -110,8 +110,7 @@ class CVDP(Process):
 
         if not result['success']:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'],
-                                   100)
+            response.update_status("exception occured!", 100)
             return response
 
         # result plot
