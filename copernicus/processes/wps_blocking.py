@@ -20,28 +20,36 @@ class Blocking(Process):
                 experiments=['historical'],
                 ensembles=['r2i1p1'],
                 start_end_year=(1850, 2005),
-                start_end_defaults=(1980, 1989)
-            ),
-            LiteralInput('season', 'Season',
-                         abstract='Choose a season like DJF.',
-                         data_type='string',
-                         allowed_values=['DJF', 'MAM', 'JJA', 'SON', 'ALL'],
-                         default='DJF'),
+                start_end_defaults=(1980, 1989)),
+            LiteralInput(
+                'season',
+                'Season',
+                abstract='Choose a season like DJF.',
+                data_type='string',
+                allowed_values=['DJF', 'MAM', 'JJA', 'SON', 'ALL'],
+                default='DJF'),
         ]
         outputs = [
             *default_outputs(),
-            ComplexOutput('tm90_plot', 'Output plot',
-                          abstract='Generated output plot of ESMValTool processing.',
-                          as_reference=True,
-                          supported_formats=[Format('image/png')]),
-            ComplexOutput('blocking_plot', 'Blocking Events Frequency Plot',
-                          abstract='Generated output plot of ESMValTool processing.',
-                          as_reference=True,
-                          supported_formats=[Format('image/png')]),
-            ComplexOutput('archive', 'Archive',
-                        abstract='The complete output of the ESMValTool processing as an zip archive.',
-                        as_reference=True,
-                        supported_formats=[Format('application/zip')]),
+            ComplexOutput(
+                'tm90_plot',
+                'Output plot',
+                abstract='Generated output plot of ESMValTool processing.',
+                as_reference=True,
+                supported_formats=[Format('image/png')]),
+            ComplexOutput(
+                'blocking_plot',
+                'Blocking Events Frequency Plot',
+                abstract='Generated output plot of ESMValTool processing.',
+                as_reference=True,
+                supported_formats=[Format('image/png')]),
+            ComplexOutput(
+                'archive',
+                'Archive',
+                abstract=
+                'The complete output of the ESMValTool processing as an zip archive.',
+                as_reference=True,
+                supported_formats=[Format('application/zip')]),
         ]
 
         super(Blocking, self).__init__(
@@ -52,12 +60,14 @@ class Blocking(Process):
             abstract="Run the blocking R scripts",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata('Documentation',
-                         'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
-                         role=util.WPS_ROLE_DOC),
-                Metadata('Media',
-                         util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
-                         role=util.WPS_ROLE_MEDIA),
+                Metadata(
+                    'Documentation',
+                    'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
+                    role=util.WPS_ROLE_DOC),
+                Metadata(
+                    'Media',
+                    util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
+                    role=util.WPS_ROLE_MEDIA),
             ],
             inputs=inputs,
             outputs=outputs,
@@ -74,19 +84,19 @@ class Blocking(Process):
             ensemble=request.inputs['ensemble'][0].data,
         )
 
-        options = dict(
-            season=request.inputs['season'][0].data
-        )
+        options = dict(season=request.inputs['season'][0].data)
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
+        start_year = request.inputs['start_year'][0].data
+        end_year = request.inputs['end_year'][0].data
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
             diag='miles_blocking',
             constraints=constraints,
             options=options,
-            start_year=request.inputs['start_year'][0].data,
-            end_year=request.inputs['end_year'][0].data,
+            start_year=start_year,
+            end_year=end_year,
             output_format='png',
         )
 
@@ -112,29 +122,43 @@ class Blocking(Process):
 
         if not result['success']:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'], 100)
+            response.update_status("exception occured: " + result['exception'],
+                                   100)
             return response
 
-        # result plot
-        response.update_status("collecting output ...", 80)
-        response.outputs['tm90_plot'].output_format = Format('application/png')
-        response.outputs['tm90_plot'].file = runner.get_output(
-            result['plot_dir'],
-            path_filter=os.path.join('miles_diagnostics', 'miles_block'),
-            name_filter="TM90*",
-            output_format="png")
-        
-        response.outputs['blocking_plot'].output_format = Format('application/png')
-        response.outputs['blocking_plot'].file = runner.get_output(
-            result['plot_dir'],
-            path_filter=os.path.join('miles_diagnostics', 'miles_block'),
-            name_filter="BlockEvents*",
-            output_format="png")
+        subdir = os.path.join(constraints['model'], constraints['experiment'],
+                              constraints['ensemble'],
+                              "{}_{}".format(start_year, end_year),
+                              options['seasons'], 'Block')
+        try:
+            # result plot
+            response.update_status("collecting output ...", 80)
+            response.outputs['tm90_plot'].output_format = Format('application/png')
+            response.outputs['tm90_plot'].file = runner.get_output(
+                result['plot_dir'],
+                path_filter=os.path.join('miles_diagnostics', 'miles_block',
+                                        subdir),
+                name_filter="TM90*",
+                output_format="png")
 
-        response.update_status("creating archive of diagnostic result ...", 90)
+            response.outputs['blocking_plot'].output_format = Format(
+                'application/png')
+            response.outputs['blocking_plot'].file = runner.get_output(
+                result['plot_dir'],
+                path_filter=os.path.join('miles_diagnostics', 'miles_block',
+                                        subdir),
+                name_filter="BlockEvents*",
+                output_format="png")
 
-        response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'), 'diagnostic_result.zip')
+            response.update_status("creating archive of diagnostic result ...", 90)
+
+            response.outputs['archive'].output_format = Format('application/zip')
+            response.outputs['archive'].file = runner.compress_output(
+                os.path.join(self.workdir, 'output'), 'diagnostic_result.zip')
+        except Exception as e:
+            response.update_status("exception occured: " + str(e),
+                                   100)
+            return response
 
         response.update_status("done.", 100)
         return response
