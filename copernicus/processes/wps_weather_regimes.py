@@ -33,12 +33,21 @@ class WeatherRegimes(Process):
                          allowed_values=[4],
                          default=4),
         ]
+        plots = [
+            ComplexOutput('plot{}'.format(i),
+                          'Regime{} plot'.format(i),
+                          abstract='Regime {} plot.'.format(i),
+                          as_reference=True,
+                          supported_formats=[Format('image/png')])
+            for i in range(1, 5)
+        ]
         outputs = [
             *default_outputs(),
-            ComplexOutput('plot', 'Output plot',
-                          abstract='Generated output plot of ESMValTool processing.',
+            *plots,
+            ComplexOutput('data', 'Regime Data',
+                          abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
-                          supported_formats=[Format('image/png')]),
+                          supported_formats=[FORMATS.NETCDF]),
             ComplexOutput('archive', 'Archive',
                         abstract='The complete output of the ESMValTool processing as an zip archive.',
                         as_reference=True,
@@ -120,7 +129,7 @@ class WeatherRegimes(Process):
         subdir = os.path.join(constraints['model'], constraints['experiment'],
                               constraints['ensemble'],
                               "{}_{}".format(start_year, end_year),
-                              options['season'], 'Block')
+                              options['season'], 'Regimes')
         try:
             self.get_outputs(result, subdir, response)
         except Exception as e:
@@ -137,9 +146,18 @@ class WeatherRegimes(Process):
     def get_outputs(self, result, subdir, response):
         # result plot
         response.update_status("collecting output ...", 80)
-        response.outputs['plot'].output_format = Format('application/png')
-        response.outputs['plot'].file = runner.get_output(
+        for i in range(1,5):
+            key = 'plot{}'.format(i)
+            response.outputs[key].output_format = Format('application/png')
+            response.outputs[key].file = runner.get_output(
+                result['plot_dir'],
+                path_filter=os.path.join('miles_diagnostics', 'miles_regimes', subdir),
+                name_filter="Regime{}_*".format(i),
+                output_format="png")
+        
+        response.outputs['data'].output_format = FORMATS.NETCDF
+        response.outputs['data'].file = runner.get_output(
             result['work_dir'],
-            path_filter=os.path.join('miles_diagnostics', 'miles_eof', subdir),
-            name_filter="*",
-            output_format="png")
+            path_filter=os.path.join('miles_diagnostics', 'miles_regimes', subdir),
+            name_filter="RegimesPattern*",
+            output_format="nc")
