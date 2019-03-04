@@ -129,7 +129,7 @@ class Blocking(Process):
         subdir = os.path.join(constraints['model'], constraints['experiment'],
                               constraints['ensemble'],
                               "{}_{}".format(start_year, end_year),
-                              options['seasons'], 'Block')
+                              options['season'], 'Block')
         try:
             # result plot
             response.update_status("collecting output ...", 80)
