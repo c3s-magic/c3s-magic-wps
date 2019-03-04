@@ -77,7 +77,7 @@ class WeatherRegimes(Process):
 
         options = dict(
             season=request.inputs['season'][0].data,
-            teles=request.inputs['nclusters'][0].data
+            nclusters=request.inputs['nclusters'][0].data
         )
 
         # generate recipe

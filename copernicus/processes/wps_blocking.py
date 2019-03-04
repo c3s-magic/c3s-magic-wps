@@ -43,6 +43,14 @@ class Blocking(Process):
                 abstract='Generated output plot of ESMValTool processing.',
                 as_reference=True,
                 supported_formats=[Format('image/png')]),
+            ComplexOutput('data_full', 'Full Blocking Data',
+                          abstract='Generated output data of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput('data_clim', 'Clim Blocking Data',
+                          abstract='Generated output data of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[FORMATS.NETCDF]),
             ComplexOutput(
                 'archive',
                 'Archive',
@@ -161,3 +169,17 @@ class Blocking(Process):
                                     subdir),
             name_filter="BlockEvents*",
             output_format="png")
+        
+        response.outputs['block_full'].output_format = FORMATS.NETCDF
+        response.outputs['block_full'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('miles_diagnostics', 'miles_eof', subdir),
+            name_filter="BlockFull*",
+            output_format="nc")
+        
+        response.outputs['block_clim'].output_format = FORMATS.NETCDF
+        response.outputs['block_clim'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('miles_diagnostics', 'miles_eof', subdir),
+            name_filter="BlockClim*",
+            output_format="nc")
