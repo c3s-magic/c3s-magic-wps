@@ -6,7 +6,7 @@ LABEL Description="CP4CDS WPS Demo" Vendor="CP4CDS" Version="0.3.0"
 # Update Debian system
 RUN apt-get update && apt-get install -y \
  build-essential \
- font-dejavu \
+ fonts-dejavu \
 && rm -rf /var/lib/apt/lists/*
 
 # Update conda
