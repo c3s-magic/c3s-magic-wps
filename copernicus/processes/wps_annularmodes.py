@@ -91,14 +91,12 @@ class AnnularModes(Process):
         # run diag
         response.update_status("running diagnostic ...", 20)
         result = runner.run(recipe_file, config_file)
-        logfile = result['logfile']
-        plot_dir = result['plot_dir']
 
         response.outputs['success'].data = result['success']
 
         # log output
         response.outputs['log'].output_format = FORMATS.TEXT
-        response.outputs['log'].file = logfile
+        response.outputs['log'].file = result['logfile']
 
         # debug log output
         response.outputs['debug_log'].output_format = FORMATS.TEXT
@@ -109,28 +107,10 @@ class AnnularModes(Process):
             response.update_status("exception occured: " + result['exception'], 100)
             return response
 
-        # result plot
-        response.update_status("collecting output ...", 80)
-        response.outputs['plot_pdf'].output_format = Format('application/png')
-        response.outputs['plot_pdf'].file = runner.get_output(
-            plot_dir,
-            path_filter=os.path.join('zmnam', 'main'),
-            name_filter="CMIP5*25000Pa_da_pdf",
-            output_format="png")
-
-        response.outputs['plot_reg'].output_format = Format('application/png')
-        response.outputs['plot_reg'].file = runner.get_output(
-            plot_dir,
-            path_filter=os.path.join('zmnam', 'main'),
-            name_filter="CMIP5*25000Pa_mo_reg",
-            output_format="png")
-
-        response.outputs['plot_ts'].output_format = Format('application/png')
-        response.outputs['plot_ts'].file = runner.get_output(
-            plot_dir,
-            path_filter=os.path.join('zmnam', 'main'),
-            name_filter="CMIP5*25000Pa_mo_ts",
-            output_format="png")
+        try:
+            self.get_outputs(result, response)
+        except Exception as e:
+            response.update_status("An exception occured during output extraction: " + str(e), 85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
@@ -139,3 +119,27 @@ class AnnularModes(Process):
 
         response.update_status("done.", 100)
         return response
+    
+    def get_outputs(self, result, response):
+        # result plot
+        response.update_status("collecting output ...", 80)
+        response.outputs['plot_pdf'].output_format = Format('application/png')
+        response.outputs['plot_pdf'].file = runner.get_output(
+            result['plot_dir'],
+            path_filter=os.path.join('zmnam', 'main'),
+            name_filter="CMIP5*25000Pa_da_pdf",
+            output_format="png")
+
+        response.outputs['plot_reg'].output_format = Format('application/png')
+        response.outputs['plot_reg'].file = runner.get_output(
+            result['plot_dir'],
+            path_filter=os.path.join('zmnam', 'main'),
+            name_filter="CMIP5*25000Pa_mo_reg",
+            output_format="png")
+
+        response.outputs['plot_ts'].output_format = Format('application/png')
+        response.outputs['plot_ts'].file = runner.get_output(
+            result['plot_dir'],
+            path_filter=os.path.join('zmnam', 'main'),
+            name_filter="CMIP5*25000Pa_mo_ts",
+            output_format="png")

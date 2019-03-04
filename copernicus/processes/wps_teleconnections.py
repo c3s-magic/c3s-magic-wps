@@ -82,13 +82,15 @@ class Teleconnections(Process):
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
+        start_year = request.inputs['start_year'][0].data
+        end_year = request.inputs['end_year'][0].data
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
             diag='miles_eof',
             constraints=constraints,
             options=options,
-            start_year=request.inputs['start_year'][0].data,
-            end_year=request.inputs['end_year'][0].data,
+            start_year=start_year,
+            end_year=end_year,
             output_format='png',
         )
 
@@ -99,14 +101,12 @@ class Teleconnections(Process):
         # run diag
         response.update_status("running diagnostic ...", 20)
         result = runner.run(recipe_file, config_file)
-        logfile = result['logfile']
-        workdir = result['work_dir']
 
         response.outputs['success'].data = result['success']
 
         # log output
         response.outputs['log'].output_format = FORMATS.TEXT
-        response.outputs['log'].file = logfile
+        response.outputs['log'].file = result['logfile']
 
         # debug log output
         response.outputs['debug_log'].output_format = FORMATS.TEXT
@@ -117,14 +117,14 @@ class Teleconnections(Process):
             response.update_status("exception occured: " + result['exception'], 100)
             return response
 
-        # result plot
-        response.update_status("collecting output ...", 80)
-        response.outputs['plot'].output_format = Format('application/png')
-        response.outputs['plot'].file = runner.get_output(
-            workdir,
-            path_filter=os.path.join('miles_diagnostics', 'miles_eof'),
-            name_filter="*",
-            output_format="png")
+        subdir = os.path.join(constraints['model'], constraints['experiment'],
+                              constraints['ensemble'],
+                              "{}_{}".format(start_year, end_year),
+                              options['season'], 'Block')
+        try:
+            self.get_outputs(result, subdir, response)
+        except Exception as e:
+            response.update_status("exception occured: " + str(e), 85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
@@ -133,3 +133,13 @@ class Teleconnections(Process):
 
         response.update_status("done.", 100)
         return response
+
+    def get_outputs(self, result, subdir, response):
+        # result plot
+        response.update_status("collecting output ...", 80)
+        response.outputs['plot'].output_format = Format('application/png')
+        response.outputs['plot'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('miles_diagnostics', 'miles_eof', subdir),
+            name_filter="*",
+            output_format="png")

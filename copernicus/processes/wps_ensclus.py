@@ -145,13 +145,9 @@ class EnsClus(Process):
         response.update_status("running diagnostic ...", 20)
         result = runner.run(recipe_file, config_file)
 
-        logfile = result['logfile']
-        work_dir = result['work_dir']
-        plot_dir = result['plot_dir']
-
         # log output
         response.outputs['log'].output_format = FORMATS.TEXT
-        response.outputs['log'].file = logfile
+        response.outputs['log'].file = result['logfile']
 
         # debug log output
         response.outputs['debug_log'].output_format = FORMATS.TEXT
@@ -165,28 +161,10 @@ class EnsClus(Process):
                                    100)
             return response
 
-        # result plot
-        response.update_status("collecting output ...", 80)
-        response.outputs['plot'].output_format = Format('application/eps')
-        response.outputs['plot'].file = runner.get_output(
-            plot_dir,
-            path_filter=os.path.join('EnsClus', 'main'),
-            name_filter="*",
-            output_format="eps")
-
-        response.outputs['data'].output_format = FORMATS.NETCDF
-        response.outputs['data'].file = runner.get_output(
-            work_dir,
-            path_filter=os.path.join('EnsClus', 'main'),
-            name_filter="ens*",
-            output_format="nc")
-
-        response.outputs['statistics'].output_format = FORMATS.TEXT
-        response.outputs['statistics'].file = runner.get_output(
-            work_dir,
-            path_filter=os.path.join('EnsClus', 'main'),
-            name_filter="statistics*",
-            output_format="txt")
+        try:
+            self.get_outputs(result, response)
+        except Exception as e:
+            response.update_status("exception occured: " + str(e), 85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
@@ -196,3 +174,27 @@ class EnsClus(Process):
 
         response.update_status("done.", 100)
         return response
+
+    def get_outputs(self, result, response):
+        # result plot
+        response.update_status("collecting output ...", 80)
+        response.outputs['plot'].output_format = Format('application/eps')
+        response.outputs['plot'].file = runner.get_output(
+            result['plot_dir'],
+            path_filter=os.path.join('EnsClus', 'main'),
+            name_filter="*",
+            output_format="eps")
+
+        response.outputs['data'].output_format = FORMATS.NETCDF
+        response.outputs['data'].file = runner.get_output(
+            result['plot_dir'],
+            path_filter=os.path.join('EnsClus', 'main'),
+            name_filter="ens*",
+            output_format="nc")
+
+        response.outputs['statistics'].output_format = FORMATS.TEXT
+        response.outputs['statistics'].file = runner.get_output(
+            result['plot_dir'],
+            path_filter=os.path.join('EnsClus', 'main'),
+            name_filter="statistics*",
+            output_format="txt")

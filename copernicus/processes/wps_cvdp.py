@@ -95,14 +95,12 @@ class CVDP(Process):
         # run diag
         response.update_status("running diagnostic ...", 20)
         result = runner.run(recipe_file, config_file)
-        logfile = result['logfile']
-        workdir = result['work_dir']
 
         response.outputs['success'].data = result['success']
 
         # log output
         response.outputs['log'].output_format = FORMATS.TEXT
-        response.outputs['log'].file = logfile
+        response.outputs['log'].file = result['logfile']
 
         # debug log output
         response.outputs['debug_log'].output_format = FORMATS.TEXT
@@ -112,12 +110,27 @@ class CVDP(Process):
             LOGGER.exception('esmvaltool failed!')
             response.update_status("exception occured!", 100)
             return response
+        
+        try:
+            self.get_outputs(result, response)
+        except Exception as e:
+            response.update_status("exception occured: " + str(e), 85)
 
+        response.update_status("creating archive of diagnostic result ...", 90)
+
+        response.outputs['archive'].output_format = Format('application/zip')
+        response.outputs['archive'].file = runner.compress_output(
+            os.path.join(self.workdir, 'output'), 'diagnostic_result.zip')
+
+        response.update_status("done.", 100)
+        return response
+
+    def get_output(self, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
         response.outputs['plot'].output_format = Format('application/png')
         response.outputs['plot'].file = runner.get_output(
-            workdir,
+            result['plot_dir'],
             path_filter=os.path.join('diagnostic1', 'cvdp'),
             name_filter="pr.mean.ann",
             output_format="png")
@@ -128,12 +141,3 @@ class CVDP(Process):
         #        path_filter=os.path.join('diagnostic1', 'script1'),
         #        name_filter="CMIP5*",
         #        output_format="nc")
-
-        response.update_status("creating archive of diagnostic result ...", 90)
-
-        response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(
-            os.path.join(self.workdir, 'output'), 'diagnostic_result.zip')
-
-        response.update_status("done.", 100)
-        return response
