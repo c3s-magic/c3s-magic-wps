@@ -166,16 +166,18 @@ class Blocking(Process):
                 name_filter="{}*".format(plot),
                 output_format="png")
         
+        # workaround because the data outputdir uses a dash instead of an underscore
+        subdir2 = subdir.replace('_','-')
         response.outputs['block_full'].output_format = FORMATS.NETCDF
         response.outputs['block_full'].file = runner.get_output(
             result['work_dir'],
-            path_filter=os.path.join('miles_diagnostics', 'miles_block', subdir),
+            path_filter=os.path.join('miles_diagnostics', 'miles_block', subdir2),
             name_filter="BlockFull*",
             output_format="nc")
         
         response.outputs['block_clim'].output_format = FORMATS.NETCDF
         response.outputs['block_clim'].file = runner.get_output(
             result['work_dir'],
-            path_filter=os.path.join('miles_diagnostics', 'miles_block', subdir),
+            path_filter=os.path.join('miles_diagnostics', 'miles_block', subdir2),
             name_filter="BlockClim*",
             output_format="nc")

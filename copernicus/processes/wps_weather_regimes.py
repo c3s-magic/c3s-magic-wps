@@ -52,9 +52,9 @@ class WeatherRegimes(Process):
         super(WeatherRegimes, self).__init__(
             self._handler,
             identifier="weather_regimes",
-            title="Run the teleconnections (eof) R scripts",
+            title="Weather regimes",
             version=runner.VERSION,
-            abstract="Run the teleconnections (eof) R scripts",
+            abstract="Diagnostic providing North-Atlantic Weather Regimes",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
@@ -151,9 +151,11 @@ class WeatherRegimes(Process):
                 name_filter="{}*".format(plot),
                 output_format="png")
         
+        # workaround because the data outputdir uses a dash instead of an underscore
+        subdir2 = subdir.replace('_','-')
         response.outputs['data'].output_format = FORMATS.NETCDF
         response.outputs['data'].file = runner.get_output(
             result['work_dir'],
-            path_filter=os.path.join('miles_diagnostics', 'miles_regimes', subdir),
+            path_filter=os.path.join('miles_diagnostics', 'miles_regimes', subdir2),
             name_filter="RegimesPattern*",
             output_format="nc")

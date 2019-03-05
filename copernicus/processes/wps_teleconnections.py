@@ -52,9 +52,9 @@ class Teleconnections(Process):
         super(Teleconnections, self).__init__(
             self._handler,
             identifier="teleconnections",
-            title="Run the teleconnections (eof) R scripts",
+            title="Teleconnection indices",
             version=runner.VERSION,
-            abstract="Run the teleconnections (eof) R scripts",
+            abstract="Diagnostic providing teleconnection indices (Z500 empirical orthogonal functions)",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
@@ -152,9 +152,12 @@ class Teleconnections(Process):
                                         subdir),
                 name_filter="{}*".format(plot),
                 output_format="png")
+
+        # workaround because the data outputdir uses a dash instead of an underscore
+        subdir2 = subdir.replace('_','-')
         response.outputs['data'].output_format = FORMATS.NETCDF
         response.outputs['data'].file = runner.get_output(
             result['work_dir'],
-            path_filter=os.path.join('miles_diagnostics', 'miles_eof', subdir),
+            path_filter=os.path.join('miles_diagnostics', 'miles_eof', subdir2),
             name_filter="EOFs*",
             output_format="nc")
