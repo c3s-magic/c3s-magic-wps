@@ -45,12 +45,6 @@ class Blocking(Process):
         ]
         outputs = [
             *inputs_from_plot_names(self.plotlist),
-            ComplexOutput(
-                'blocking_plot',
-                'Blocking Events Frequency Plot',
-                abstract='Generated output plot of ESMValTool processing.',
-                as_reference=True,
-                supported_formats=[Format('image/png')]),
             ComplexOutput('data_full', 'Full Blocking Data',
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
@@ -72,9 +66,9 @@ class Blocking(Process):
         super(Blocking, self).__init__(
             self._handler,
             identifier="blocking",
-            title="Run the blocking R scripts",
+            title="Blocking metrics and indices",
             version=runner.VERSION,
-            abstract="Run the blocking R scripts",
+            abstract="Calculate Blocking metrics that shows the mid-latitude 1D and 2D blocking indices.",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
@@ -175,13 +169,13 @@ class Blocking(Process):
         response.outputs['block_full'].output_format = FORMATS.NETCDF
         response.outputs['block_full'].file = runner.get_output(
             result['work_dir'],
-            path_filter=os.path.join('miles_diagnostics', 'miles_eof', subdir),
+            path_filter=os.path.join('miles_diagnostics', 'miles_block', subdir),
             name_filter="BlockFull*",
             output_format="nc")
         
         response.outputs['block_clim'].output_format = FORMATS.NETCDF
         response.outputs['block_clim'].file = runner.get_output(
             result['work_dir'],
-            path_filter=os.path.join('miles_diagnostics', 'miles_eof', subdir),
+            path_filter=os.path.join('miles_diagnostics', 'miles_block', subdir),
             name_filter="BlockClim*",
             output_format="nc")
