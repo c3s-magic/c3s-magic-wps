@@ -24,11 +24,11 @@ class ZMNAM(Process):
             ),
         ]
         self.pressure_levels = [5000, 25000, 50000, 100000]
-        self.plotlist = [
-            "{}Pa_mo_reg".format(i) for i in  self.pressure_levels
-        ].extend(
-            ["{}Pa_da_pdf".format(i) for i in  self.pressure_levels]).extend(
-                ["{}Pa_mo_ts".format(i) for i in  self.pressure_levels])
+        self.plotlist = ["{}Pa_mo_reg".format(i) for i in  self.pressure_levels]
+        self.plotlist.extend(
+            ["{}Pa_da_pdf".format(i) for i in  self.pressure_levels])
+        self.plotlist.extend(
+            ["{}Pa_mo_ts".format(i) for i in  self.pressure_levels])
         outputs = [
             *inputs_from_plot_names(self.plotlist),
             ComplexOutput('regr_map', 'Regr Map Data',
