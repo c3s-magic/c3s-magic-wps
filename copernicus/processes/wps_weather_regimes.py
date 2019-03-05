@@ -31,19 +31,20 @@ class WeatherRegimes(Process):
                 default='ERA-Interim',
                 min_occurs=1,
                 max_occurs=1),
-            LiteralInput('season', 'Season',
-                         abstract='Choose a season like DJF.',
-                         data_type='string',
-                         allowed_values=['DJF'],
-                         default='DJF'),
-            LiteralInput('nclusters', 'nclusters',
-                         abstract='Choose a number of clusters.',
-                         data_type='string',
-                         allowed_values=['4'],
-                         default='4'),
+            # Removed on request of Jost
+            # LiteralInput('season', 'Season',
+            #              abstract='Choose a season like DJF.',
+            #              data_type='string',
+            #              allowed_values=['DJF'],
+            #              default='DJF'),
+            # LiteralInput('nclusters', 'nclusters',
+            #              abstract='Choose a number of clusters.',
+            #              data_type='string',
+            #              allowed_values=['4'],
+            #              default='4'),
         ]
         self.plotlist = [
-            "Regime{}_*".format(i) for i in range(1,5)
+            "Regime{}".format(i) for i in range(1,5)
         ]
         outputs = [
             *inputs_from_plot_names(self.plotlist),
@@ -89,9 +90,10 @@ class WeatherRegimes(Process):
             ensemble=request.inputs['ensemble'][0].data,
         )
 
+        # Only DJF and 4 clusters is supported currently
         options = dict(
-            season=request.inputs['season'][0].data,
-            nclusters=int(request.inputs['nclusters'][0].data)
+            season= 'DJF', # request.inputs['season'][0].data,
+            nclusters=4 # int(request.inputs['nclusters'][0].data)
         )
 
         # generate recipe
@@ -157,7 +159,7 @@ class WeatherRegimes(Process):
                 result['plot_dir'],
                 path_filter=os.path.join('miles_diagnostics', 'miles_regimes',
                                         subdir),
-                name_filter="{}*".format(plot),
+                name_filter="{}_*".format(plot),
                 output_format="png")
         
         # workaround because the data outputdir uses a dash instead of an underscore

@@ -43,7 +43,7 @@ class Teleconnections(Process):
                          default='NAO'),
         ]
         self.plotlist = [
-            "EOF{}_*".format(i) for i in range(1,5)
+            "EOF{}".format(i) for i in range(1,5)
         ]
         outputs = [
             *inputs_from_plot_names(self.plotlist),
@@ -159,7 +159,7 @@ class Teleconnections(Process):
                 result['plot_dir'],
                 path_filter=os.path.join('miles_diagnostics', 'miles_eof',
                                         subdir),
-                name_filter="{}*".format(plot),
+                name_filter="{}_*".format(plot),
                 output_format="png")
 
         # workaround because the data outputdir uses a dash instead of an underscore

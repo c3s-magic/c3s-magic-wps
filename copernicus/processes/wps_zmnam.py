@@ -140,7 +140,7 @@ class ZMNAM(Process):
             response.outputs[key].file = runner.get_output(
                 result['plot_dir'],
                 path_filter=os.path.join('zmnam', 'main'),
-                name_filter="*{}*".format(plot),
+                name_filter="*_{}".format(plot),
                 output_format="png")
         
         response.outputs['regr_map'].output_format = FORMATS.NETCDF
