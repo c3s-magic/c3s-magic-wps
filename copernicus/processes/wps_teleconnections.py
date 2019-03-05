@@ -125,21 +125,20 @@ class Teleconnections(Process):
         response.outputs['debug_log'].output_format = FORMATS.TEXT
         response.outputs['debug_log'].file = result['debug_logfile']
 
-        if not result['success']:
-            LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'], 100)
-            return response
-
-        subdir = os.path.join(constraints['model'], constraints['experiment'],
+        if result['success']:
+            try:
+                subdir = os.path.join(constraints['model'], constraints['experiment'],
                               constraints['ensemble'],
                               "{}_{}".format(start_year, end_year),
                               options['season'],
                               'EOFs',
                               options['teles'])
-        try:
-            self.get_outputs(result, subdir, response)
-        except Exception as e:
-            response.update_status("exception occured: " + str(e), 85)
+                self.get_outputs(result, subdir, response)
+            except Exception as e:
+                response.update_status("exception occured: " + str(e), 85)
+        else:
+            LOGGER.exception('esmvaltool failed!')
+            response.update_status("exception occured: " + result['exception'], 85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
