@@ -22,6 +22,15 @@ class Teleconnections(Process):
                 start_end_year=(1850, 2005),
                 start_end_defaults=(1980, 1989)
             ),
+            LiteralInput(
+                'ref_model',
+                'Reference Model',
+                abstract='Choose a reference model like ERA-Interim.',
+                data_type='string',
+                allowed_values=['ERA-Interim'],
+                default='ERA-Interim',
+                min_occurs=1,
+                max_occurs=1),
             LiteralInput('season', 'Season',
                          abstract='Choose a season like DJF.',
                          data_type='string',

@@ -22,6 +22,15 @@ class WeatherRegimes(Process):
                 start_end_year=(1850, 2005),
                 start_end_defaults=(1980, 1989)
             ),
+            LiteralInput(
+                'ref_model',
+                'Reference Model',
+                abstract='Choose a reference model like ERA-Interim.',
+                data_type='string',
+                allowed_values=['ERA-Interim'],
+                default='ERA-Interim',
+                min_occurs=1,
+                max_occurs=1),
             LiteralInput('season', 'Season',
                          abstract='Choose a season like DJF.',
                          data_type='string',
@@ -29,9 +38,9 @@ class WeatherRegimes(Process):
                          default='DJF'),
             LiteralInput('nclusters', 'nclusters',
                          abstract='Choose a number of clusters.',
-                         data_type='integer',
-                         allowed_values=[4],
-                         default=4),
+                         data_type='string',
+                         allowed_values=['4'],
+                         default='4'),
         ]
         self.plotlist = [
             "Regime{}_*".format(i) for i in range(1,5)
@@ -81,7 +90,7 @@ class WeatherRegimes(Process):
 
         options = dict(
             season=request.inputs['season'][0].data,
-            nclusters=request.inputs['nclusters'][0].data
+            nclusters=int(request.inputs['nclusters'][0].data)
         )
 
         # generate recipe
