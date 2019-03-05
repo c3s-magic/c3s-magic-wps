@@ -96,6 +96,7 @@ class Blocking(Process):
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)
+        workdir = self.workdir
 
         # build esgf search constraints
         constraints = dict(
@@ -111,7 +112,7 @@ class Blocking(Process):
         start_year = request.inputs['start_year'][0].data
         end_year = request.inputs['end_year'][0].data
         recipe_file, config_file = runner.generate_recipe(
-            workdir=self.workdir,
+            workdir=workdir,
             diag='miles_blocking',
             constraints=constraints,
             options=options,
@@ -156,7 +157,7 @@ class Blocking(Process):
 
         response.outputs['archive'].output_format = Format('application/zip')
         response.outputs['archive'].file = runner.compress_output(
-            os.path.join(self.workdir, 'output'), 'diagnostic_result.zip')
+            os.path.join(workdir, 'output'), 'diagnostic_result.zip')
 
         response.update_status("done.", 100)
         return response
