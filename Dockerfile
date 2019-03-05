@@ -25,9 +25,9 @@ RUN git clone -b version2_development https://github.com/ESMValGroup/ESMValTool.
 #Add dependancies of esmvaltool to wps conda environement created earlier
 WORKDIR /opt/esmvaltool
 RUN conda env update -n wps -f environment.yml
-RUN ["/bin/bash", "-c", "source activate wps && conda install -c conda-forge cdo==1.9.5 hdf5==1.10.3"]
 RUN ["/bin/bash", "-c", "source activate wps && pip install -e ."]
 RUN ["/bin/bash", "-c", "source activate wps && Rscript esmvaltool/install/R/setup.R"]
+RUN ["/bin/bash", "-c", "source activate wps && conda install -c conda-forge cdo==1.9.5 hdf5==1.10.3"]
 
 # Copy WPS project
 COPY . /opt/wps
