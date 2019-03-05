@@ -5,7 +5,7 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from .utils import default_outputs, model_experiment_ensemble
+from .utils import default_outputs, model_experiment_ensemble, inputs_from_plot_names
 
 from .. import runner, util
 
@@ -23,19 +23,30 @@ class ZMNAM(Process):
                 start_end_defaults=(1979, 2008)
             ),
         ]
+        self.pressure_levels = [5000, 25000, 50000, 100000]
+        self.plotlist = [
+            "{}Pa_mo_reg".format(i) for i in  self.pressure_levels
+        ].extend(
+            ["{}Pa_da_pdf".format(i) for i in  self.pressure_levels]).extend(
+                ["{}Pa_mo_ts".format(i) for i in  self.pressure_levels])
         outputs = [
-            ComplexOutput('plot_pdf', 'Output plot PDF',
-                          abstract='Generated output plot of ESMValTool processing.',
+            *inputs_from_plot_names(self.plotlist),
+            ComplexOutput('regr_map', 'Regr Map Data',
+                          abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
-                          supported_formats=[Format('image/png')]),
-            ComplexOutput('plot_reg', 'Output plot REG',
-                          abstract='Generated output plot of ESMValTool processing.',
+                          supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput('eofs', 'EOF Data',
+                          abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
-                          supported_formats=[Format('image/png')]),
-            ComplexOutput('plot_ts', 'Output plot TS',
-                          abstract='Generated output plot of ESMValTool processing.',
+                          supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput('pc_mo', 'PC Mo Data',
+                          abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
-                          supported_formats=[Format('image/png')]),
+                          supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput('pc_da', 'PC Da Data',
+                          abstract='Generated output data of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[FORMATS.NETCDF]),
             ComplexOutput('archive', 'Archive',
                         abstract='The complete output of the ESMValTool processing as an zip archive.',
                         as_reference=True,
@@ -123,23 +134,39 @@ class ZMNAM(Process):
     def get_outputs(self, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
-        response.outputs['plot_pdf'].output_format = Format('application/png')
-        response.outputs['plot_pdf'].file = runner.get_output(
-            result['plot_dir'],
+        for plot in self.plotlist:
+            key = '{}_plot'.format(plot.lower())
+            response.outputs[key].output_format = Format('application/png')
+            response.outputs[key].file = runner.get_output(
+                result['plot_dir'],
+                path_filter=os.path.join('zmnam', 'main'),
+                name_filter="*{}*".format(plot),
+                output_format="png")
+        
+        response.outputs['regr_map'].output_format = FORMATS.NETCDF
+        response.outputs['regr_map'].file = runner.get_output(
+            result['work_dir'],
             path_filter=os.path.join('zmnam', 'main'),
-            name_filter="CMIP5*25000Pa_da_pdf",
-            output_format="png")
+            name_filter="*regr_map*",
+            output_format="nc")
 
-        response.outputs['plot_reg'].output_format = Format('application/png')
-        response.outputs['plot_reg'].file = runner.get_output(
-            result['plot_dir'],
+        response.outputs['eofs'].output_format = FORMATS.NETCDF
+        response.outputs['eofs'].file = runner.get_output(
+            result['work_dir'],
             path_filter=os.path.join('zmnam', 'main'),
-            name_filter="CMIP5*25000Pa_mo_reg",
-            output_format="png")
-
-        response.outputs['plot_ts'].output_format = Format('application/png')
-        response.outputs['plot_ts'].file = runner.get_output(
-            result['plot_dir'],
+            name_filter="*eofs*",
+            output_format="nc")
+        
+        response.outputs['pc_mo'].output_format = FORMATS.NETCDF
+        response.outputs['pc_mo'].file = runner.get_output(
+            result['work_dir'],
             path_filter=os.path.join('zmnam', 'main'),
-            name_filter="CMIP5*25000Pa_mo_ts",
-            output_format="png")
+            name_filter="*pc_mo*",
+            output_format="nc")
+        
+        response.outputs['pc_da'].output_format = FORMATS.NETCDF
+        response.outputs['pc_da'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('zmnam', 'main'),
+            name_filter="*pc_da*",
+            output_format="nc")
