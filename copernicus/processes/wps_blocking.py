@@ -5,7 +5,7 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from copernicus.processes.utils import default_outputs, model_experiment_ensemble
+from copernicus.processes.utils import default_outputs, model_experiment_ensemble, inputs_from_plot_names
 
 from .. import runner, util
 
@@ -29,14 +29,22 @@ class Blocking(Process):
                 allowed_values=['DJF', 'MAM', 'JJA', 'SON', 'ALL'],
                 default='DJF'),
         ]
+        self.plotlist = [
+            'TM90',
+            'NumberEvents',
+            'DurationEvents',
+            'LongBlockEvents',
+            'BlockEvents',
+            'ACN',
+            'CN',
+            'BI',
+            'MGI',
+            'Z500',
+            'ExtraBlock',
+            'InstBlock'
+        ]
         outputs = [
-            *default_outputs(),
-            ComplexOutput(
-                'tm90_plot',
-                'Output plot',
-                abstract='Generated output plot of ESMValTool processing.',
-                as_reference=True,
-                supported_formats=[Format('image/png')]),
+            *inputs_from_plot_names(self.plotlist),
             ComplexOutput(
                 'blocking_plot',
                 'Blocking Events Frequency Plot',
@@ -58,6 +66,7 @@ class Blocking(Process):
                 'The complete output of the ESMValTool processing as an zip archive.',
                 as_reference=True,
                 supported_formats=[Format('application/zip')]),
+            *default_outputs(),
         ]
 
         super(Blocking, self).__init__(
@@ -153,22 +162,15 @@ class Blocking(Process):
     def get_outputs(self, result, subdir, response):
         # result plot
         response.update_status("collecting output ...", 80)
-        response.outputs['tm90_plot'].output_format = Format('application/png')
-        response.outputs['tm90_plot'].file = runner.get_output(
-            result['plot_dir'],
-            path_filter=os.path.join('miles_diagnostics', 'miles_block',
-                                    subdir),
-            name_filter="TM90*",
-            output_format="png")
-
-        response.outputs['blocking_plot'].output_format = Format(
-            'application/png')
-        response.outputs['blocking_plot'].file = runner.get_output(
-            result['plot_dir'],
-            path_filter=os.path.join('miles_diagnostics', 'miles_block',
-                                    subdir),
-            name_filter="BlockEvents*",
-            output_format="png")
+        for plot in self.plotlist:
+            key = '{}_plot'.format(plot.lower())
+            response.outputs[key].output_format = Format('application/png')
+            response.outputs[key].file = runner.get_output(
+                result['plot_dir'],
+                path_filter=os.path.join('miles_diagnostics', 'miles_block',
+                                        subdir),
+                name_filter="{}*".format(plot),
+                output_format="png")
         
         response.outputs['block_full'].output_format = FORMATS.NETCDF
         response.outputs['block_full'].file = runner.get_output(

@@ -49,7 +49,6 @@ class PreprocessExample(Process):
                          default=85000.0),
         ]
         outputs = [
-            *default_outputs(),
             ComplexOutput('plot', 'Output plot',
                           abstract='Generated output plot of ESMValTool processing.',
                           as_reference=True,
@@ -58,10 +57,11 @@ class PreprocessExample(Process):
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[FORMATS.NETCDF]),
-             ComplexOutput('archive', 'Archive',
+            ComplexOutput('archive', 'Archive',
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
                           as_reference=True,
                           supported_formats=[Format('application/zip')]),
+            *default_outputs(),
         ]
 
         super(PreprocessExample, self).__init__(

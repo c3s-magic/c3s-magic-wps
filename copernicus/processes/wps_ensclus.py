@@ -54,7 +54,6 @@ class EnsClus(Process):
                 default='80'),
         ]
         outputs = [
-            *default_outputs(),
             ComplexOutput(
                 'plot',
                 'Output plot',
@@ -80,6 +79,7 @@ class EnsClus(Process):
                 'The complete output of the ESMValTool processing as an zip archive.',
                 as_reference=True,
                 supported_formats=[Format('application/zip')]),
+            *default_outputs(),
         ]
 
         super(EnsClus, self).__init__(

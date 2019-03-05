@@ -23,7 +23,6 @@ class CVDP(Process):
             ),
         ]
         outputs = [
-            *default_outputs(),
             ComplexOutput(
                 'plot',
                 'Output plot',
@@ -41,6 +40,7 @@ class CVDP(Process):
                 'The complete output of the ESMValTool processing as an zip archive.',
                 as_reference=True,
                 supported_formats=[Format('application/zip')]),
+            *default_outputs(),
         ]
 
         super(CVDP, self).__init__(

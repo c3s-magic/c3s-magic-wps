@@ -5,7 +5,7 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from copernicus.processes.utils import default_outputs, model_experiment_ensemble
+from copernicus.processes.utils import default_outputs, model_experiment_ensemble, inputs_from_plot_names
 
 from .. import runner, util
 
@@ -33,17 +33,11 @@ class Teleconnections(Process):
                          allowed_values=['NAO','AO','PNA'],
                          default='NAO'),
         ]
-        plots = [
-            ComplexOutput('plot{}'.format(i),
-                          'EOF{} plot'.format(i),
-                          abstract='EOF{} plot.'.format(i),
-                          as_reference=True,
-                          supported_formats=[Format('image/png')])
-            for i in range(1, 5)
+        self.plotlist = [
+            "EOF{}_*".format(i) for i in range(1,5)
         ]
         outputs = [
-            *default_outputs(),
-            *plots,
+            *inputs_from_plot_names(self.plotlist),
             ComplexOutput('data', 'EOF Data',
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
@@ -52,6 +46,7 @@ class Teleconnections(Process):
                         abstract='The complete output of the ESMValTool processing as an zip archive.',
                         as_reference=True,
                         supported_formats=[Format('application/zip')]),
+            *default_outputs(),
         ]
 
         super(Teleconnections, self).__init__(
@@ -148,15 +143,15 @@ class Teleconnections(Process):
     def get_outputs(self, result, subdir, response):
         # result plot
         response.update_status("collecting output ...", 80)
-        for i in range(1,5):
-            key = 'plot{}'.format(i)
+        for plot in self.plotlist:
+            key = '{}_plot'.format(plot.lower())
             response.outputs[key].output_format = Format('application/png')
             response.outputs[key].file = runner.get_output(
                 result['plot_dir'],
-                path_filter=os.path.join('miles_diagnostics', 'miles_eof', subdir),
-                name_filter="EOF{}_*".format(i),
+                path_filter=os.path.join('miles_diagnostics', 'miles_eof',
+                                        subdir),
+                name_filter="{}*".format(plot),
                 output_format="png")
-
         response.outputs['data'].output_format = FORMATS.NETCDF
         response.outputs['data'].file = runner.get_output(
             result['work_dir'],

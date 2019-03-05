@@ -12,7 +12,7 @@ from .. import runner, util
 LOGGER = logging.getLogger("PYWPS")
 
 
-class StratosphereTroposphere(Process):
+class ZMNAM(Process):
     def __init__(self):
         inputs = [
             *model_experiment_ensemble(
@@ -24,7 +24,6 @@ class StratosphereTroposphere(Process):
             ),
         ]
         outputs = [
-            *default_outputs(),
             ComplexOutput('plot_pdf', 'Output plot PDF',
                           abstract='Generated output plot of ESMValTool processing.',
                           as_reference=True,
@@ -41,11 +40,12 @@ class StratosphereTroposphere(Process):
                         abstract='The complete output of the ESMValTool processing as an zip archive.',
                         as_reference=True,
                         supported_formats=[Format('application/zip')]),
+            *default_outputs(),
         ]
 
-        super(StratosphereTroposphere, self).__init__(
+        super(ZMNAM, self).__init__(
             self._handler,
-            identifier="stratosphere-troposphere",
+            identifier="zmnam",
             title="Stratosphere-troposphere coupling and annular modes indices (ZMNAM)",
             version=runner.VERSION,
             abstract="Stratosphere-troposphere coupling and annular modes indices (ZMNAM)",

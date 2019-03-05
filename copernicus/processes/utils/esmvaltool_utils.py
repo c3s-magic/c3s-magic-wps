@@ -87,3 +87,14 @@ def model_experiment_ensemble(models=['MPI-ESM-LR'],
                 allowed_values=ensembles,
                 default=ensembles[0]),
             *year_ranges(start_end_year, start_end_defaults))
+
+def inputs_from_plot_names(plotlist):
+    plots = []
+    for plot in plotlist:
+        plots.append(ComplexOutput(
+                '{}_plot'.format(plot.lower()),
+                '{} plot'.format(plot),
+                abstract='Generated {} plot of ESMValTool processing.'.format(plot),
+                as_reference=True,
+                supported_formats=[Format('image/png')]))
+    return plots

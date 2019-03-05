@@ -8,8 +8,7 @@ from .wps_perfmetrics import Perfmetrics
 from .wps_rainfarm import RainFarm
 from .wps_rmse import RMSE
 from .wps_blocking import Blocking
-from .wps_stratosphere_troposphere import StratosphereTroposphere
-from .wps_annularmodes import AnnularModes
+from .wps_zmnam import ZMNAM
 from .wps_teleconnections import Teleconnections
 from .wps_weather_regimes import WeatherRegimes
 
@@ -28,8 +27,7 @@ processes = [
     Sleep(),
     Blocking(),
     PreprocessExample(),
-    StratosphereTroposphere(),
-    AnnularModes(),
+    ZMNAM(),
     Teleconnections(),
     WeatherRegimes(),
 ]
