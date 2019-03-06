@@ -5,7 +5,7 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from copernicus.processes.utils import default_outputs, model_experiment_ensemble, year_ranges
+from copernicus.processes.utils import default_outputs, model_experiment_ensemble, year_ranges, inputs_from_plot_names
 
 from .. import runner, util
 
@@ -81,7 +81,29 @@ class ModesVariability(Process):
                 ],
                 default='JJA'),
         ]
+        self.plotlist = [
+            'Table_psl', 'psl_predicted_regimes', 'psl_observed_regimes'
+        ]
         outputs = [
+            *inputs_from_plot_names(self.plotlist),
+            ComplexOutput(
+                'rmse',
+                'RMSE Data',
+                abstract='Generated output data of ESMValTool processing.',
+                as_reference=True,
+                supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput(
+                'exp',
+                'EXP Data',
+                abstract='Generated output data of ESMValTool processing.',
+                as_reference=True,
+                supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput(
+                'obs',
+                'OBS Data',
+                abstract='Generated output data of ESMValTool processing.',
+                as_reference=True,
+                supported_formats=[FORMATS.NETCDF]),
             ComplexOutput(
                 'archive',
                 'Archive',
@@ -125,21 +147,24 @@ class ModesVariability(Process):
             model_historical=request.inputs['model_historical'][0].data,
             experiment_historical=request.inputs['experiment_historical'][0].data,
             ensemble_historical=request.inputs['ensemble_historical'][0].data,
-            start_year_historical = request.inputs['start_historical'][0].data,
-            end_year_historical = request.inputs['end_historical'][0].data,
+            start_year_historical=request.inputs['start_historical'][0].data,
+            end_year_historical=request.inputs['end_historical'][0].data,
             model_projection=request.inputs['model_projection'][0].data,
             experiment_projection=request.inputs['experiment_projection'][0].data,
             ensemble_projection=request.inputs['ensemble_projection'][0].data,
-            start_year_projection = request.inputs['start_projection'][0].data,
-            end_year_projection = request.inputs['end_projection'][0].data
-        )
+            start_year_projection=request.inputs['start_projection'][0].data,
+            end_year_projection=request.inputs['end_projection'][0].data)
 
         options = dict(
             region=request.inputs['region'][0].data,
-            start_historical='{}-01-01'.format(request.inputs['start_historical'][0].data),
-            end_historical='{}-12-31'.format(request.inputs['end_historical'][0].data),
-            start_projection='{}-01-01'.format(request.inputs['start_projection'][0].data),
-            end_projection='{}-12-31'.format(request.inputs['end_projection'][0].data),
+            start_historical='{}-01-01'.format(
+                request.inputs['start_historical'][0].data),
+            end_historical='{}-12-31'.format(
+                request.inputs['end_historical'][0].data),
+            start_projection='{}-01-01'.format(
+                request.inputs['start_projection'][0].data),
+            end_projection='{}-12-31'.format(
+                request.inputs['end_projection'][0].data),
             ncenters=int(request.inputs['ncenters'][0].data),
             detrend_order=int(request.inputs['detrend_order'][0].data),
             cluster_method=request.inputs['cluster_method'][0].data,
@@ -183,13 +208,8 @@ class ModesVariability(Process):
                                    100)
             return response
 
-        # subdir = os.path.join(constraints['model'], constraints['experiment'],
-        #                       constraints['ensemble'], "{}_{}".format(
-        #                           start_year,
-        #                           end_year), options['season'], 'Block')
-        subdir = ""
         try:
-            self.get_outputs(result, subdir, response)
+            self.get_outputs(result, response)
         except Exception as e:
             response.update_status("exception occured: " + str(e), 85)
 
@@ -202,6 +222,35 @@ class ModesVariability(Process):
         response.update_status("done.", 100)
         return response
 
-    def get_outputs(self, result, subdir, response):
+    def get_outputs(self, result, response):
         # result plot
-        pass
+        response.update_status("collecting output ...", 80)
+        for plot in self.plotlist:
+            key = '{}_plot'.format(plot.lower())
+            response.outputs[key].output_format = Format('application/png')
+            response.outputs[key].file = runner.get_output(
+                result['plot_dir'],
+                path_filter=os.path.join('weather_regime', 'main'),
+                name_filter="*{}*".format(plot),
+                output_format="png")
+
+        response.outputs['rmse'].output_format = FORMATS.NETCDF
+        response.outputs['rmse'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('weather_regime', 'main'),
+            name_filter="*rmse*",
+            output_format="nc")
+
+        response.outputs['exp'].output_format = FORMATS.NETCDF
+        response.outputs['exp'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('weather_regime', 'main'),
+            name_filter="*exp*",
+            output_format="nc")
+
+        response.outputs['obs'].output_format = FORMATS.NETCDF
+        response.outputs['obs'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('weather_regime', 'main'),
+            name_filter="*obs*",
+            output_format="nc")

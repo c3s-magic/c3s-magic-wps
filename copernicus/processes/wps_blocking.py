@@ -178,13 +178,13 @@ class Blocking(Process):
         response.outputs['data_full'].output_format = FORMATS.NETCDF
         response.outputs['data_full'].file = runner.get_output(
             result['work_dir'],
-            path_filter=os.path.join('miles_diagnostics', 'miles_block', subdir2),
+            path_filter=os.path.join('miles_diagnostics', 'miles_block', subdir),
             name_filter="BlockFull*",
             output_format="nc")
         
         response.outputs['data_clim'].output_format = FORMATS.NETCDF
         response.outputs['data_clim'].file = runner.get_output(
             result['work_dir'],
-            path_filter=os.path.join('miles_diagnostics', 'miles_block', subdir2),
+            path_filter=os.path.join('miles_diagnostics', 'miles_block', subdir),
             name_filter="BlockClim*",
             output_format="nc")

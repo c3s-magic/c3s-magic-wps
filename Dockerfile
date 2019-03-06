@@ -20,7 +20,7 @@ RUN conda env create -n wps -f /opt/environment.yml
 # Install development version of ESMValTool
 
 #Clone GitHub version of ESMValTool
-RUN git clone -b version2_development https://github.com/ESMValGroup/ESMValTool.git /opt/esmvaltool
+RUN git clone -b magic_march_2019 https://github.com/ESMValGroup/ESMValTool.git /opt/esmvaltool
 
 #Add dependancies of esmvaltool to wps conda environement created earlier
 WORKDIR /opt/esmvaltool
