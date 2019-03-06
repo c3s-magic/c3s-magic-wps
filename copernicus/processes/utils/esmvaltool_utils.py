@@ -97,7 +97,7 @@ def model_experiment_ensemble(models=['MPI-ESM-LR'],
             default=ensembles[0]),
     ]
     if start_end_year is not None:
-        inputs.extend(*year_ranges(start_end_year, start_end_defaults))
+        inputs.extend(year_ranges(start_end_year, start_end_defaults))
 
     return inputs
 

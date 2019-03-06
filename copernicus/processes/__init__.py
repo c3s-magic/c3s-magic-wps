@@ -11,6 +11,7 @@ from .wps_blocking import Blocking
 from .wps_zmnam import ZMNAM
 from .wps_teleconnections import Teleconnections
 from .wps_weather_regimes import WeatherRegimes
+from .wps_modes_variability import ModesVariability
 
 
 #Disabled for now
@@ -30,4 +31,5 @@ processes = [
     ZMNAM(),
     Teleconnections(),
     WeatherRegimes(),
+    ModesVariability()
 ]
