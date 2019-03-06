@@ -28,7 +28,7 @@ class ModesVariability(Process):
             *model_experiment_ensemble(
                 models=['bcc-csm1-1'],
                 model_name='Model_projection',
-                experiments=['historical'],
+                experiments=['rcp85'],
                 experiment_name='Experiment_projection',
                 ensembles=['r1i1p1'],
                 ensemble_name='Ensemble_projection'),
