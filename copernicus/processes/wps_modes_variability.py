@@ -61,13 +61,14 @@ class ModesVariability(Process):
                 'Cluster Method',
                 abstract='Choose a clustering method.',
                 data_type='string',
-                allowed_values=['kmeans', 'complete'],
+                allowed_values=['kmeans', 'hclust'],
                 default='kmeans'),
             LiteralInput(
                 'eofs',
                 'EOFs',
                 abstract='Calculate EOFs?',
-                data_type='boolean',
+                data_type='string',
+                allowed_values=['True', 'False'],
                 default=True),
             LiteralInput(
                 'frequency',
@@ -124,13 +125,13 @@ class ModesVariability(Process):
             model_historical=request.inputs['model_historical'][0].data,
             experiment_historical=request.inputs['experiment_historical'][0].data,
             ensemble_historical=request.inputs['ensemble_historical'][0].data,
-            start_year_historical = request.inputs['start_year_historical'][0].data,
-            end_year_historical = request.inputs['end_year_historical'][0].data,
+            start_year_historical = request.inputs['start_historical'][0].data,
+            end_year_historical = request.inputs['end_historical'][0].data,
             model_projection=request.inputs['model_projection'][0].data,
             experiment_projection=request.inputs['experiment_projection'][0].data,
             ensemble_projection=request.inputs['ensemble_projection'][0].data,
-            start_year_projection = request.inputs['start_year_projection'][0].data,
-            end_year_projection = request.inputs['end_year_projection'][0].data
+            start_year_projection = request.inputs['start_projection'][0].data,
+            end_year_projection = request.inputs['end_projection'][0].data
         )
 
         options = dict(
@@ -142,7 +143,7 @@ class ModesVariability(Process):
             ncenters=int(request.inputs['ncenters'][0].data),
             detrend_order=int(request.inputs['detrend_order'][0].data),
             cluster_method=request.inputs['cluster_method'][0].data,
-            EOFS=request.inputs['eofs'][0].data,
+            eofs=request.inputs['eofs'][0].data,
             frequency=request.inputs['frequency'][0].data,
         )
 
@@ -150,7 +151,7 @@ class ModesVariability(Process):
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
-            diag='miles_blocking',
+            diag='modes_of_variability_wp4',
             constraints=constraints,
             options=options,
             start_year=constraints['start_year_historical'],

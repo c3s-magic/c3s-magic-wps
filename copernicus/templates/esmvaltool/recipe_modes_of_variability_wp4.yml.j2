@@ -27,17 +27,17 @@ datasets:
   #- {dataset: IPSL-CM5A-MR, project: CMIP5,  start_year: 1961,  end_year: 1990, ensemble: r1i1p1, exp: historical, type: exp}
   #- {dataset: IPSL-CM5A-MR, project: CMIP5,  start_year: 2006,  end_year: 2026, ensemble: r1i1p1, exp: rcp85, type: exp}
   - dataset: {{constraints['model_historical']}}
-     project: CMIP5
-     exp: {{constraints['experiment_historical']}}
-     ensemble: {{constraints['ensemble_historical']}}
-     start_year: {{start_year_historical}}
-     end_year: {{end_year_historical}}
+    project: CMIP5
+    exp: {{constraints['experiment_historical']}}
+    ensemble: {{constraints['ensemble_historical']}}
+    start_year: {{constraints['start_year_historical']}}
+    end_year: {{constraints['end_year_historical']}}
   - dataset: {{constraints['model_projection']}}
-     project: CMIP5
-     exp: {{constraints['experiment_projection']}}
-     ensemble: {{constraints['ensemble_projection']}}
-     start_year: {{start_year_projection}}
-     end_year: {{end_year_projection}}
+    project: CMIP5
+    exp: {{constraints['experiment_projection']}}
+    ensemble: {{constraints['ensemble_projection']}}
+    start_year: {{constraints['start_year_projection']}}
+    end_year: {{constraints['end_year_projection']}}
   {# - {dataset: bcc-csm1-1, project: CMIP5, start_year: 1961, end_year: 2000, ensemble: r1i1p1, exp: historical, type: exp}
   - {dataset: bcc-csm1-1, project: CMIP5, start_year: 2020, end_year: 2050, ensemble: r1i1p1, exp: rcp85, type: exp} #}
 
