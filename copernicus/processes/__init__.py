@@ -12,6 +12,7 @@ from .wps_zmnam import ZMNAM
 from .wps_teleconnections import Teleconnections
 from .wps_weather_regimes import WeatherRegimes
 from .wps_modes_variability import ModesVariability
+from .wps_combined_indices import CombinedIndices
 
 
 #Disabled for now
@@ -31,5 +32,6 @@ processes = [
     ZMNAM(),
     Teleconnections(),
     WeatherRegimes(),
-    ModesVariability()
+    ModesVariability(),
+    CombinedIndices()
 ]
