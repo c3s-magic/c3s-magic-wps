@@ -130,7 +130,7 @@ class CVDP(Process):
         response.update_status("collecting output ...", 80)
         response.outputs['plot'].output_format = Format('application/png')
         response.outputs['plot'].file = runner.get_output(
-            result['plot_dir'],
+            result['work_dir'], # Yes, it's in the work dir
             path_filter=os.path.join('diagnostic1', 'cvdp'),
             name_filter="pr.mean.ann",
             output_format="png")
