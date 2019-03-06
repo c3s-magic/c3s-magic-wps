@@ -8,23 +8,30 @@ import logging
 LOGGER = logging.getLogger("PYWPS")
 
 
-def year_ranges(start_end_year, start_end_defaults):
+def year_ranges(start_end_year, start_end_defaults, start_name='start_year', end_name='end_year'):
     start_year, end_year = start_end_year
-    default_start_year, default_end_year = start_end_defaults
-    return (
+    if start_end_defaults is not None:
+        default_start_year, default_end_year = start_end_defaults
+    else:
+        default_start_year = start_year
+        default_end_year = end_year
+    
+    start_long_name = start_name.replace('_', ' ').capitalize()
+    end_long_name = end_name.replace('_', ' ').capitalize()
+    return [
         LiteralInput(
-            'start_year',
-            "Start year ({})".format(start_year),
+            start_name,
+            "{} ({})".format(start_long_name, start_year),
             data_type='integer',
-            abstract='Start year of model data.',
+            abstract='{} of model data.'.format(start_long_name),
             default=default_start_year),
         LiteralInput(
-            'end_year',
-            'End year (till {})'.format(end_year),
+            end_name,
+            "{} (till {})".format(end_long_name, end_year),
             data_type='integer',
-            abstract='End year of model data.',
+            abstract='{} of model data.'.format(end_long_name),
             default=default_end_year)
-    )
+    ]
 
 
 def default_outputs():
@@ -62,41 +69,48 @@ def model_experiment_ensemble(models=['MPI-ESM-LR'],
                               experiment_name='Experiment',
                               ensembles=['r1i1p1'],
                               ensemble_name='Ensemble',
-                              start_end_year=(1850, 2005),
-                              start_end_defaults=(1950, 2005)):
-    return (LiteralInput(
-        model_name.lower(),
-        model_name,
-        abstract='Choose a model like {}.'.format(models[0]),
-        data_type='string',
-        allowed_values=models,
-        default=models[0],
-        min_occurs=1,
-        max_occurs=1),
-            LiteralInput(
-                experiment_name.lower(),
-                experiment_name,
-                abstract='Choose an experiment like {}.'.format(
-                    experiments[0]),
-                data_type='string',
-                allowed_values=experiments,
-                default=experiments[0]),
-            LiteralInput(
-                ensemble_name.lower(),
-                ensemble_name,
-                abstract='Choose an ensemble like {}.'.format(ensembles[0]),
-                data_type='string',
-                allowed_values=ensembles,
-                default=ensembles[0]),
-            *year_ranges(start_end_year, start_end_defaults))
+                              start_end_year=None,
+                              start_end_defaults=None):
+    inputs = [
+        LiteralInput(
+            model_name.lower(),
+            model_name,
+            abstract='Choose a model like {}.'.format(models[0]),
+            data_type='string',
+            allowed_values=models,
+            default=models[0],
+            min_occurs=1,
+            max_occurs=1),
+        LiteralInput(
+            experiment_name.lower(),
+            experiment_name,
+            abstract='Choose an experiment like {}.'.format(experiments[0]),
+            data_type='string',
+            allowed_values=experiments,
+            default=experiments[0]),
+        LiteralInput(
+            ensemble_name.lower(),
+            ensemble_name,
+            abstract='Choose an ensemble like {}.'.format(ensembles[0]),
+            data_type='string',
+            allowed_values=ensembles,
+            default=ensembles[0]),
+    ]
+    if start_end_year is not None:
+        inputs.extend(*year_ranges(start_end_year, start_end_defaults))
+
+    return inputs
+
 
 def inputs_from_plot_names(plotlist):
     plots = []
     for plot in plotlist:
-        plots.append(ComplexOutput(
+        plots.append(
+            ComplexOutput(
                 '{}_plot'.format(plot.lower()),
                 '{} plot'.format(plot),
-                abstract='Generated {} plot of ESMValTool processing.'.format(plot),
+                abstract='Generated {} plot of ESMValTool processing.'.format(
+                    plot),
                 as_reference=True,
                 supported_formats=[Format('image/png')]))
     return plots
