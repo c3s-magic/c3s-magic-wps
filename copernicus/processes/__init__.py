@@ -13,6 +13,7 @@ from .wps_teleconnections import Teleconnections
 from .wps_weather_regimes import WeatherRegimes
 from .wps_modes_variability import ModesVariability
 from .wps_combined_indices import CombinedIndices
+from .wps_multimodel_products import MultimodelProducts
 
 
 #Disabled for now
@@ -33,5 +34,6 @@ processes = [
     Teleconnections(),
     WeatherRegimes(),
     ModesVariability(),
-    CombinedIndices()
+    CombinedIndices(),
+    MultimodelProducts(),
 ]
