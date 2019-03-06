@@ -132,7 +132,7 @@ class WeatherRegimes(Process):
             try:
                 subdir = os.path.join(constraints['model'], constraints['experiment'],
                               constraints['ensemble'],
-                              "{}_{}".format(start_year, end_year),
+                              "{}-{}".format(start_year, end_year),
                               options['season'], 'Regimes')
                 self.get_outputs(result, subdir, response)
             except Exception as e:
@@ -162,11 +162,9 @@ class WeatherRegimes(Process):
                 name_filter="{}_*".format(plot),
                 output_format="png")
         
-        # workaround because the data outputdir uses a dash instead of an underscore
-        subdir2 = subdir.replace('_','-')
         response.outputs['data'].output_format = FORMATS.NETCDF
         response.outputs['data'].file = runner.get_output(
             result['work_dir'],
-            path_filter=os.path.join('miles_diagnostics', 'miles_regimes', subdir2),
+            path_filter=os.path.join('miles_diagnostics', 'miles_regimes', subdir),
             name_filter="RegimesPattern*",
             output_format="nc")

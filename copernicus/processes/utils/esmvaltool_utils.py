@@ -11,18 +11,20 @@ LOGGER = logging.getLogger("PYWPS")
 def year_ranges(start_end_year, start_end_defaults):
     start_year, end_year = start_end_year
     default_start_year, default_end_year = start_end_defaults
-    return (LiteralInput(
-        'start_year',
-        "Start year ({})".format(start_year),
-        data_type='integer',
-        abstract='Start year of model data.',
-        default=default_start_year),
-            LiteralInput(
-                'end_year',
-                'End year (till {})'.format(end_year),
-                data_type='integer',
-                abstract='End year of model data.',
-                default=default_end_year))
+    return (
+        LiteralInput(
+            'start_year',
+            "Start year ({})".format(start_year),
+            data_type='integer',
+            abstract='Start year of model data.',
+            default=default_start_year),
+        LiteralInput(
+            'end_year',
+            'End year (till {})'.format(end_year),
+            data_type='integer',
+            abstract='End year of model data.',
+            default=default_end_year)
+    )
 
 
 def default_outputs():

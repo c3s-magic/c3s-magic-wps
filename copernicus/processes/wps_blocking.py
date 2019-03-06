@@ -143,7 +143,7 @@ class Blocking(Process):
             try:
                 subdir = os.path.join(constraints['model'], constraints['experiment'],
                         constraints['ensemble'],
-                        "{}_{}".format(start_year, end_year),
+                        "{}-{}".format(start_year, end_year),
                         options['season'], 'Block')
 
                 self.get_outputs(result, subdir, response)
@@ -174,9 +174,7 @@ class Blocking(Process):
                                         subdir),
                 name_filter="{}*".format(plot),
                 output_format="png")
-        
-        # workaround because the data outputdir uses a dash instead of an underscore
-        subdir2 = subdir.replace('_','-')
+
         response.outputs['data_full'].output_format = FORMATS.NETCDF
         response.outputs['data_full'].file = runner.get_output(
             result['work_dir'],
