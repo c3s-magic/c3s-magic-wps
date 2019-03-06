@@ -71,10 +71,13 @@ def model_experiment_ensemble(models=['MPI-ESM-LR'],
                               ensemble_name='Ensemble',
                               start_end_year=None,
                               start_end_defaults=None):
+    model_long_name = model_name.replace('_', ' ').capitalize()
+    experiment_long_name = model_name.replace('_', ' ').capitalize()
+    ensemble_long_name = model_name.replace('_', ' ').capitalize()
     inputs = [
         LiteralInput(
             model_name.lower(),
-            model_name,
+            model_long_name,
             abstract='Choose a model like {}.'.format(models[0]),
             data_type='string',
             allowed_values=models,
@@ -83,14 +86,14 @@ def model_experiment_ensemble(models=['MPI-ESM-LR'],
             max_occurs=1),
         LiteralInput(
             experiment_name.lower(),
-            experiment_name,
+            experiment_long_name,
             abstract='Choose an experiment like {}.'.format(experiments[0]),
             data_type='string',
             allowed_values=experiments,
             default=experiments[0]),
         LiteralInput(
             ensemble_name.lower(),
-            ensemble_name,
+            ensemble_long_name,
             abstract='Choose an ensemble like {}.'.format(ensembles[0]),
             data_type='string',
             allowed_values=ensembles,
