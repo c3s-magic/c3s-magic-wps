@@ -7,7 +7,7 @@ from pywps.response.status import WPS_STATUS
 
 from copernicus import runner, util
 
-from .utils import default_outputs, model_experiment_ensemble
+from .utils import default_outputs, model_experiment_ensemble, year_ranges
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -15,19 +15,27 @@ LOGGER = logging.getLogger("PYWPS")
 class EnsClus(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(
-                models=['Defaults'],
-                experiments=['historical'],
-                ensembles=['r1i1p1'],
-                start_end_year=(1850, 2005),
-                start_end_defaults=(1850, 2005)),
+            # *model_experiment_ensemble(
+            #     models=['Defaults'],
+            #     experiments=['historical'],
+            #     ensembles=['r1i1p1'],
+            #     start_end_year=(1850, 2005),
+            #     start_end_defaults=(1850, 2005)),
+            *year_ranges((1850, 2005),(1900, 2005)),
+            LiteralInput(
+                'season',
+                'Season',
+                abstract='Choose a season like DJF.',
+                data_type='string',
+                allowed_values=['DJF', 'DJFM', 'NDJFM', 'JJA'],
+                default='JJA'),
             LiteralInput(
                 'area',
                 'Area',
                 abstract='Area',
                 data_type='string',
-                allowed_values=['Eu', 'EAT', 'PNA'],
-                default='Eu'),
+                allowed_values=['EU', 'EAT', 'PNA', 'NH'],
+                default='EU'),
             LiteralInput(
                 'extreme',
                 'Extreme',
@@ -35,7 +43,7 @@ class EnsClus(Process):
                 data_type='string',
                 allowed_values=[
                     '60th_percentile', '75th_percentile', '90th_percentile',
-                    'mean', 'maximum', 'std'
+                    'mean', 'maximum', 'std', 'trend'
                 ],
                 default='75th_percentile'),
             LiteralInput(
@@ -90,7 +98,9 @@ class EnsClus(Process):
             abstract="""Cluster analysis tool based on the k-means algorithm
                 for ensembles of climate model simulations. EnsClus group
                 ensemble members according to similar characteristics and
-                select the most representative member for each cluster.""",
+                select the most representative member for each cluster.
+                Currently included are the models: ACCESS1-0, ACCESS1-3,
+                CanESM2, CCSM4, CESM1-BGC""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
@@ -113,11 +123,11 @@ class EnsClus(Process):
 
         # build esgf search constraints
         constraints = dict(
-            model=request.inputs['model'][0].data,
-            experiment=request.inputs['experiment'][0].data,
+            # model=request.inputs['model'][0].data, # currently not used in recipy
+            experiment='historical', # request.inputs['experiment'][0].data,
             time_frequency='mon',
             cmor_table='Amon',
-            ensemble=request.inputs['ensemble'][0].data,
+            ensemble='r1i1p1' # request.inputs['ensemble'][0].data,
         )
 
         options = dict(
