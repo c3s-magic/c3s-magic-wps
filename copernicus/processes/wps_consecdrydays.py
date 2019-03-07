@@ -149,19 +149,19 @@ class ConsecDryDays(Process):
             response.outputs[key].file = runner.get_output(
                 result['plot_dir'],
                 path_filter=os.path.join('dry_days', 'consecutive_dry_days'),
-                name_filter="{}_*".format(plot),
+                name_filter="*{}".format(plot),
                 output_format="png")
 
         response.outputs['drymax'].output_format = FORMATS.NETCDF
         response.outputs['drymax'].file = runner.get_output(
             result['work_dir'],
             path_filter=os.path.join('dry_days', 'consecutive_dry_days'),
-            name_filter="CMIP5*drymax",
+            name_filter="*drymax",
             output_format="nc")
 
         response.outputs['dryfreq'].output_format = FORMATS.NETCDF
         response.outputs['dryfreq'].file = runner.get_output(
             result['work_dir'],
             path_filter=os.path.join('dry_days', 'consecutive_dry_days'),
-            name_filter="CMIP5*dryfreq",
+            name_filter="*dryfreq",
             output_format="nc")
