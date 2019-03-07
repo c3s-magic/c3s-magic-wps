@@ -15,8 +15,16 @@ LOGGER = logging.getLogger("PYWPS")
 class MultimodelProducts(Process):
     def __init__(self):
         inputs = []
-        self.plotlist = []
+        self.plotlist = [
+            'tas',
+            'Area'
+        ]
         outputs = [
+            *outputs_from_plot_names(self.plotlist),
+            ComplexOutput('data', 'Data',
+                          abstract='Generated output data of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[FORMATS.NETCDF]),
             ComplexOutput(
                 'archive',
                 'Archive',
@@ -112,3 +120,18 @@ class MultimodelProducts(Process):
     def get_outputs(self, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
+        for plot in self.plotlist:
+            key = '{}_plot'.format(plot.lower())
+            response.outputs[key].output_format = Format('application/png')
+            response.outputs[key].file = runner.get_output(
+                result['plot_dir'],
+                path_filter=os.path.join('dry_days', 'consecutive_dry_days'),
+                name_filter="{}*".format(plot),
+                output_format="png")
+
+        response.outputs['drymax'].output_format = FORMATS.NETCDF
+        response.outputs['drymax'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('dry_days', 'consecutive_dry_days'),
+            name_filter="tas*",
+            output_format="nc")
