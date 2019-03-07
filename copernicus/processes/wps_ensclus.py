@@ -69,8 +69,20 @@ class EnsClus(Process):
                 as_reference=True,
                 supported_formats=[Format('image/eps')]),
             ComplexOutput(
-                'data',
-                'Data',
+                'ens_extreme',
+                'ens_extreme',
+                abstract='Generated output data of ESMValTool processing.',
+                as_reference=True,
+                supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput(
+                'ens_climatologies',
+                'ens_climatologies',
+                abstract='Generated output data of ESMValTool processing.',
+                as_reference=True,
+                supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput(
+                'ens_anomalies',
+                'ens_anomalies',
                 abstract='Generated output data of ESMValTool processing.',
                 as_reference=True,
                 supported_formats=[FORMATS.NETCDF]),
@@ -193,19 +205,33 @@ class EnsClus(Process):
         response.outputs['plot'].file = runner.get_output(
             result['plot_dir'],
             path_filter=os.path.join('EnsClus', 'main'),
-            name_filter="*",
-            output_format="eps")
+            name_filter="anomalies*",
+            output_format="png")
 
-        response.outputs['data'].output_format = FORMATS.NETCDF
-        response.outputs['data'].file = runner.get_output(
-            result['plot_dir'],
+        response.outputs['ens_anomalies'].output_format = FORMATS.NETCDF
+        response.outputs['ens_anomalies'].file = runner.get_output(
+            result['work_dir'],
             path_filter=os.path.join('EnsClus', 'main'),
-            name_filter="ens*",
+            name_filter="ens_anomalies*",
+            output_format="nc")
+        
+        response.outputs['ens_anomalies'].output_format = FORMATS.NETCDF
+        response.outputs['ens_anomalies'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('EnsClus', 'main'),
+            name_filter="ens_anomalies*",
+            output_format="nc")
+        
+        response.outputs['ens_climatologies'].output_format = FORMATS.NETCDF
+        response.outputs['ens_climatologies'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('EnsClus', 'main'),
+            name_filter="ens_anomalies*",
             output_format="nc")
 
         response.outputs['statistics'].output_format = FORMATS.TEXT
         response.outputs['statistics'].file = runner.get_output(
-            result['plot_dir'],
+            result['work_dir'],
             path_filter=os.path.join('EnsClus', 'main'),
             name_filter="statistics*",
             output_format="txt")
