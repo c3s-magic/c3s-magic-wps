@@ -20,6 +20,12 @@ class CombinedIndices(Process):
         ]
         outputs = [
             ComplexOutput(
+                'data',
+                'Data',
+                abstract='Generated combined indices data.',
+                as_reference=True,
+                supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput(
                 'archive',
                 'Archive',
                 abstract=
@@ -114,3 +120,9 @@ class CombinedIndices(Process):
     def get_outputs(self, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
+        response.outputs['data'].output_format = FORMATS.NETCDF
+        response.outputs['data'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('combine_indices', 'main'),
+            name_filter="*",
+            output_format="nc")
