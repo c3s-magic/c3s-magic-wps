@@ -73,9 +73,8 @@ class ShapeSelect(Process):
         # build esgf search constraints
         constraints = dict(
             model=request.inputs['model'][0].data,
+            mip='Amon',
             experiment=request.inputs['experiment'][0].data,
-            time_frequency='day',
-            cmor_table='day',
             ensemble=request.inputs['ensemble'][0].data,
         )
 
