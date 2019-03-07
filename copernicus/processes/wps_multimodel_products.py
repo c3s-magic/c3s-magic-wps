@@ -129,8 +129,8 @@ class MultimodelProducts(Process):
                 name_filter="{}*".format(plot),
                 output_format="png")
 
-        response.outputs['drymax'].output_format = FORMATS.NETCDF
-        response.outputs['drymax'].file = runner.get_output(
+        response.outputs['data'].output_format = FORMATS.NETCDF
+        response.outputs['data'].file = runner.get_output(
             result['work_dir'],
             path_filter=os.path.join('anomaly_agreement', 'main'),
             name_filter="tas*",
