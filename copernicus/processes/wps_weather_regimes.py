@@ -5,7 +5,7 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from .utils import default_outputs, model_experiment_ensemble, inputs_from_plot_names
+from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names
 
 from .. import runner, util
 
@@ -47,7 +47,7 @@ class WeatherRegimes(Process):
             "Regime{}".format(i) for i in range(1,5)
         ]
         outputs = [
-            *inputs_from_plot_names(self.plotlist),
+            *outputs_from_plot_names(self.plotlist),
             ComplexOutput('data', 'Regime Data',
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,

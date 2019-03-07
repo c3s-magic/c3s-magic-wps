@@ -1,34 +1,31 @@
 ---
+documentation:
+  description: 'Consecutive dry days'
+  authors: ['berg_pe']
+  projects: ['c3s-magic']
+  references: ['acknow_project']
 
 datasets:
-  - {
-      dataset: {{constraints['model']}},
-      project: CMIP5,
-      mip: {{constraints['cmor_table']}},
-      exp: {{constraints['experiment']}},
-      ensemble: {{constraints['ensemble']}},
-      start_year: {{start_year}},
-      end_year: {{end_year}}
-    }
-
-preprocessors:
-
-   preprocessor1: {}
+  - dataset: {{constraints['model']}}
+    project: CMIP5
+    mip: {{constraints['cmor_table']}}
+    exp: {{constraints['experiment']}}
+    ensemble: {{constraints['ensemble']}}
+    start_year: {{start_year}}
+    end_year: {{end_year}}
 
 diagnostics:
 
-   diagnostic1:
-      description: Calculating number of dry days.
-      variables:
-         pr:
-            preprocessor: preprocessor1
-            field: T2Ms
-      scripts:
-         script1:  #conseq dry days
-            script: droughtindex/diag_cdd.py
-            dryindex: 'cdd'
-            #plim: 1
-            #frlim: 5
-            plim: {{options['plim']}}
-            frlim: {{options['frlim']}}
-        
+  dry_days:
+    description: Calculating number of dry days.
+    variables:
+      pr:
+        field: T2Ms
+    scripts:
+      consecutive_dry_days:
+        script: droughtindex/diag_cdd.py
+        dryindex: 'cdd'
+        plim: {{options['plim']}}
+        frlim: {{options['frlim']}}
+        quickplot:
+          plot_type: pcolormesh        

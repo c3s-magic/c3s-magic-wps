@@ -105,7 +105,7 @@ def model_experiment_ensemble(models=['MPI-ESM-LR'],
     return inputs
 
 
-def inputs_from_plot_names(plotlist):
+def outputs_from_plot_names(plotlist):
     plots = []
     for plot in plotlist:
         plots.append(

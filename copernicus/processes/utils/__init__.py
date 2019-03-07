@@ -1,1 +1,1 @@
-from .esmvaltool_utils import year_ranges, default_outputs, model_experiment_ensemble, inputs_from_plot_names
+from .esmvaltool_utils import year_ranges, default_outputs, model_experiment_ensemble, outputs_from_plot_names

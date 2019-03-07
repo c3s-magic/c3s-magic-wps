@@ -4,9 +4,6 @@ from .wps_consecdrydays import ConsecDryDays
 from .wps_cvdp import CVDP
 from .wps_ensclus import EnsClus
 from .wps_shapeselect import ShapeSelect
-from .wps_perfmetrics import Perfmetrics
-from .wps_rainfarm import RainFarm
-from .wps_rmse import RMSE
 from .wps_blocking import Blocking
 from .wps_zmnam import ZMNAM
 from .wps_teleconnections import Teleconnections
@@ -18,15 +15,7 @@ from .wps_heatwaves_coldwaves import HeatwavesColdwaves
 from .wps_diurnal_temperature_index import DiurnalTemperatureIndex
 from .wps_capacity_factor import CapacityFactor
 from .wps_extreme_index import ExtremeIndex
-
-
-#Disabled for now
-# MyDiag(),
-# RainFarm(),
-# RMSE(),
-# ConsecDryDays(),
-# ShapeSelect(),
-# Perfmetrics(),
+from .wps_drought_indicator import DroughtIndicator
 
 processes = [
     CVDP(),
@@ -44,4 +33,7 @@ processes = [
     DiurnalTemperatureIndex(),
     CapacityFactor(),
     ExtremeIndex(),
+    DroughtIndicator(),
+    ConsecDryDays(),
+    ShapeSelect(),
 ]

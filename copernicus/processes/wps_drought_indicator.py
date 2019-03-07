@@ -12,7 +12,7 @@ from .. import runner, util
 LOGGER = logging.getLogger("PYWPS")
 
 
-class MultimodelProducts(Process):
+class DroughtIndicator(Process):
     def __init__(self):
         inputs = []
         self.plotlist = []
@@ -27,24 +27,18 @@ class MultimodelProducts(Process):
             *default_outputs(),
         ]
 
-        super(MultimodelProducts, self).__init__(
+        super(DroughtIndicator, self).__init__(
             self._handler,
-            identifier="multimodel_products",
-            title="Generic multi-model products",
+            identifier="drought_indicator",
+            title="Drought indicator",
             version=runner.VERSION,
-            abstract="""For the 'generic multi-model diagnostic' the ensemble
-                mean anomaly, and the ensemble variance and agreement are
-                calculated. The results are shown as maps and time series.""",
+            abstract="""The drought indicator calculates diagnostics for meteorological drought.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
-                    'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_spei.html',
                     role=util.WPS_ROLE_DOC),
-                Metadata(
-                    'Media',
-                    util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
-                    role=util.WPS_ROLE_MEDIA),
             ],
             inputs=inputs,
             outputs=outputs,
@@ -63,11 +57,11 @@ class MultimodelProducts(Process):
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
-            diag='multimodel_products_wp5',
+            diag='spei',
             constraints=constraints,
             options=options,
-            start_year=1961,
-            end_year=2099,
+            start_year=2000,
+            end_year=2005,
             output_format='png',
         )
 

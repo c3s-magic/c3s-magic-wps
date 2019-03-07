@@ -6,6 +6,7 @@ write_netcdf: true
 log_level: info
 exit_on_warning: false
 output_file_type: {{ output_format }}
+auxiliary_data_dir: '/opt/esmvaltool/esmvaltool/diag_scripts/shapeselect/testdata/'
 
 output_dir: {{ output_dir }}
 

@@ -9,6 +9,8 @@ from pywps.app.Common import Metadata
 from copernicus import runner
 from copernicus import util
 
+from copernicus.processes.utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
+
 import logging
 LOGGER = logging.getLogger("PYWPS")
 
@@ -16,29 +18,12 @@ LOGGER = logging.getLogger("PYWPS")
 class ShapeSelect(Process):
     def __init__(self):
         inputs = [
-            LiteralInput('model', 'Model',
-                         abstract='Choose a model like bcc-csm1-1.',
-                         data_type='string',
-                         allowed_values=['bcc-csm1-1'],
-                         default='bcc-csm1-1',
-			 min_occurs=1,
-			 max_occurs=1),
-            LiteralInput('experiment', 'Experiment',
-                         abstract='Choose an experiment like historical.',
-                         data_type='string',
-                         allowed_values=['historical'],
-                         default='historical'),
-            LiteralInput('ensemble', 'Ensemble',
-                         abstract='Choose an ensemble like r1i1p1.',
-                         data_type='string',
-                         allowed_values=['r1i1p1'],
-                         default='r1i1p1'),
-            LiteralInput('start_year', 'Start year (from 1979)', data_type='integer',
-                         abstract='Start year of model data.',
-                         default="2000"),
-            LiteralInput('end_year', 'End year (till 2005)', data_type='integer',
-                         abstract='End year of model data.',
-                         default="2001"),
+            *model_experiment_ensemble(
+                models=['EC-EARTH'],
+                experiments=['historical'],
+                ensembles=['r12i1p1'],
+                start_end_year=(1979, 2005),
+                start_end_defaults=(1990, 1999)),
             LiteralInput('shape', 'Shape',
                          abstract='Shape of the area',
                          data_type='string',
@@ -46,14 +31,6 @@ class ShapeSelect(Process):
                          default='MotalaStrom'),
          ]
         outputs = [
-            ComplexOutput('recipe', 'recipe',
-                          abstract='ESMValTool recipe used for processing.',
-                          as_reference=True,
-                          supported_formats=[Format('text/plain')]),
-            ComplexOutput('log', 'Log File',
-                          abstract='Log File of ESMValTool processing.',
-                          as_reference=True,
-                          supported_formats=[Format('text/plain')]),
             ComplexOutput('plot', 'Output plot',
                           abstract='Generated output plot of ESMValTool processing.',
                           as_reference=True,
@@ -66,21 +43,22 @@ class ShapeSelect(Process):
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
                           as_reference=True,
                           supported_formats=[Format('application/zip')]),
+            *default_outputs(),
         ]
 
         super(ShapeSelect, self).__init__(
             self._handler,
-            identifier="shape_select",
-            title="Shape selection metric",
+            identifier="shapefile_selection",
+            title="Shapefile selection",
             version=runner.VERSION,
-            abstract= "Selects data from a region specified by a shape (e.g a catchment)",
+            abstract= "Metric showing selected gridded data within a user defined polygon shapefile and outputting as NetCDF or csv file.",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
-                         'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
+                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_shapeselect.html',
                          role=util.WPS_ROLE_DOC),
                 Metadata('Media',
-                         util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
+                         util.diagdata_url() + '/shapefile_selection/OBS_CRU_reanaly_1_T2Ms_tas_1990-1994.png',
                          role=util.WPS_ROLE_MEDIA),
             ],
             inputs=inputs,
@@ -90,6 +68,7 @@ class ShapeSelect(Process):
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)
+        workdir = self.workdir
 
         # build esgf search constraints
         constraints = dict(
@@ -107,8 +86,8 @@ class ShapeSelect(Process):
         # generate recipe
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
-            workdir=self.workdir,
-            diag='shapeselect_py',
+            workdir=workdir,
+            diag='shapeselect',
             constraints=constraints,
             start_year=request.inputs['start_year'][0].data,
             end_year=request.inputs['end_year'][0].data,
@@ -116,33 +95,32 @@ class ShapeSelect(Process):
             options=options,
         )
 
-        # run diag
-        response.update_status("running diagnostic ...", 20)
-        logfile, plot_dir, work_dir, run_dir = runner.run(recipe_file, config_file)
-
         # recipe output
         response.outputs['recipe'].output_format = FORMATS.TEXT
         response.outputs['recipe'].file = recipe_file
 
+        # run diag
+        response.update_status("running diagnostic ...", 20)
+        result = runner.run(recipe_file, config_file)
+
+        response.outputs['success'].data = result['success']
+
         # log output
         response.outputs['log'].output_format = FORMATS.TEXT
-        response.outputs['log'].file = logfile
+        response.outputs['log'].file = result['logfile']
 
-        # result plot
-        response.update_status("collecting output ...", 80)
-        response.outputs['plot'].output_format = Format('application/png')
-        response.outputs['plot'].file = runner.get_output(
-            plot_dir,
-            path_filter=os.path.join('diagnostic1', 'script1'),
-            name_filter="CMIP5*",
-            output_format="png")
+        # debug log output
+        response.outputs['debug_log'].output_format = FORMATS.TEXT
+        response.outputs['debug_log'].file = result['debug_logfile']
 
-        response.outputs['data'].output_format = Format('application/vnd.ms-excel')
-        response.outputs['data'].file = runner.get_output(
-            work_dir,
-            path_filter=os.path.join('diagnostic1', 'script1'),
-            name_filter="CMIP5*",
-            output_format="xlsx")
+        if result['success']:
+            try:
+                self.get_outputs(result, response)
+            except Exception as e:
+                response.update_status("exception occured: " + str(e), 85)
+        else:
+            LOGGER.exception('esmvaltool failed!')
+            response.update_status("exception occured: " + result['exception'], 85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
@@ -151,3 +129,20 @@ class ShapeSelect(Process):
 
         response.update_status("done.", 100)
         return response
+    
+    def get_outputs(self, result, response):
+        # result plot
+        response.update_status("collecting output ...", 80)
+        response.outputs['plot'].output_format = Format('application/png')
+        response.outputs['plot'].file = runner.get_output(
+            result['plot_dir'],
+            path_filter=os.path.join('diagnostic1', 'script1'),
+            name_filter="CMIP5*",
+            output_format="png")
+
+        response.outputs['data'].output_format = Format('application/vnd.ms-excel')
+        response.outputs['data'].file = runner.get_output(
+            result['plot_dir'],
+            path_filter=os.path.join('diagnostic1', 'script1'),
+            name_filter="CMIP5*",
+            output_format="xlsx")

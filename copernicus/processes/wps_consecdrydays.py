@@ -12,33 +12,18 @@ from copernicus import util
 import logging
 LOGGER = logging.getLogger("PYWPS")
 
+from copernicus.processes.utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
+
 
 class ConsecDryDays(Process):
     def __init__(self):
         inputs = [
-            LiteralInput('model', 'Model',
-                         abstract='Choose a model like MPI-ESM-LR.',
-                         data_type='string',
-                         allowed_values=['bcc-csm1-1-m', 'bcc-csm1-1'],
-                         default='bcc-csm1-1-m',
-			 min_occurs=1,
-			 max_occurs=1),
-            LiteralInput('experiment', 'Experiment',
-                         abstract='Choose an experiment like historical.',
-                         data_type='string',
-                         allowed_values=['historical'],
-                         default='historical'),
-            LiteralInput('ensemble', 'Ensemble',
-                         abstract='Choose an ensemble like r1i1p1.',
-                         data_type='string',
-                         allowed_values=['r1i1p1'],
-                         default='r1i1p1'),
-            LiteralInput('start_year', 'Start year (from 1850)', data_type='integer',
-                         abstract='Start year of model data.',
-                         default="2001"),
-            LiteralInput('end_year', 'End year (till 2012)', data_type='integer',
-                         abstract='End year of model data.',
-                         default="2002"),
+            *model_experiment_ensemble(
+                models=['bcc-csm1-1-m', 'bcc-csm1-1'],
+                experiments=['historical'],
+                ensembles=['r1i1p1'],
+                start_end_year=(1850, 2012),
+                start_end_defaults=(2001, 2002)),
             LiteralInput('frlim', 'frlim',
                          abstract='Frlim',
                          data_type='string',
@@ -51,18 +36,6 @@ class ConsecDryDays(Process):
                          default='1'),
         ]
         outputs = [
-            ComplexOutput('recipe', 'recipe',
-                          abstract='ESMValTool recipe used for processing.',
-                          as_reference=True,
-                          supported_formats=[Format('text/plain')]),
-            ComplexOutput('log', 'Log File',
-                          abstract='Log File of ESMValTool processing.',
-                          as_reference=True,
-                          supported_formats=[Format('text/plain')]),
-#            ComplexOutput('plot', 'Output plot',
-#                          abstract='Generated output plot of ESMValTool processing.',
-#                          as_reference=True,
-#                          supported_formats=[Format('image/png')]),
             ComplexOutput('drymax', 'Data Drymax',
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
@@ -75,6 +48,7 @@ class ConsecDryDays(Process):
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
                           as_reference=True,
                           supported_formats=[Format('application/zip')]),
+            *default_outputs(),
         ]
 
         super(ConsecDryDays, self).__init__(
@@ -86,10 +60,10 @@ class ConsecDryDays(Process):
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
-                         'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
+                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_consecdrydays.html',
                          role=util.WPS_ROLE_DOC),
                 Metadata('Media',
-                         util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
+                         util.diagdata_url() + '/consecdrydays/drydays.png',
                          role=util.WPS_ROLE_MEDIA),
             ],
             inputs=inputs,
@@ -99,6 +73,7 @@ class ConsecDryDays(Process):
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)
+        workdir = self.workdir
 
         # build esgf search constraints
         constraints = dict(
@@ -118,7 +93,7 @@ class ConsecDryDays(Process):
         # generate recipe
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
-            workdir=self.workdir,
+            workdir=workdir,
             diag='consecdrydays',
             constraints=constraints,
             start_year=request.inputs['start_year'][0].data,
@@ -127,40 +102,32 @@ class ConsecDryDays(Process):
             output_format='png',
         )
 
-        # run diag
-        response.update_status("running diagnostic ...", 20)
-        logfile, plot_dir, work_dir, run_dir = runner.run(recipe_file, config_file)
-
         # recipe output
         response.outputs['recipe'].output_format = FORMATS.TEXT
         response.outputs['recipe'].file = recipe_file
 
+        # run diag
+        response.update_status("running diagnostic ...", 20)
+        result = runner.run(recipe_file, config_file)
+
+        response.outputs['success'].data = result['success']
+
         # log output
         response.outputs['log'].output_format = FORMATS.TEXT
-        response.outputs['log'].file = logfile
+        response.outputs['log'].file = result['logfile']
 
-        # result plot
-        response.update_status("collecting output ...", 80)
-#        response.outputs['plot'].output_format = Format('application/png')
-#        response.outputs['plot'].file = runner.get_output(
-#            plot_dir,
-#            path_filter=os.path.join('diagnostic1', 'script1'),
-#            name_filter="CMIP5*",
-#            output_format="png")
+        # debug log output
+        response.outputs['debug_log'].output_format = FORMATS.TEXT
+        response.outputs['debug_log'].file = result['debug_logfile']
 
-        response.outputs['drymax'].output_format = FORMATS.NETCDF
-        response.outputs['drymax'].file = runner.get_output(
-            work_dir,
-            path_filter=os.path.join('diagnostic1', 'script1'),
-            name_filter="CMIP5*drymax",
-            output_format="nc")
-
-        response.outputs['dryfreq'].output_format = FORMATS.NETCDF
-        response.outputs['dryfreq'].file = runner.get_output(
-            work_dir,
-            path_filter=os.path.join('diagnostic1', 'script1'),
-            name_filter="CMIP5*dryfreq",
-            output_format="nc")
+        if result['success']:
+            try:
+                self.get_outputs(result, response)
+            except Exception as e:
+                response.update_status("exception occured: " + str(e), 85)
+        else:
+            LOGGER.exception('esmvaltool failed!')
+            response.update_status("exception occured: " + result['exception'], 85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
@@ -169,3 +136,18 @@ class ConsecDryDays(Process):
 
         response.update_status("done.", 100)
         return response
+
+    def get_outputs(self, result, response):
+        response.outputs['drymax'].output_format = FORMATS.NETCDF
+        response.outputs['drymax'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('diagnostic1', 'script1'),
+            name_filter="CMIP5*drymax",
+            output_format="nc")
+
+        response.outputs['dryfreq'].output_format = FORMATS.NETCDF
+        response.outputs['dryfreq'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('diagnostic1', 'script1'),
+            name_filter="CMIP5*dryfreq",
+            output_format="nc")

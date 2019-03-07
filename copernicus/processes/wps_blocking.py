@@ -5,7 +5,7 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from copernicus.processes.utils import default_outputs, model_experiment_ensemble, inputs_from_plot_names
+from copernicus.processes.utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names
 
 from .. import runner, util
 
@@ -53,7 +53,7 @@ class Blocking(Process):
             'InstBlock'
         ]
         outputs = [
-            *inputs_from_plot_names(self.plotlist),
+            *outputs_from_plot_names(self.plotlist),
             ComplexOutput('data_full', 'Full Blocking Data',
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,

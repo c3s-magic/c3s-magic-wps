@@ -85,20 +85,21 @@ class EnsClus(Process):
         super(EnsClus, self).__init__(
             self._handler,
             identifier="ensclus",
-            title="Recipe for sub-ensemble selection",
+            title="EnsClus - Ensemble Clustering",
             version=runner.VERSION,
-            abstract="Generates a plot for temperature using ESMValTool."
-            " The default run uses the following CMIP5 data:"
-            " project=CMIP5, experiment=historical, ensemble=r1i1p1, variable=ta, model=MPI-ESM-LR, time_frequency=mon",  # noqa
+            abstract="""Cluster analysis tool based on the k-means algorithm
+                for ensembles of climate model simulations. EnsClus group
+                ensemble members according to similar characteristics and
+                select the most representative member for each cluster.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
-                    'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_ensclus.html',
                     role=util.WPS_ROLE_DOC),
                 Metadata(
                     'Media',
-                    util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
+                    util.diagdata_url() + '/ensclus/ensclus_thumbnail.png',
                     role=util.WPS_ROLE_MEDIA),
             ],
             inputs=inputs,
@@ -163,7 +164,8 @@ class EnsClus(Process):
                 response.update_status("exception occured: " + str(e), 85)
         else:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'], 85)
+            response.update_status("exception occured: " + result['exception'],
+                                   85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
