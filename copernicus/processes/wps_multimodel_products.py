@@ -125,13 +125,13 @@ class MultimodelProducts(Process):
             response.outputs[key].output_format = Format('application/png')
             response.outputs[key].file = runner.get_output(
                 result['plot_dir'],
-                path_filter=os.path.join('dry_days', 'consecutive_dry_days'),
+                path_filter=os.path.join('anomaly_agreement', 'main'),
                 name_filter="{}*".format(plot),
                 output_format="png")
 
         response.outputs['drymax'].output_format = FORMATS.NETCDF
         response.outputs['drymax'].file = runner.get_output(
             result['work_dir'],
-            path_filter=os.path.join('dry_days', 'consecutive_dry_days'),
+            path_filter=os.path.join('anomaly_agreement', 'main'),
             name_filter="tas*",
             output_format="nc")
