@@ -14,6 +14,10 @@ from .wps_weather_regimes import WeatherRegimes
 from .wps_modes_variability import ModesVariability
 from .wps_combined_indices import CombinedIndices
 from .wps_multimodel_products import MultimodelProducts
+from .wps_heatwaves_coldwaves import HeatwavesColdwaves
+from .wps_diurnal_temperature_index import DiurnalTemperatureIndex
+from .wps_capacity_factor import CapacityFactor
+from .wps_extreme_index import ExtremeIndex
 
 
 #Disabled for now
@@ -36,4 +40,8 @@ processes = [
     ModesVariability(),
     CombinedIndices(),
     MultimodelProducts(),
+    HeatwavesColdwaves(),
+    DiurnalTemperatureIndex(),
+    CapacityFactor(),
+    ExtremeIndex(),
 ]
