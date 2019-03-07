@@ -31,11 +31,11 @@ class ShapeSelect(Process):
                          default='MotalaStrom'),
          ]
         outputs = [
-            ComplexOutput('plot', 'Output plot',
-                          abstract='Generated output plot of ESMValTool processing.',
-                          as_reference=True,
-                          supported_formats=[Format('image/png')]),
             ComplexOutput('data', 'Data',
+                          abstract='Generated NetCDF file with precipitation for the selected area.',
+                          as_reference=True,
+                          supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput('xlsx_data', 'XLSX Data',
                           abstract='Generated excel file with precipitation for the selected area',
                           as_reference=True,
                           supported_formats=[Format('application/vnd.ms-excel')]),
@@ -132,16 +132,16 @@ class ShapeSelect(Process):
     def get_outputs(self, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
-        response.outputs['plot'].output_format = Format('application/png')
-        response.outputs['plot'].file = runner.get_output(
-            result['plot_dir'],
+        response.outputs['data'].output_format = Format('application/png')
+        response.outputs['data'].file = runner.get_output(
+            result['work_dir'],
             path_filter=os.path.join('diagnostic1', 'script1'),
             name_filter="CMIP5*",
-            output_format="png")
+            output_format="nc")
 
-        response.outputs['data'].output_format = Format('application/vnd.ms-excel')
-        response.outputs['data'].file = runner.get_output(
-            result['plot_dir'],
+        response.outputs['xlsx_data'].output_format = Format('application/vnd.ms-excel')
+        response.outputs['xlsx_data'].file = runner.get_output(
+            result['work_dir'],
             path_filter=os.path.join('diagnostic1', 'script1'),
             name_filter="CMIP5*",
             output_format="xlsx")
