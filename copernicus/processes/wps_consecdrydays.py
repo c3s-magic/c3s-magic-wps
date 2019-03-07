@@ -37,15 +37,15 @@ class ConsecDryDays(Process):
         ]
         self.plotlist = [
             'dryfreq',
-            'drydays'
+            'drymax'
         ]
         outputs = [
             *outputs_from_plot_names(self.plotlist),
-            ComplexOutput('drymax', 'Data Drymax',
+            ComplexOutput('data_drymax', 'Data Drymax',
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[FORMATS.NETCDF]),
-            ComplexOutput('dryfreq', 'Data DryFreq',
+            ComplexOutput('data_dryfreq', 'Data DryFreq',
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[FORMATS.NETCDF]),
@@ -152,15 +152,15 @@ class ConsecDryDays(Process):
                 name_filter="*{}".format(plot),
                 output_format="png")
 
-        response.outputs['drymax'].output_format = FORMATS.NETCDF
-        response.outputs['drymax'].file = runner.get_output(
+        response.outputs['data_drymax'].output_format = FORMATS.NETCDF
+        response.outputs['data_drymax'].file = runner.get_output(
             result['work_dir'],
             path_filter=os.path.join('dry_days', 'consecutive_dry_days'),
             name_filter="*drymax",
             output_format="nc")
 
-        response.outputs['dryfreq'].output_format = FORMATS.NETCDF
-        response.outputs['dryfreq'].file = runner.get_output(
+        response.outputs['data_dryfreq'].output_format = FORMATS.NETCDF
+        response.outputs['data_dryfreq'].file = runner.get_output(
             result['work_dir'],
             path_filter=os.path.join('dry_days', 'consecutive_dry_days'),
             name_filter="*dryfreq",
