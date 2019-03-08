@@ -17,10 +17,10 @@ class ExtremeIndex(Process):
         inputs = [
             LiteralInput(
                 'metric',
-                'Meason',
+                'Metric',
                 abstract='Choose a metric to calculate.',
                 data_type='string',
-                allowed_values=['t10p', 't90p', 'cdd', 'rx5day', 'Wx'],
+                allowed_values=['t10p', 't90p', 'rx5day', 'Wx'], # 'cdd' <- these do not work
                 default='Wx'),
         ]
         self.plotlist = []

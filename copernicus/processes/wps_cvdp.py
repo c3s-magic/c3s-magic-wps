@@ -29,10 +29,6 @@ class CVDP(Process):
                 abstract='Generated output plot of ESMValTool processing.',
                 as_reference=True,
                 supported_formats=[Format('image/png')]),
-            #            ComplexOutput('data', 'Data',
-            #                          abstract='Generated output data of ESMValTool processing.',
-            #                          as_reference=True,
-            #                          supported_formats=[FORMATS.NETCDF]),
             ComplexOutput(
                 'archive',
                 'Archive',
@@ -46,7 +42,7 @@ class CVDP(Process):
         super(CVDP, self).__init__(
             self._handler,
             identifier="cvdp",
-            title="Run the NCAR CVDPackage",
+            title="NCAR CVDPackage",
             version=runner.VERSION,
             abstract="Run the NCAR CVDPackage",
             metadata=[
@@ -134,10 +130,3 @@ class CVDP(Process):
             path_filter=os.path.join('diagnostic1', 'cvdp'),
             name_filter="pr.mean.ann",
             output_format="png")
-
-        #    response.outputs['data'].output_format = FORMATS.NETCDF
-        #    response.outputs['data'].file = runner.get_output(
-        #        work_dir,
-        #        path_filter=os.path.join('diagnostic1', 'script1'),
-        #        name_filter="CMIP5*",
-        #        output_format="nc")
