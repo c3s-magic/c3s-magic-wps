@@ -208,22 +208,22 @@ class EnsClus(Process):
             name_filter="anomalies*",
             output_format="png")
 
-        response.outputs['ens_anomalies'].output_format = FORMATS.NETCDF
-        response.outputs['ens_anomalies'].file = runner.get_output(
+        response.outputs['ens_extreme'].output_format = FORMATS.NETCDF
+        response.outputs['ens_extreme'].file = runner.get_output(
             result['work_dir'],
             path_filter=os.path.join('EnsClus', 'main'),
-            name_filter="ens_anomalies*",
-            output_format="nc")
-        
-        response.outputs['ens_anomalies'].output_format = FORMATS.NETCDF
-        response.outputs['ens_anomalies'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('EnsClus', 'main'),
-            name_filter="ens_anomalies*",
+            name_filter="ens_extreme*",
             output_format="nc")
         
         response.outputs['ens_climatologies'].output_format = FORMATS.NETCDF
         response.outputs['ens_climatologies'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('EnsClus', 'main'),
+            name_filter="ens_anomalies*",
+            output_format="nc")
+        
+        response.outputs['ens_anomalies'].output_format = FORMATS.NETCDF
+        response.outputs['ens_anomalies'].file = runner.get_output(
             result['work_dir'],
             path_filter=os.path.join('EnsClus', 'main'),
             name_filter="ens_anomalies*",
