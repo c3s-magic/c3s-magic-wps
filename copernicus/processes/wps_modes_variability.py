@@ -77,7 +77,7 @@ class ModesVariability(Process):
                 data_type='string',
                 allowed_values=[
                     'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG',
-                    'SEP', 'OCT', 'NOV', 'DEC', 'JJA', 'SON', 'MAM', 'DJF'
+                    'SEP', 'OCT', 'NOV', 'DEC', 'JJA', 'SON', 'DJF' # 'MAM' <- does not work yet
                 ],
                 default='JJA'),
         ]
