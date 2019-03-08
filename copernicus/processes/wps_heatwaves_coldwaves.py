@@ -33,8 +33,8 @@ class HeatwavesColdwaves(Process):
                 'Operator',
                 abstract='either `>` for exceedances or `<` for non-exceedances',
                 data_type='string',
-                allowed_values=['<', '>'],
-                default='<'),
+                allowed_values=['exceedances', 'non-exceedances'],
+                default='non-exceedances'),
             LiteralInput(
                 'season',
                 'Season',
@@ -95,7 +95,20 @@ class HeatwavesColdwaves(Process):
         # build esgf search constraints
         constraints = dict()
 
-        options = dict()
+        op = request.inputs['operator'][0].data
+        if op == 'exceendances':
+            operator = '>'
+        elif op == 'non-exceedances':
+            operator = '<'
+        else:
+            raise Exception('Unknown operator for task: ' + op)
+
+        options = dict(
+            quantile=request.inputs['quantile'][0].data,
+            min_duration=request.inputs['min_duration'][0].data,
+            operator=operator,
+            season=request.inputs['season'][0].data,
+        )
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
