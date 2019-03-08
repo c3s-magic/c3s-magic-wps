@@ -43,14 +43,14 @@ diagnostics:
       main:
         script: magic_bsc/combined_indices_wp6.r
         ## Weights for combining indices - if not "equal" or "NULL", must be the same length as the number of indices
-        weights: "equal"
+        weights: {{options['weights']}} # "equal"
 
         # Compute running mean?
-        running_mean: 5 #3
+        running_mean: null # 5 #3
 
         #Or compute seasons? (NOTE: cant compute both running means and seasons):
-        moninf: 1  # First month
-        monsup: 3  # Last month
+        moninf: {{options['moninf']}} # 1  # First month
+        monsup: {{options['monsup']}} # 3  # Last month
 
         # Multi-year average?
         multi_year_average: false

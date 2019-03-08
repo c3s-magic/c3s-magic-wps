@@ -15,8 +15,27 @@ LOGGER = logging.getLogger("PYWPS")
 class CombinedIndices(Process):
     def __init__(self):
         inputs = [
-        ]
-        self.plotlist = [
+            LiteralInput(
+                'weights',
+                'Weights',
+                abstract='Wither ‘equal’, for equal weights, ‘null’ for no weights.',
+                data_type='string',
+                allowed_values=['equal', 'null'],
+                default='equal'),
+            LiteralInput(
+                'moninf',
+                'First month month of the seasonal mean period',
+                abstract='The first month of the seasonal mean period to be computed, if none the monthly anomalies will be computed.',
+                data_type='string',
+                allowed_values=['1', '2', '3', '4','5', '6', '7', '8', '9', '10', '11', '12', 'null'],
+                default='6'),
+            LiteralInput(
+                'monsup',
+                'Last month month of the seasonal mean period',
+                abstract='the last month of the seasonal mean period to be computed, if none the monthly anomalies will be computed.',
+                data_type='string',
+                allowed_values=['1', '2', '3', '4','5', '6', '7', '8', '9', '10', '11', '12'],
+                default='6'),
         ]
         outputs = [
             ComplexOutput(
@@ -65,6 +84,9 @@ class CombinedIndices(Process):
         )
 
         options = dict(
+            weights=request.inputs['weights'][0].data,
+            moninf=request.inputs['moninf'][0].data,
+            monsup=request.inputs['monsup'][0].data,
         )
 
         # generate recipe
