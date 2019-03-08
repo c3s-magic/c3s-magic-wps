@@ -18,6 +18,19 @@ class DiurnalTemperatureIndex(Process):
         self.plotlist = []
         outputs = [
             ComplexOutput(
+                'plot',
+                'Diurnal Temperature Variation (DTR) Indicator plot',
+                abstract='The diurnal temperature indicator to estimate energy demand.',
+                as_reference=True,
+                supported_formats=[Format('image/png')]),
+            ComplexOutput(
+                'data',
+                'Diurnal Temperature Variation (DTR) Indicator data',
+                abstract=
+                'The diurnal temperature indicator data.',
+                as_reference=True,
+                supported_formats=[Format('application/zip')]),
+            ComplexOutput(
                 'archive',
                 'Archive',
                 abstract=
@@ -37,8 +50,12 @@ class DiurnalTemperatureIndex(Process):
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
-                    'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_diurnal_temperature_index.html',
                     role=util.WPS_ROLE_DOC),
+                Metadata(
+                    'Media',
+                    util.diagdata_url() + '/dtr/diurnal_temperature_variation.png',
+                    role=util.WPS_ROLE_MEDIA),
             ],
             inputs=inputs,
             outputs=outputs,
@@ -106,3 +123,16 @@ class DiurnalTemperatureIndex(Process):
     def get_outputs(self, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
+        response.outputs['plot'].output_format = Format('application/png')
+        response.outputs['plot'].file = runner.get_output(
+            result['plot_dir'],
+            path_filter=os.path.join('diurnal_temperature_indicator', 'main'),
+            name_filter="*",
+            output_format="png")
+
+        response.outputs['data'].output_format = FORMATS.NETCDF
+        response.outputs['data'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('diurnal_temperature_indicator', 'main'),
+            name_filter="Seasonal_DTRindicator*",
+            output_format="nc")
