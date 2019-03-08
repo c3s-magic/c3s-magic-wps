@@ -31,7 +31,7 @@ class HeatwavesColdwaves(Process):
             LiteralInput(
                 'operator',
                 'Operator',
-                abstract='either ‘>’ for exceedances or ‘<’ for non-exceedances',
+                abstract='either `>` for exceedances or `<` for non-exceedances',
                 data_type='string',
                 allowed_values=['<', '>'],
                 default='<'),
