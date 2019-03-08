@@ -14,9 +14,30 @@ LOGGER = logging.getLogger("PYWPS")
 
 class ExtremeIndex(Process):
     def __init__(self):
-        inputs = []
+        inputs = [
+            LiteralInput(
+                'metric',
+                'Meason',
+                abstract='Choose a metric to calculate.',
+                data_type='string',
+                allowed_values=['t10p', 't90p', 'cdd', 'rx5day', 'Wx'],
+                default='Wx'),
+        ]
         self.plotlist = []
         outputs = [
+            ComplexOutput(
+                'plot',
+                'Combined Climate Extreme Index plot',
+                abstract='Combined Climate Extreme Index plot.',
+                as_reference=True,
+                supported_formats=[Format('image/png')]),
+            ComplexOutput(
+                'data',
+                'Combined Climate Extreme Index data',
+                abstract=
+                'Combined Climate Extreme Index data.',
+                as_reference=True,
+                supported_formats=[Format('application/zip')]),
             ComplexOutput(
                 'archive',
                 'Archive',
@@ -55,7 +76,9 @@ class ExtremeIndex(Process):
         # build esgf search constraints
         constraints = dict()
 
-        options = dict()
+        options = dict(
+            metric=request.inputs['metric'][0].data
+        )
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
@@ -94,7 +117,7 @@ class ExtremeIndex(Process):
             return response
 
         try:
-            self.get_outputs(result, response)
+            self.get_outputs(result, constraints, options, response)
         except Exception as e:
             response.update_status("exception occured: " + str(e), 85)
 
@@ -107,6 +130,19 @@ class ExtremeIndex(Process):
         response.update_status("done.", 100)
         return response
 
-    def get_outputs(self, result, response):
+    def get_outputs(self, result, constraints, options, response):
         # result plot
         response.update_status("collecting output ...", 80)
+        response.outputs['plot'].output_format = Format('application/png')
+        response.outputs['plot'].file = runner.get_output(
+            result['plot_dir'],
+            path_filter=os.path.join('extreme_index', 'main'),
+            name_filter="{}*".format(options['metric']),
+            output_format="png")
+
+        response.outputs['data'].output_format = FORMATS.NETCDF
+        response.outputs['data'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('extreme_index', 'main'),
+            name_filter="*risk_insurance_index*",
+            output_format="nc")

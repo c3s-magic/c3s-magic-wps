@@ -20,14 +20,14 @@ class HeatwavesColdwaves(Process):
             ComplexOutput(
                 'plot',
                 'Extreme spell duration tasmin plot',
-                abstract='Generated extereme spell duration tasmin plot.',
+                abstract='Generated extreme spell duration tasmin plot.',
                 as_reference=True,
                 supported_formats=[Format('image/png')]),
             ComplexOutput(
                 'data',
-                'Extereme spell duration tasmin data',
+                'Extreme spell duration tasmin data',
                 abstract=
-                'Extereme spell duration tasmin data.',
+                'Extreme spell duration tasmin data.',
                 as_reference=True,
                 supported_formats=[Format('application/zip')]),
             ComplexOutput(
