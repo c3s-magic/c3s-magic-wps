@@ -18,7 +18,7 @@ class CombinedIndices(Process):
             LiteralInput(
                 'weights',
                 'Weights',
-                abstract='Wither ‘equal’, for equal weights, ‘null’ for no weights.',
+                abstract='Either `equal`, for equal weights, `null` for no weights.',
                 data_type='string',
                 allowed_values=['equal', 'null'],
                 default='equal'),
@@ -28,14 +28,14 @@ class CombinedIndices(Process):
                 abstract='The first month of the seasonal mean period to be computed, if none the monthly anomalies will be computed.',
                 data_type='string',
                 allowed_values=['1', '2', '3', '4','5', '6', '7', '8', '9', '10', '11', '12', 'null'],
-                default='6'),
+                default='1'),
             LiteralInput(
                 'monsup',
                 'Last month month of the seasonal mean period',
                 abstract='the last month of the seasonal mean period to be computed, if none the monthly anomalies will be computed.',
                 data_type='string',
                 allowed_values=['1', '2', '3', '4','5', '6', '7', '8', '9', '10', '11', '12'],
-                default='6'),
+                default='3'),
         ]
         outputs = [
             ComplexOutput(

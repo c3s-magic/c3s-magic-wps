@@ -21,7 +21,7 @@ class EnsClus(Process):
             #     ensembles=['r1i1p1'],
             #     start_end_year=(1850, 2005),
             #     start_end_defaults=(1850, 2005)),
-            *year_ranges((1850, 2005),(1900, 2005)),
+            # *year_ranges((1850, 2005),(1900, 2005)),
             LiteralInput(
                 'season',
                 'Season',
@@ -46,13 +46,13 @@ class EnsClus(Process):
                     'mean', 'maximum', 'std', 'trend'
                 ],
                 default='75th_percentile'),
-            LiteralInput(
-                'numclus',
-                'Number of Clusters',
-                abstract='Numclus',
-                data_type='string',
-                allowed_values=['2', '3', '4'],
-                default='3'),
+            # LiteralInput(
+            #     'numclus',
+            #     'Number of Clusters',
+            #     abstract='Numclus',
+            #     data_type='string',
+            #     allowed_values=['2', '3', '4'],
+            #     default='3'),
             LiteralInput(
                 'perc',
                 'Percentage',
@@ -137,12 +137,12 @@ class EnsClus(Process):
         constraints = dict(
             # model=request.inputs['model'][0].data, # currently not used in recipy
             experiment='historical', # request.inputs['experiment'][0].data,
-            time_frequency='mon',
-            cmor_table='Amon',
+            mip='Amon',
             ensemble='r1i1p1' # request.inputs['ensemble'][0].data,
         )
 
         options = dict(
+            season=request.inputs['season'][0].data,
             area=request.inputs['area'][0].data,
             extreme=request.inputs['extreme'][0].data,
             numclus=request.inputs['numclus'][0].data,
