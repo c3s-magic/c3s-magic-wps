@@ -18,6 +18,19 @@ class CapacityFactor(Process):
         self.plotlist = []
         outputs = [
             ComplexOutput(
+                'plot',
+                'Capacity Factor of Wind Power plot',
+                abstract='Ratio of average estimated power to theoretical maximum power.',
+                as_reference=True,
+                supported_formats=[Format('image/png')]),
+            ComplexOutput(
+                'data',
+                'Capacity Factor of Wind Power data',
+                abstract=
+                'Ratio of average estimated power to theoretical maximum power.',
+                as_reference=True,
+                supported_formats=[Format('application/zip')]),
+            ComplexOutput(
                 'archive',
                 'Archive',
                 abstract=
@@ -110,3 +123,16 @@ class CapacityFactor(Process):
     def get_outputs(self, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
+        response.outputs['plot'].output_format = Format('application/png')
+        response.outputs['plot'].file = runner.get_output(
+            result['plot_dir'],
+            path_filter=os.path.join('capacity_factor', 'main'),
+            name_filter="capacity_factor*",
+            output_format="png")
+
+        response.outputs['data'].output_format = FORMATS.NETCDF
+        response.outputs['data'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('capacity_factor', 'main'),
+            name_filter="capacity_factor*",
+            output_format="nc")
