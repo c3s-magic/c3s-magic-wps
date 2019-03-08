@@ -15,7 +15,35 @@ LOGGER = logging.getLogger("PYWPS")
 class HeatwavesColdwaves(Process):
     def __init__(self):
         inputs = []
-        self.plotlist = []
+        self.plotlist = [
+            LiteralInput(
+                'quantile',
+                'Quantile',
+                abstract='quantile defining the exceedance/non-exceedance threshold',
+                data_type='float',
+                allowed_values=[0.5, 0.6, 0.7, 0.8, 0.9],
+                default=0.8),
+            LiteralInput(
+                'min_duration',
+                'Minimum duration',
+                abstract='Min duration in days of a heatwave/coldwave event',
+                data_type='positiveInteger',
+                default=5),
+            LiteralInput(
+                'operator',
+                'Operator',
+                abstract='either ‘>’ for exceedances or ‘<’ for non-exceedances',
+                data_type='string',
+                allowed_values=['<', '>'],
+                default='<'),
+            LiteralInput(
+                'season',
+                'Season',
+                abstract='Choose a season.',
+                data_type='string',
+                allowed_values=['summer', 'winter'],
+                default='winter'),
+        ]
         outputs = [
             ComplexOutput(
                 'plot',
