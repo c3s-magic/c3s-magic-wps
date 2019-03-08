@@ -18,6 +18,19 @@ class HeatwavesColdwaves(Process):
         self.plotlist = []
         outputs = [
             ComplexOutput(
+                'plot',
+                'Extreme spell duration tasmin plot',
+                abstract='Generated extereme spell duration tasmin plot.',
+                as_reference=True,
+                supported_formats=[Format('image/png')]),
+            ComplexOutput(
+                'data',
+                'Extereme spell duration tasmin data',
+                abstract=
+                'Extereme spell duration tasmin data.',
+                as_reference=True,
+                supported_formats=[Format('application/zip')]),
+            ComplexOutput(
                 'archive',
                 'Archive',
                 abstract=
@@ -110,3 +123,16 @@ class HeatwavesColdwaves(Process):
     def get_outputs(self, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
+        response.outputs['plot'].output_format = Format('application/png')
+        response.outputs['plot'].file = runner.get_output(
+            result['plot_dir'],
+            path_filter=os.path.join('heatwaves_coldwaves', 'main'),
+            name_filter="*extreme_spell*",
+            output_format="png")
+
+        response.outputs['data'].output_format = FORMATS.NETCDF
+        response.outputs['data'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('heatwaves_coldwaves', 'main'),
+            name_filter="*extreme_spell*",
+            output_format="nc")
