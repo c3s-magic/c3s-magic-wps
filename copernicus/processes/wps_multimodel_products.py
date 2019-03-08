@@ -4,6 +4,8 @@ import os
 from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
+from pywps.inout.literaltypes import AllowedValue
+from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from copernicus.processes.utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
 
@@ -14,7 +16,44 @@ LOGGER = logging.getLogger("PYWPS")
 
 class MultimodelProducts(Process):
     def __init__(self):
-        inputs = []
+        inputs = [
+            LiteralInput(
+                'moninf',
+                'First month month of the seasonal mean period',
+                abstract='The first month of the seasonal mean period to be computed, if none the monthly anomalies will be computed.',
+                data_type='string',
+                allowed_values=['1', '2', '3', '4','5', '6', '7', '8', '9', '10', '11', '12', 'none'],
+                default='6'),
+            LiteralInput(
+                'monsup',
+                'First month month of the seasonal mean period',
+                abstract='the last month of the seasonal mean period to be computed, if none the monthly anomalies will be computed.',
+                data_type='string',
+                allowed_values=['1', '2', '3', '4','5', '6', '7', '8', '9', '10', '11', '12', 'none'],
+                default='6'),
+            LiteralInput(
+                'agreement_threshold',
+                'Agreement Threshold',
+                abstract='Integer between 0 and 100 indicating the threshold in percent for the minimum agreement between models on the sign of the multi-model mean anomaly for the stipling to be plotted.',
+                data_type='integer',
+                allowed_values=AllowedValue(
+                    allowed_type=ALLOWEDVALUETYPE.RANGE,
+                    minval=0,
+                    maxval=100
+                ),
+                default=80),
+            LiteralInput(
+                'running_mean',
+                'Running Mean',
+                abstract='integer indictating the length of the window for the running mean to be computed.',
+                data_type='integer',
+                allowed_values=AllowedValue(
+                    allowed_type=ALLOWEDVALUETYPE.RANGE,
+                    minval=1,
+                    maxval=365
+                ),
+                default=5),
+        ]
         self.plotlist = [
             'tas',
             'Area'
@@ -47,11 +86,11 @@ class MultimodelProducts(Process):
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
-                    'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_multimodel_products.html',
                     role=util.WPS_ROLE_DOC),
                 Metadata(
                     'Media',
-                    util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
+                    util.diagdata_url() + '/multimodel_products/bsc_anomaly_timeseries.png',
                     role=util.WPS_ROLE_MEDIA),
             ],
             inputs=inputs,
@@ -65,7 +104,12 @@ class MultimodelProducts(Process):
         # build esgf search constraints
         constraints = dict()
 
-        options = dict()
+        options = dict(
+            moninf=int(request.inputs['moninf'][0].data),
+            monsup=int(request.inputs['monsup'][0].data),
+            agreement_threshold=int(request.inputs['agreement_threshold'][0].data),
+            running_mean=int(request.inputs['running_mean'][0].data),
+        )
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
