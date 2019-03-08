@@ -18,6 +18,46 @@ class DroughtIndicator(Process):
         self.plotlist = []
         outputs = [
             ComplexOutput(
+                'spi_plot',
+                'SPI Histogram plot',
+                abstract='Generated spi histogram plot.',
+                as_reference=True,
+                supported_formats=[Format('image/png')]),
+            ComplexOutput(
+                'spei_plot',
+                'SPEI Histogram plot',
+                abstract='Generated SPEI Histogram plot.',
+                as_reference=True,
+                supported_formats=[Format('image/png')]),
+            ComplexOutput(
+                'spi_model',
+                'SPI Data for the model',
+                abstract=
+                'The complete SPI Data for the model.',
+                as_reference=True,
+                supported_formats=[Format('application/zip')]),
+            ComplexOutput(
+                'spi_reference',
+                'SPI Data for the reference model',
+                abstract=
+                'The complete SPI Data for the reference model.',
+                as_reference=True,
+                supported_formats=[Format('application/zip')]),
+            ComplexOutput(
+                'spei_model',
+                'SPEI Data for the model',
+                abstract=
+                'The complete SPEI Data for the model.',
+                as_reference=True,
+                supported_formats=[Format('application/zip')]),
+            ComplexOutput(
+                'spei_reference',
+                'SPEI Data for the reference model',
+                abstract=
+                'The complete SPEI Data for the reference model.',
+                as_reference=True,
+                supported_formats=[Format('application/zip')]),
+            ComplexOutput(
                 'archive',
                 'Archive',
                 abstract=
@@ -106,3 +146,43 @@ class DroughtIndicator(Process):
     def get_outputs(self, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
+        response.outputs['spi_plot'].output_format = Format('application/png')
+        response.outputs['spi_plot'].file = runner.get_output(
+            result['plot_dir'],
+            path_filter=os.path.join('diagnostic', 'spi'),
+            name_filter="histplot",
+            output_format="png")
+        response.outputs['spei_plot'].output_format = Format('application/png')
+        response.outputs['spei_plot'].file = runner.get_output(
+            result['plot_dir'],
+            path_filter=os.path.join('diagnostic', 'spei'),
+            name_filter="histplot",
+            output_format="png")
+
+        response.outputs['spi_model'].output_format = FORMATS.NETCDF
+        response.outputs['spi_model'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('diagnostic', 'spi'),
+            name_filter="CMPI5*spi*",
+            output_format="nc")
+        
+        response.outputs['spi_reference'].output_format = FORMATS.NETCDF
+        response.outputs['spi_reference'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('diagnostic', 'spi'),
+            name_filter="OBS*spi*",
+            output_format="nc")
+
+        response.outputs['spei_model'].output_format = FORMATS.NETCDF
+        response.outputs['spei_model'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('diagnostic', 'spei'),
+            name_filter="CMPI5*spei*",
+            output_format="nc")
+        
+        response.outputs['spei_reference'].output_format = FORMATS.NETCDF
+        response.outputs['spei_reference'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('diagnostic', 'spei'),
+            name_filter="OBS*spei*",
+            output_format="nc")
