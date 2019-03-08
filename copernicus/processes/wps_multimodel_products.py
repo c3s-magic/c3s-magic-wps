@@ -26,7 +26,7 @@ class MultimodelProducts(Process):
                 default='6'),
             LiteralInput(
                 'monsup',
-                'First month month of the seasonal mean period',
+                'Last month month of the seasonal mean period',
                 abstract='the last month of the seasonal mean period to be computed, if none the monthly anomalies will be computed.',
                 data_type='string',
                 allowed_values=['1', '2', '3', '4','5', '6', '7', '8', '9', '10', '11', '12', 'none'],
@@ -36,11 +36,7 @@ class MultimodelProducts(Process):
                 'Agreement Threshold',
                 abstract='Integer between 0 and 100 indicating the threshold in percent for the minimum agreement between models on the sign of the multi-model mean anomaly for the stipling to be plotted.',
                 data_type='integer',
-                allowed_values=AllowedValue(
-                    allowed_type=ALLOWEDVALUETYPE.RANGE,
-                    minval=0,
-                    maxval=100
-                ),
+                allowed_values=[i for i in range(0,101)],
                 default=80),
             LiteralInput(
                 'running_mean',
@@ -105,8 +101,8 @@ class MultimodelProducts(Process):
         constraints = dict()
 
         options = dict(
-            moninf=int(request.inputs['moninf'][0].data),
-            monsup=int(request.inputs['monsup'][0].data),
+            moninf=request.inputs['moninf'][0].data,
+            monsup=request.inputs['monsup'][0].data,
             agreement_threshold=int(request.inputs['agreement_threshold'][0].data),
             running_mean=int(request.inputs['running_mean'][0].data),
         )
