@@ -21,7 +21,7 @@ class EnsClus(Process):
             #     ensembles=['r1i1p1'],
             #     start_end_year=(1850, 2005),
             #     start_end_defaults=(1850, 2005)),
-            # *year_ranges((1850, 2005),(1900, 2005)),
+             *year_ranges((1850, 2005),(1990, 2005)),
             LiteralInput(
                 'season',
                 'Season',
