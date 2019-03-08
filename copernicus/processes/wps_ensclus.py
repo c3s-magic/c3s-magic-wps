@@ -145,7 +145,7 @@ class EnsClus(Process):
             season=request.inputs['season'][0].data,
             area=request.inputs['area'][0].data,
             extreme=request.inputs['extreme'][0].data,
-            numclus=request.inputs['numclus'][0].data,
+            # numclus=request.inputs['numclus'][0].data,
             perc=request.inputs['perc'][0].data,
         )
 
