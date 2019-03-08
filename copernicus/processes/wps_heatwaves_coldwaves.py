@@ -14,8 +14,7 @@ LOGGER = logging.getLogger("PYWPS")
 
 class HeatwavesColdwaves(Process):
     def __init__(self):
-        inputs = []
-        self.plotlist = [
+        inputs = [
             LiteralInput(
                 'quantile',
                 'Quantile',
