@@ -96,7 +96,7 @@ class HeatwavesColdwaves(Process):
         constraints = dict()
 
         op = request.inputs['operator'][0].data
-        if op == 'exceendances':
+        if op == 'exceedances':
             operator = '>'
         elif op == 'non-exceedances':
             operator = '<'
