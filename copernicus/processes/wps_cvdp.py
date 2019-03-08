@@ -23,12 +23,12 @@ class CVDP(Process):
             ),
         ]
         outputs = [
-            ComplexOutput(
-                'plot',
-                'Output plot',
-                abstract='Generated output plot of ESMValTool processing.',
-                as_reference=True,
-                supported_formats=[Format('image/png')]),
+            # ComplexOutput(
+            #     'plot',
+            #     'Output plot',
+            #     abstract='Generated output plot of ESMValTool processing.',
+            #     as_reference=True,
+            #     supported_formats=[Format('image/png')]),
             ComplexOutput(
                 'archive',
                 'Archive',
@@ -124,9 +124,9 @@ class CVDP(Process):
     def get_output(self, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
-        response.outputs['plot'].output_format = Format('application/png')
-        response.outputs['plot'].file = runner.get_output(
-            result['work_dir'], # Yes, it's in the work dir
-            path_filter=os.path.join('diagnostic1', 'cvdp'),
-            name_filter="pr.mean.ann",
-            output_format="png")
+        # response.outputs['plot'].output_format = Format('application/png')
+        # response.outputs['plot'].file = runner.get_output(
+        #     result['work_dir'], # Yes, it's in the work dir
+        #     path_filter=os.path.join('diagnostic1', 'cvdp'),
+        #     name_filter="pr.mean.ann",
+        #     output_format="png")

@@ -26,7 +26,7 @@ class HeatwavesColdwaves(Process):
                 'min_duration',
                 'Minimum duration',
                 abstract='Min duration in days of a heatwave/coldwave event',
-                data_type='positiveInteger',
+                data_type='integer',
                 default=5),
             LiteralInput(
                 'operator',
