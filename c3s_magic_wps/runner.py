@@ -11,7 +11,7 @@ import logging
 LOGGER = logging.getLogger("PYWPS")
 
 template_env = Environment(
-    loader=PackageLoader('copernicus', '/templates/esmvaltool'),
+    loader=PackageLoader('c3s_magic_wps', '/templates/esmvaltool'),
     autoescape=select_autoescape(['yml', ])
 )
 

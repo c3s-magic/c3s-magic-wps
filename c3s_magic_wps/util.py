@@ -25,8 +25,7 @@ def static_directory():
 
 
 def static_url():
-    # return 'http://localhost:5000/static'
-    return 'https://raw.githubusercontent.com/cp4cds/copernicus-wps-demo/master/copernicus/static'
+    return 'http://localhost:5000/static'
 
 
 def diagdata_url():

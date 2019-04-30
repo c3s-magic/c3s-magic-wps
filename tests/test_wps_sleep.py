@@ -4,7 +4,7 @@ from pywps import Service
 from pywps.tests import assert_response_success
 
 from . common import client_for
-from copernicus.processes.wps_sleep import Sleep
+from c3s_magic_wps.processes.wps_sleep import Sleep
 
 
 @pytest.mark.slow

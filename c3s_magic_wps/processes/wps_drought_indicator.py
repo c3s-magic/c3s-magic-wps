@@ -5,7 +5,7 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from copernicus.processes.utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
+from .utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
 
 from .. import runner, util
 
@@ -165,7 +165,7 @@ class DroughtIndicator(Process):
             path_filter=os.path.join('diagnostic', 'spi'),
             name_filter="CMPI5*spi*",
             output_format="nc")
-        
+
         response.outputs['spi_reference'].output_format = FORMATS.NETCDF
         response.outputs['spi_reference'].file = runner.get_output(
             result['work_dir'],
@@ -179,7 +179,7 @@ class DroughtIndicator(Process):
             path_filter=os.path.join('diagnostic', 'spei'),
             name_filter="CMPI5*spei*",
             output_format="nc")
-        
+
         response.outputs['spei_reference'].output_format = FORMATS.NETCDF
         response.outputs['spei_reference'].file = runner.get_output(
             result['work_dir'],

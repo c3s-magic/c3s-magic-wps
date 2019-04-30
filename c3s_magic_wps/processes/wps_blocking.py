@@ -5,7 +5,7 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from copernicus.processes.utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names
+from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names
 
 from .. import runner, util
 
@@ -181,7 +181,7 @@ class Blocking(Process):
             path_filter=os.path.join('miles_diagnostics', 'miles_block', subdir),
             name_filter="BlockFull*",
             output_format="nc")
-        
+
         response.outputs['data_clim'].output_format = FORMATS.NETCDF
         response.outputs['data_clim'].file = runner.get_output(
             result['work_dir'],

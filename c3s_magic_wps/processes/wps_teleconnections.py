@@ -5,7 +5,7 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from copernicus.processes.utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names
+from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names
 
 from .. import runner, util
 

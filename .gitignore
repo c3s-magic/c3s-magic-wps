@@ -4,7 +4,10 @@
 # Docker
 #Dockerfile
 
-# PyWPS 
+# Mac
+.DS_Store
+
+# PyWPS
 custom.cfg
 .custom.cfg
 *.pid

@@ -4,46 +4,62 @@ import os
 from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
+from pywps.inout.literaltypes import AllowedValue
+from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
-from copernicus.processes.utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
+from .utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
 
 from .. import runner, util
 
 LOGGER = logging.getLogger("PYWPS")
 
 
-class CombinedIndices(Process):
+class MultimodelProducts(Process):
     def __init__(self):
         inputs = [
-            LiteralInput(
-                'weights',
-                'Weights',
-                abstract='Either `equal`, for equal weights, `null` for no weights.',
-                data_type='string',
-                allowed_values=['equal', 'null'],
-                default='equal'),
             LiteralInput(
                 'moninf',
                 'First month month of the seasonal mean period',
                 abstract='The first month of the seasonal mean period to be computed, if none the monthly anomalies will be computed.',
                 data_type='string',
                 allowed_values=['1', '2', '3', '4','5', '6', '7', '8', '9', '10', '11', '12', 'null'],
-                default='1'),
+                default='6'),
             LiteralInput(
                 'monsup',
                 'Last month month of the seasonal mean period',
                 abstract='the last month of the seasonal mean period to be computed, if none the monthly anomalies will be computed.',
                 data_type='string',
                 allowed_values=['1', '2', '3', '4','5', '6', '7', '8', '9', '10', '11', '12'],
-                default='3'),
+                default='6'),
+            LiteralInput(
+                'agreement_threshold',
+                'Agreement Threshold',
+                abstract='Integer between 0 and 100 indicating the threshold in percent for the minimum agreement between models on the sign of the multi-model mean anomaly for the stipling to be plotted.',
+                data_type='integer',
+                allowed_values=[i for i in range(0,101)],
+                default=80),
+            LiteralInput(
+                'running_mean',
+                'Running Mean',
+                abstract='integer indictating the length of the window for the running mean to be computed.',
+                data_type='integer',
+                allowed_values=AllowedValue(
+                    allowed_type=ALLOWEDVALUETYPE.RANGE,
+                    minval=1,
+                    maxval=365
+                ),
+                default=5),
+        ]
+        self.plotlist = [
+            'tas',
+            'Area'
         ]
         outputs = [
-            ComplexOutput(
-                'data',
-                'Data',
-                abstract='Generated combined indices data.',
-                as_reference=True,
-                supported_formats=[FORMATS.NETCDF]),
+            *outputs_from_plot_names(self.plotlist),
+            ComplexOutput('data', 'Data',
+                          abstract='Generated output data of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[FORMATS.NETCDF]),
             ComplexOutput(
                 'archive',
                 'Archive',
@@ -54,21 +70,23 @@ class CombinedIndices(Process):
             *default_outputs(),
         ]
 
-        super(CombinedIndices, self).__init__(
+        super(MultimodelProducts, self).__init__(
             self._handler,
-            identifier="combined_indices",
-            title="Single and multi-model indices based on area averages",
+            identifier="multimodel_products",
+            title="Generic multi-model products",
             version=runner.VERSION,
-            abstract="""Metric showning single and multi model indices based on area averages.""",
+            abstract="""For the 'generic multi-model diagnostic' the ensemble
+                mean anomaly, and the ensemble variance and agreement are
+                calculated. The results are shown as maps and time series.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
-                    'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_multimodel_products.html',
                     role=util.WPS_ROLE_DOC),
                 Metadata(
                     'Media',
-                    util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
+                    util.diagdata_url() + '/multimodel_products/bsc_anomaly_timeseries.png',
                     role=util.WPS_ROLE_MEDIA),
             ],
             inputs=inputs,
@@ -80,24 +98,24 @@ class CombinedIndices(Process):
         response.update_status("starting ...", 0)
 
         # build esgf search constraints
-        constraints = dict(
-        )
+        constraints = dict()
 
         options = dict(
-            weights=request.inputs['weights'][0].data,
             moninf=request.inputs['moninf'][0].data,
             monsup=request.inputs['monsup'][0].data,
+            agreement_threshold=int(request.inputs['agreement_threshold'][0].data),
+            running_mean=int(request.inputs['running_mean'][0].data),
         )
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
-            diag='combined_indices_wp6',
+            diag='multimodel_products_wp5',
             constraints=constraints,
             options=options,
-            start_year=1950,
-            end_year=2005,
+            start_year=1961,
+            end_year=2099,
             output_format='png',
         )
 
@@ -142,9 +160,18 @@ class CombinedIndices(Process):
     def get_outputs(self, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
+        for plot in self.plotlist:
+            key = '{}_plot'.format(plot.lower())
+            response.outputs[key].output_format = Format('application/png')
+            response.outputs[key].file = runner.get_output(
+                result['plot_dir'],
+                path_filter=os.path.join('anomaly_agreement', 'main'),
+                name_filter="{}*".format(plot),
+                output_format="png")
+
         response.outputs['data'].output_format = FORMATS.NETCDF
         response.outputs['data'].file = runner.get_output(
             result['work_dir'],
-            path_filter=os.path.join('combine_indices', 'main'),
-            name_filter="*",
+            path_filter=os.path.join('anomaly_agreement', 'main'),
+            name_filter="tas*",
             output_format="nc")

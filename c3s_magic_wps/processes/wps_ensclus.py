@@ -5,7 +5,7 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from copernicus import runner, util
+from .. import runner, util
 
 from .utils import default_outputs, model_experiment_ensemble, year_ranges
 
@@ -214,14 +214,14 @@ class EnsClus(Process):
             path_filter=os.path.join('EnsClus', 'main'),
             name_filter="ens_extreme*",
             output_format="nc")
-        
+
         response.outputs['ens_climatologies'].output_format = FORMATS.NETCDF
         response.outputs['ens_climatologies'].file = runner.get_output(
             result['work_dir'],
             path_filter=os.path.join('EnsClus', 'main'),
             name_filter="ens_anomalies*",
             output_format="nc")
-        
+
         response.outputs['ens_anomalies'].output_format = FORMATS.NETCDF
         response.outputs['ens_anomalies'].file = runner.get_output(
             result['work_dir'],

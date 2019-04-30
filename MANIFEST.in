@@ -1,6 +1,6 @@
 include Makefile
 include *.txt
 include *.rst
-recursive-include copernicus *
+recursive-include c3s_magic_wps *
 global-exclude __pycache__
 global-exclude *.py[co]

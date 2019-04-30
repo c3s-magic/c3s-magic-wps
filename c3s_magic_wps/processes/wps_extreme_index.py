@@ -5,29 +5,37 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from copernicus.processes.utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
+from .utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
 
 from .. import runner, util
 
 LOGGER = logging.getLogger("PYWPS")
 
 
-class CapacityFactor(Process):
+class ExtremeIndex(Process):
     def __init__(self):
-        inputs = []
+        inputs = [
+            LiteralInput(
+                'metric',
+                'Metric',
+                abstract='Choose a metric to calculate.',
+                data_type='string',
+                allowed_values=['t10p', 't90p', 'rx5day', 'Wx'], # 'cdd' <- these do not work
+                default='Wx'),
+        ]
         self.plotlist = []
         outputs = [
             ComplexOutput(
                 'plot',
-                'Capacity Factor of Wind Power plot',
-                abstract='Ratio of average estimated power to theoretical maximum power.',
+                'Combined Climate Extreme Index plot',
+                abstract='Combined Climate Extreme Index plot.',
                 as_reference=True,
                 supported_formats=[Format('image/png')]),
             ComplexOutput(
                 'data',
-                'Capacity Factor of Wind Power data',
+                'Combined Climate Extreme Index data',
                 abstract=
-                'Ratio of average estimated power to theoretical maximum power.',
+                'Combined Climate Extreme Index data.',
                 as_reference=True,
                 supported_formats=[Format('application/zip')]),
             ComplexOutput(
@@ -40,12 +48,12 @@ class CapacityFactor(Process):
             *default_outputs(),
         ]
 
-        super(CapacityFactor, self).__init__(
+        super(ExtremeIndex, self).__init__(
             self._handler,
-            identifier="capacity_factor",
-            title="Capacity factor of wind power",
+            identifier="extreme_index",
+            title="Combined Climate Extreme Index",
             version=runner.VERSION,
-            abstract="""Metric showing the wind capacity factor to estimate energy supply.""",
+            abstract="""Metric showing extreme indices relevant to the insurance industry (heat, cold, wind, flood and drought indices).""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
@@ -54,7 +62,7 @@ class CapacityFactor(Process):
                     role=util.WPS_ROLE_DOC),
                 Metadata(
                     'Media',
-                    util.diagdata_url() + '/capacity_factor/diurnal_temperature_variation.png',
+                    util.diagdata_url() + '/risk_index/insurance_risk_indices.png',
                     role=util.WPS_ROLE_MEDIA),
             ],
             inputs=inputs,
@@ -68,17 +76,19 @@ class CapacityFactor(Process):
         # build esgf search constraints
         constraints = dict()
 
-        options = dict()
+        options = dict(
+            metric=request.inputs['metric'][0].data
+        )
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
-            diag='capacity_factor_wp7',
+            diag='extreme_index_wp7',
             constraints=constraints,
             options=options,
-            start_year=1980,
-            end_year=2005,
+            start_year=1971,
+            end_year=2040,
             output_format='png',
         )
 
@@ -107,7 +117,7 @@ class CapacityFactor(Process):
             return response
 
         try:
-            self.get_outputs(result, response)
+            self.get_outputs(result, constraints, options, response)
         except Exception as e:
             response.update_status("exception occured: " + str(e), 85)
 
@@ -120,19 +130,19 @@ class CapacityFactor(Process):
         response.update_status("done.", 100)
         return response
 
-    def get_outputs(self, result, response):
+    def get_outputs(self, result, constraints, options, response):
         # result plot
         response.update_status("collecting output ...", 80)
         response.outputs['plot'].output_format = Format('application/png')
         response.outputs['plot'].file = runner.get_output(
             result['plot_dir'],
-            path_filter=os.path.join('capacity_factor', 'main'),
-            name_filter="capacity_factor*",
+            path_filter=os.path.join('extreme_index', 'main'),
+            name_filter="{}*".format(options['metric']),
             output_format="png")
 
         response.outputs['data'].output_format = FORMATS.NETCDF
         response.outputs['data'].file = runner.get_output(
             result['work_dir'],
-            path_filter=os.path.join('capacity_factor', 'main'),
-            name_filter="capacity_factor*",
+            path_filter=os.path.join('extreme_index', 'main'),
+            name_filter="*risk_insurance_index*",
             output_format="nc")

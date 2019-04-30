@@ -5,56 +5,29 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from copernicus.processes.utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
+from .utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
 
 from .. import runner, util
 
 LOGGER = logging.getLogger("PYWPS")
 
 
-class HeatwavesColdwaves(Process):
+class DiurnalTemperatureIndex(Process):
     def __init__(self):
-        inputs = [
-            LiteralInput(
-                'quantile',
-                'Quantile',
-                abstract='quantile defining the exceedance/non-exceedance threshold',
-                data_type='float',
-                allowed_values=[0.5, 0.6, 0.7, 0.8, 0.9],
-                default=0.8),
-            LiteralInput(
-                'min_duration',
-                'Minimum duration',
-                abstract='Min duration in days of a heatwave/coldwave event',
-                data_type='integer',
-                default=5),
-            LiteralInput(
-                'operator',
-                'Operator',
-                abstract='either `>` for exceedances or `<` for non-exceedances',
-                data_type='string',
-                allowed_values=['exceedances', 'non-exceedances'],
-                default='non-exceedances'),
-            LiteralInput(
-                'season',
-                'Season',
-                abstract='Choose a season.',
-                data_type='string',
-                allowed_values=['summer', 'winter'],
-                default='winter'),
-        ]
+        inputs = []
+        self.plotlist = []
         outputs = [
             ComplexOutput(
                 'plot',
-                'Extreme spell duration tasmin plot',
-                abstract='Generated extreme spell duration tasmin plot.',
+                'Diurnal Temperature Variation (DTR) Indicator plot',
+                abstract='The diurnal temperature indicator to estimate energy demand.',
                 as_reference=True,
                 supported_formats=[Format('image/png')]),
             ComplexOutput(
                 'data',
-                'Extreme spell duration tasmin data',
+                'Diurnal Temperature Variation (DTR) Indicator data',
                 abstract=
-                'Extreme spell duration tasmin data.',
+                'The diurnal temperature indicator data.',
                 as_reference=True,
                 supported_formats=[Format('application/zip')]),
             ComplexOutput(
@@ -67,21 +40,21 @@ class HeatwavesColdwaves(Process):
             *default_outputs(),
         ]
 
-        super(HeatwavesColdwaves, self).__init__(
+        super(DiurnalTemperatureIndex, self).__init__(
             self._handler,
-            identifier="heatwaves_coldwaves",
-            title="Heatwave and coldwave duration",
+            identifier="diurnal_temperature_index",
+            title="Diurnal Temperature Variation (DTR) Indicator",
             version=runner.VERSION,
-            abstract="""Metric showing the duration of heatwaves and coldwaves, to help understand potential changes in energy demand.""",
+            abstract="""Metric showing the diurnal temperature indicator to estimate energy demand.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
-                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_heatwaves_coldwaves.html',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_diurnal_temperature_index.html',
                     role=util.WPS_ROLE_DOC),
                 Metadata(
                     'Media',
-                    util.diagdata_url() + '/heatwaves_coldwaves/extreme_spells_energy.png',
+                    util.diagdata_url() + '/dtr/diurnal_temperature_variation.png',
                     role=util.WPS_ROLE_MEDIA),
             ],
             inputs=inputs,
@@ -95,29 +68,16 @@ class HeatwavesColdwaves(Process):
         # build esgf search constraints
         constraints = dict()
 
-        op = request.inputs['operator'][0].data
-        if op == 'exceedances':
-            operator = '>'
-        elif op == 'non-exceedances':
-            operator = '<'
-        else:
-            raise Exception('Unknown operator for task: ' + op)
-
-        options = dict(
-            quantile=request.inputs['quantile'][0].data,
-            min_duration=request.inputs['min_duration'][0].data,
-            operator=operator,
-            season=request.inputs['season'][0].data,
-        )
+        options = dict()
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
-            diag='heatwaves_coldwaves_wp7',
+            diag='diurnal_temperature_index_wp7',
             constraints=constraints,
             options=options,
-            start_year=1971,
+            start_year=1961,
             end_year=2080,
             output_format='png',
         )
@@ -166,13 +126,13 @@ class HeatwavesColdwaves(Process):
         response.outputs['plot'].output_format = Format('application/png')
         response.outputs['plot'].file = runner.get_output(
             result['plot_dir'],
-            path_filter=os.path.join('heatwaves_coldwaves', 'main'),
-            name_filter="*extreme_spell*",
+            path_filter=os.path.join('diurnal_temperature_indicator', 'main'),
+            name_filter="*",
             output_format="png")
 
         response.outputs['data'].output_format = FORMATS.NETCDF
         response.outputs['data'].file = runner.get_output(
             result['work_dir'],
-            path_filter=os.path.join('heatwaves_coldwaves', 'main'),
-            name_filter="*extreme_spell*",
+            path_filter=os.path.join('diurnal_temperature_indicator', 'main'),
+            name_filter="Seasonal_DTRindicator*",
             output_format="nc")

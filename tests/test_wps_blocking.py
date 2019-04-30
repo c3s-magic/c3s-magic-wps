@@ -4,7 +4,7 @@ from pywps import Service
 from pywps.tests import assert_response_success
 
 from . common import client_for
-from copernicus.processes.wps_blocking import Blocking
+from c3s_magic_wps.processes.wps_blocking import Blocking
 
 
 def test_wps_blocking():

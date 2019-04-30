@@ -7,15 +7,15 @@ Command-line options
 --------------------
 
 You can overwrite the default `PyWPS`_ configuration by using command-line options.
-See the copernicus-wps-demo help which options are available::
+See the c3s magic wps help which options are available::
 
-    $ copernicus start --help
+    $ c3s_magic_wps start --help
     --hostname HOSTNAME        hostname in PyWPS configuration.
     --port PORT                port in PyWPS configuration.
 
 Start service with different hostname and port::
 
-    $ copernicus start --hostname localhost --port 5001
+    $ c3s_magic_wps start --hostname localhost --port 5001
 
 Use a custom configuration file
 -------------------------------
@@ -28,7 +28,7 @@ For example change the hostname (*demo.org*) and logging level:
 
 .. code-block:: sh
 
-   $ cd copernicus-wps-demo
+   $ cd c3s_magic_wps
    $ vim etc/custom.cfg
    $ cat etc/custom.cfg
    [server]
@@ -43,7 +43,7 @@ Start the service with your custom configuration:
 .. code-block:: sh
 
    # start the service with this configuration
-   $ copernicus start -c etc/custom.cfg
+   $ c3s_magic_wps start -c etc/custom.cfg
 
 
 .. _PyWPS: http://pywps.org/

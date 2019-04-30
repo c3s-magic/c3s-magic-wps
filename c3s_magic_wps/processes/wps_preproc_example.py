@@ -6,8 +6,8 @@ from pywps.inout.literaltypes import make_allowedvalues
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from copernicus import runner, util
-from copernicus.processes.utils import default_outputs, model_experiment_ensemble
+from .. import runner, util
+from .utils import default_outputs, model_experiment_ensemble
 
 LOGGER = logging.getLogger("PYWPS")
 

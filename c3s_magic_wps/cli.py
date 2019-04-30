@@ -11,7 +11,7 @@ import click
 from jinja2 import Environment, PackageLoader
 from pywps import configuration
 
-from copernicus import wsgi
+from . import wsgi
 from six.moves.urllib.parse import urlparse
 
 PID_FILE = os.path.abspath(os.path.join(os.path.curdir, "pywps.pid"))
@@ -19,7 +19,7 @@ PID_FILE = os.path.abspath(os.path.join(os.path.curdir, "pywps.pid"))
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
 template_env = Environment(
-    loader=PackageLoader('copernicus', 'templates'), autoescape=True)
+    loader=PackageLoader('c3s_magic_wps', 'templates'), autoescape=True)
 
 
 def write_user_config(**kwargs):
@@ -69,7 +69,7 @@ def run_process_action(action=None):
         if action == 'stop':
             os.remove(PID_FILE)
     except IOError:
-        msg = "No PID file found. Service not running?"
+        msg = 'No PID file found. Service not running? Try "netstat -nlp | grep :5000".'
     except psutil.NoSuchProcess as e:
         msg = e.msg
     click.echo(msg)

@@ -15,4 +15,4 @@ def create_app(cfgfiles=None):
     return service
 
 
-#application = create_app()
+application = create_app()

@@ -6,13 +6,12 @@ from pywps import ComplexInput, ComplexOutput
 from pywps import Format, FORMATS
 from pywps.app.Common import Metadata
 
-from copernicus import runner
-from copernicus import util
+from .. import runner, util
 
 import logging
 LOGGER = logging.getLogger("PYWPS")
 
-from copernicus.processes.utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
+from .utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
 
 
 class ConsecDryDays(Process):

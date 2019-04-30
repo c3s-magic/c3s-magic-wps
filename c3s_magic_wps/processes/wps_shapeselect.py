@@ -6,10 +6,9 @@ from pywps import ComplexInput, ComplexOutput
 from pywps import Format, FORMATS
 from pywps.app.Common import Metadata
 
-from copernicus import runner
-from copernicus import util
+from .. import runner, util
 
-from copernicus.processes.utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
+from .utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
 
 import logging
 LOGGER = logging.getLogger("PYWPS")
@@ -128,7 +127,7 @@ class ShapeSelect(Process):
 
         response.update_status("done.", 100)
         return response
-    
+
     def get_outputs(self, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
