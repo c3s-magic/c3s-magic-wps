@@ -1,0 +1,23 @@
+# User's configuration file for the ESMValTool
+---
+
+write_plots: true
+write_netcdf: true
+log_level: info
+exit_on_warning: false
+output_file_type: {{ output_format }}
+auxiliary_data_dir: '/opt/esmvaltool/esmvaltool/diag_scripts/shapeselect/testdata/'
+
+output_dir: {{ output_dir }}
+
+save_intermediary_cubes: false
+remove_preproc_dir: true
+max_parallel_tasks: 1
+
+rootpath:
+  CMIP5: {{ archive_root }}
+  OBS: {{ obs_root }}
+  default: {{ obs_root }}
+
+drs:
+  CMIP5: BADC

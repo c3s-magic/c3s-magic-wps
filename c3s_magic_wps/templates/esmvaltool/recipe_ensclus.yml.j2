@@ -1,0 +1,102 @@
+# recipe_EnsClus.yml
+---
+documentation:
+  description: |
+    Recipe for sub-ensemble selection.
+    The diagnostics groups ensemble members according to similar 
+    characteristics and selects the most representative member 
+    for each cluster based on a k-means algorithm
+
+  authors:
+    - mavi_ir
+    - hard_jo
+    - arno_en
+    - cort_su
+
+  maintainer:
+    - hard_jo
+
+  references:
+    - straus07jcli
+
+  projects:
+    - c3s-magic
+
+datasets:
+  - {dataset: ACCESS1-0,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: ACCESS1-3,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: bcc-csm1-1,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: bcc-csm1-1-m,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: CanESM2,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: CCSM4,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: CESM1-BGC,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: CESM1-CAM5,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: CESM1-FASTCHEM,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: CESM1-WACCM,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: CMCC-CESM,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+ #- {dataset: CMCC-CM,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: CMCC-CMS,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: CNRM-CM5,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: CSIRO-Mk3-6-0,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+ #- {dataset: EC-EARTH,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: FGOALS-g2,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+ #- {dataset: FGOALS-s2,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: FIO-ESM,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: GFDL-CM2p1,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: GFDL-CM3,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: GFDL-ESM2G,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: GFDL-ESM2M,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: HadCM3,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+ #- {dataset: HadGEM2-AO,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: HadGEM2-CC,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: HadGEM2-ES,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: inmcm4,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: IPSL-CM5A-LR,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: IPSL-CM5A-MR,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: IPSL-CM5B-LR,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+ #- {dataset: MIROC5,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+ #- {dataset: MIROC-ESM-CHEM,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+ #- {dataset: MIROC-ESM,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: MPI-ESM-LR,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: MPI-ESM-MR,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: MPI-ESM-P,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+ #- {dataset: MRI-CGCM3,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: NorESM1-ME,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+  - {dataset: NorESM1-M,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: {{start_year}},  end_year: {{end_year}}}
+
+preprocessors:
+  preproc:
+    extract_levels: false
+    regrid:
+      target_grid: 2.5x2.5
+      scheme: linear
+
+
+diagnostics:
+  EnsClus:
+    description: Ensemble clustering
+    variables:
+      pr:
+        preprocessor: preproc
+        field: T2Ms
+    scripts:
+      main:
+        script: ensclus/ensclus.py
+        title: "Ensemble clustering diagnostic"
+
+        ## Information required:
+        ##-------------------------------about data-------------------------------------------
+        ## Write only letters or numbers, no punctuation marks!
+        ## If you want to leave the field empty write 'no' 
+        season: {{options['season']}} # 'JJA'               #seasonal average
+        area: {{options['area']}}   #regional average (examples:'EAT':Euro-Atlantic
+                                    #                           'PNA': Pacific North American
+                                    #                           'NH': Northern Hemisphere)
+                                    #                           'Eu': Europe)
+        extreme: {{options['extreme']}}   #75th_percentile, mean, maximum, std, trend
+        #---------------------about cluster analysis------------------------------------------
+        numclus: {{options['numclus']}}             #number of clusters
+        #Either set perc or numpcs:
+        perc: {{options['perc']}}               #cluster analysis is applied on a number of PCs such as they explain
+                               #'perc' of total variance
+        numpcs: 'no'           #number of PCs

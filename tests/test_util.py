@@ -1,5 +1,5 @@
 import pytest
-from copernicus import util
+from c3s_magic_wps import util
 
 
 @pytest.mark.skip(reason='not working yet')

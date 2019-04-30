@@ -5,9 +5,9 @@ Credits
 Development Lead
 ----------------
 
-* Carsten Ehbrecht <ehbrecht@dkrz.de>
+* Berend Weel <b.weel@esciencecenter.nl>
 
 Contributors
 ------------
 
-None yet. Why not be the first?
+* Carsten Ehbrecht <ehbrecht@dkrz.de>

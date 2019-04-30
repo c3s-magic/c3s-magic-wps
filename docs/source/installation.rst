@@ -3,24 +3,28 @@
 Installation
 ============
 
-Install from Anaconda
----------------------
+.. contents::
+    :local:
+    :depth: 1
 
-.. todo::
+Install from Conda
+------------------
 
-   Prepare Conda package.
+.. warning::
+
+   TODO: Prepare Conda package.
 
 Install from GitHub
 -------------------
 
-Check out code from the copernicus-wps-demo GitHub repo and start the installation:
+Check out code from the c3s magic wps GitHub repo and start the installation:
 
 .. code-block:: sh
 
-   $ git clone https://github.com/cp4cds/copernicus-wps-demo.git
-   $ cd copernicus-wps-demo
+   $ git clone https://github.com/c3s-magic/c3s-magic-wps.git
+   $ cd c3s_magic_wps
    $ conda env create -f environment.yml
-   $ source activate copernicus
+   $ source activate c3s_magic_wps
    $ python setup.py develop
 
 ... or do it the lazy way
@@ -31,24 +35,24 @@ We provide also a ``Makefile`` to run this installation without additional steps
 
 .. code-block:: sh
 
-   $ git clone https://github.com/cp4cds/copernicus-wps-demo.git
-   $ cd copernicus-wps-demo
+   $ git clone https://github.com/c3s-magic/c3s-magic-wps.git
+   $ cd c3s_magic_wps
    $ make clean    # cleans up a previous Conda environment
    $ make install  # installs Conda if necessary and runs the above installation steps
 
-Start copernicus-wps-demo PyWPS service
----------------------------------------
+Start c3s magic wps PyWPS service
+---------------------------------
 
-After successful installation you can start the service using the ``copernicus`` command-line.
+After successful installation you can start the service using the ``c3s_magic_wps`` command-line.
 
 .. code-block:: sh
 
-   $ copernicus --help # show help
-   $ copernicus start  # start service with default configuration
+   $ c3s_magic_wps --help # show help
+   $ c3s_magic_wps start  # start service with default configuration
 
    OR
 
-   $ copernicus start --daemon # start service as daemon
+   $ c3s_magic_wps start --daemon # start service as daemon
    loading configuration
    forked process id: 42
 
@@ -63,6 +67,7 @@ You can find which process uses a given port using the following command (here f
 .. code-block:: sh
 
    $ netstat -nlp | grep :5000
+
 
 Check the log files for errors:
 
@@ -83,25 +88,19 @@ You can also use the ``Makefile`` to start and stop the service:
   $ make stop
 
 
-Run copernicus-wps-demo as Docker container
--------------------------------------------
+Run c3s magic wps as Docker container
+-------------------------------------
 
-You can also run copernicus-wps-demo as a Docker container, see the :ref:`Tutorial <tutorial>`.
+You can also run c3s magic wps as a Docker container.
 
-Use Ansible to deploy copernicus-wps-demo on your System
---------------------------------------------------------
+.. warning::
 
-Use the `Ansible playbook`_ for PyWPS to deploy copernicus-wps-demo on your system.
-Follow the `example`_ for copernicus-wps-demo given in the playbook.
+  TODO: Describe Docker container support.
 
-Building the docs
------------------
+Use Ansible to deploy c3s magic wps on your System
+--------------------------------------------------
 
-First install dependencies for the documentation::
-
-  $ make bootstrap_dev
-  $ make docs
+Use the `Ansible playbook`_ for PyWPS to deploy c3s magic wps on your system.
 
 
 .. _Ansible playbook: http://ansible-wps-playbook.readthedocs.io/en/latest/index.html
-.. _example: http://ansible-wps-playbook.readthedocs.io/en/latest/tutorial.html

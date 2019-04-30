@@ -1,0 +1,79 @@
+# ESMValTool
+# recipe_modes_of_variability_wp4.yml
+---
+documentation:
+  description: |
+    Tool to compute the RMSE between the observed and modelled patterns of
+    variability obtained through classification and their relative relative
+    bias (percentage) in the frequency of occurrence and the persistence of
+    each mode.
+
+  authors:
+    - torr_ve
+    - fuck_ne
+    - cort_ni
+    - guem_vi
+    - hunt_al
+    - pere_nu
+    - manu_ni
+
+  projects:
+    - c3s-magic
+
+  references:
+    - fuckar
+
+datasets:
+  #- {dataset: IPSL-CM5A-MR, project: CMIP5,  start_year: 1961,  end_year: 1990, ensemble: r1i1p1, exp: historical, type: exp}
+  #- {dataset: IPSL-CM5A-MR, project: CMIP5,  start_year: 2006,  end_year: 2026, ensemble: r1i1p1, exp: rcp85, type: exp}
+  - dataset: {{constraints['model_historical']}}
+    project: CMIP5
+    exp: {{constraints['experiment_historical']}}
+    ensemble: {{constraints['ensemble_historical']}}
+    start_year: {{constraints['start_year_historical']}}
+    end_year: {{constraints['end_year_historical']}}
+  - dataset: {{constraints['model_projection']}}
+    project: CMIP5
+    exp: {{constraints['experiment_projection']}}
+    ensemble: {{constraints['ensemble_projection']}}
+    start_year: {{constraints['start_year_projection']}}
+    end_year: {{constraints['end_year_projection']}}
+  {# - {dataset: bcc-csm1-1, project: CMIP5, start_year: 1961, end_year: 2000, ensemble: r1i1p1, exp: historical, type: exp}
+  - {dataset: bcc-csm1-1, project: CMIP5, start_year: 2020, end_year: 2050, ensemble: r1i1p1, exp: rcp85, type: exp} #}
+
+preprocessors:
+  preproc:
+    regrid:
+      target_grid: {{constraints['model_historical']}}
+      scheme: linear
+    mask_fillvalues:
+      threshold_fraction: 0.95
+    extract_region:
+      start_longitude: 0
+      end_longitude: 360
+      start_latitude: 30
+      end_latitude: 90
+
+diagnostics:
+  weather_regime:
+    description: Compute modes of variability.
+    variables:
+      psl:
+        preprocessor: preproc
+        mip: Amon
+        field: T2M
+    scripts:
+      main:
+        script: magic_bsc/weather_regime.r
+        region: {{options['region']}} #North-Atlantic # North-Atlantic or Polar
+
+        start_historical: {{options['start_historical']}} #"1971-01-01"
+        end_historical: {{options['end_historical']}} #"2000-12-31"
+        start_projection: {{options['start_projection']}} #"2020-01-01"
+        end_projection: {{options['end_projection']}} #"2050-12-31"
+
+        ncenters: {{options['ncenters']}} # 3
+        detrend_order: {{options['detrend_order']}} # 2
+        cluster_method: {{options['cluster_method']}} # "kmeans" # select hclust or kmeans
+        EOFS: {{options['eofs']}} 
+        frequency: {{options['frequency']}}  # Select a month (format: JAN, FEB, ...) or should work with season also but not jet format: JJA, SON, MAM, DJF

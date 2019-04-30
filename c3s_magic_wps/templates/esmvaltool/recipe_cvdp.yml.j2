@@ -1,0 +1,58 @@
+---
+documentation:
+  description: |
+    Recipe for executing the NCAR CVDP package in the ESMValTool framework.
+
+  authors:
+    - phil_ad
+    - broe_bj
+
+  maintainer:
+    - broe_bj
+
+  references:
+    - phillips14eos
+
+  projects:
+    - esmval
+    - c3s-magic
+  
+datasets:
+  - dataset: {{constraints['model']}}
+    project: CMIP5
+    mip: {{constraints['cmor_table']}}
+    exp: {{constraints['experiment']}}
+    ensemble: {{constraints['ensemble']}}
+    start_year: {{start_year}}
+    end_year: {{end_year}}
+
+
+#preprocessors:
+#
+#  pp_regrid:
+#    extract_levels:
+#      false
+#    regrid:
+#      target_grid: reference_dataset
+#      scheme: linear
+#    multi_model_statistics:
+#      false
+
+diagnostics:
+
+  diagnostic1:
+    description: Run the NCAR CVDPackage.
+    variables:
+      tas:
+        field: T2Ms
+        #reference_dataset: bcc-csm1-1
+      pr:
+        field: T2Ms
+        #reference_dataset: MPI-ESM-LR
+      psl:
+        field: T2Ms
+    scripts:
+      cvdp:
+        script: cvdp/cvdp_wrapper.py
+        quickplot:
+          plot_type: pcolormesh

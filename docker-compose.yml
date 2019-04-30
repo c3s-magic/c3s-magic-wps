@@ -1,10 +1,12 @@
 version: '3'
 services:
-  copernicus:
+  wps:
     build: .
-    image: cp4cds/copernicus-wps-demo
+    image: c3s-magic/c3s-magic-wps
     ports:
       - "5000:5000"
+    environment:
+      - "WPS_OUTPUT_URL=http://localhost:5000/wps"
 
 
 # docker-compose build

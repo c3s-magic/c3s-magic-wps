@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = copernicus
+SPHINXPROJ    = c3s-magic-wps
 SOURCEDIR     = source
 BUILDDIR      = build
 

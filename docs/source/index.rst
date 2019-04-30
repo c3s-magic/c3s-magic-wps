@@ -6,7 +6,7 @@
 
    installation
    configuration
-   tutorial
+   dev_guide
    processes
    changes
 

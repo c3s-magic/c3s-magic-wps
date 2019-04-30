@@ -1,13 +1,10 @@
 language: python
 python:
-  - "2.7"
   - "3.6"
+  - "3.7"
 os:
   - linux
-#  - osx
-matrix:
-  allow_failures:
-    - python: 2.7
+  - osx
 sudo: false
 install:
   # Python 3.x is default
@@ -20,17 +17,17 @@ install:
   # Useful for debugging any issues with conda
   - conda info -a
   # Prepare env with Python version
-  - conda create -n copernicus python=$TRAVIS_PYTHON_VERSION
+  - conda create -n c3s_magic_wps python=$TRAVIS_PYTHON_VERSION
   # Update now the env with our environment
   - conda env update -f environment.yml
-  - source activate copernicus
+  - source activate c3s_magic_wps
   # Packages for testing
   - conda install pytest flake8
   # Install Emu WPS
   - python setup.py install
 before_script:
   # Start WPS service on port 5000 on 0.0.0.0
-  - copernicus start --daemon --bind-host 0.0.0.0 --port 5000
+  - c3s_magic_wps start --daemon --bind-host 0.0.0.0 --port 5000
   - sleep 2
 script:
   - pytest

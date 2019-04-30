@@ -7,10 +7,13 @@ import os
 
 from setuptools import setup, find_packages
 
-version = __import__('copernicus').__version__
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
+
+about = {}
+with open(os.path.join(here, 'c3s_magic_wps', '__version__.py'), 'r') as f:
+    exec(f.read(), about)
 
 reqs = [line.strip() for line in open('requirements.txt')]
 
@@ -30,20 +33,20 @@ classifiers = [
     'License :: OSI Approved :: Apache Software License',
 ]
 
-setup(name='copernicus',
-      version=version,
-      description="Demo with WPS processes for copernicus.",
+setup(name='c3s_magic_wps',
+      version=about['__version__'],
+      description="The Web Processing Service for Climate Data Analysis in the MAGIC project.",
       long_description=README + '\n\n' + CHANGES,
-      author="Carsten Ehbrecht",
-      author_email='ehbrecht@dkrz.de',
-      url='https://github.com/cp4cds/copernicus',
+      author=about['__author__'],
+      author_email=about['__email__'],
+      url='https://github.com/c3s-magic/c3s-magic-wps',
       classifiers=classifiers,
       license="Apache Software License 2.0",
-      keywords='wps pywps birdhouse copernicus',
+      keywords='wps pywps birdhouse c3s_magic_wps',
       packages=find_packages(),
       include_package_data=True,
       install_requires=reqs,
       entry_points={
           'console_scripts': [
-             'copernicus=copernicus.cli:cli',
+              'c3s_magic_wps=c3s_magic_wps.cli:cli',
           ]},)

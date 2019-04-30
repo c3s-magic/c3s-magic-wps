@@ -1,16 +1,16 @@
-Copernicus WPS Demo
+c3s magic wps
 ===================
 
 .. image:: https://img.shields.io/badge/docs-latest-brightgreen.svg
-   :target: http://copernicus-wps-demo.readthedocs.io/en/latest/?badge=latest
+   :target: http://c3s-magic-wps.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
-.. image:: https://travis-ci.org/cp4cds/copernicus-wps-demo.svg?branch=master
-   :target: https://travis-ci.org/cp4cds/copernicus-wps-demo
+.. image:: https://travis-ci.org/c3s-magic/c3s-magic-wps.svg?branch=master
+   :target: https://travis-ci.org/c3s-magic/c3s-magic-wps
    :alt: Travis Build
 
-.. image:: https://img.shields.io/github/license/cp4cds/copernicus-wps-demo.svg
-    :target: https://github.com/cp4cds/copernicus-wps-demo/blob/master/LICENSE.txt
+.. image:: https://img.shields.io/github/license/c3s-magic/c3s-magic-wps.svg
+    :target: https://github.com/c3s-magic/c3s-magic-wps/blob/master/LICENSE
     :alt: GitHub license
 
 .. image:: https://badges.gitter.im/bird-house/birdhouse.svg
@@ -18,10 +18,10 @@ Copernicus WPS Demo
     :alt: Join the chat at https://gitter.im/bird-house/birdhouse
 
 
-Demo with WPS processes for Copernicus.
+The Web Processing Service for Climate Data Analysis in the MAGIC project.
 
 * Free software: Apache Software License 2.0
-* Documentation: https://copernicus-wps-demo.readthedocs.io.
+* Documentation: https://c3s-magic-wps.readthedocs.io.
 
 Coperniucs Climate Data Services
 --------------------------------
