@@ -16,28 +16,19 @@ class PreprocessExample(Process):
     def __init__(self):
         inputs = [
             *model_experiment_ensemble(
-                models=['EC-EARTH'],
                 model_name='model1',
-                experiments=['historical'],
-                ensembles=['r2i1p1'],
                 ensemble_name='ensemble1',
                 start_end_year=(1850, 2005),
                 start_end_defaults=(2000, 2005)
             ),
             *model_experiment_ensemble(
-                models=['bcc-csm1-1'],
                 model_name='model2',
-                experiments=['historical'],
-                ensembles=['r1i1p1'],
                 ensemble_name='ensemble2',
                 start_end_year=(1850, 2005),
                 start_end_defaults=(2000, 2005)
             ),
             *model_experiment_ensemble(
-                models=['MPI-ESM-LR'],
                 model_name='model3',
-                experiments=['historical'],
-                ensembles=['r1i1p1'],
                 ensemble_name='ensemble3',
                 start_end_year=(1850, 2005),
                 start_end_defaults=(2000, 2005)

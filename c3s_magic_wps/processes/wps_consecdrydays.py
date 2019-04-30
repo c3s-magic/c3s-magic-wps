@@ -18,9 +18,6 @@ class ConsecDryDays(Process):
     def __init__(self):
         inputs = [
             *model_experiment_ensemble(
-                models=['bcc-csm1-1-m', 'bcc-csm1-1'],
-                experiments=['historical'],
-                ensembles=['r1i1p1'],
                 start_end_year=(1850, 2012),
                 start_end_defaults=(2001, 2002)),
             LiteralInput('frlim', 'frlim',

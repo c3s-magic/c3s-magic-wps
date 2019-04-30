@@ -16,21 +16,15 @@ class ModesVariability(Process):
     def __init__(self):
         inputs = [
             *model_experiment_ensemble(
-                models=['bcc-csm1-1'],
                 model_name='Model_historical',
-                experiments=['historical'],
                 experiment_name='Experiment_historical',
-                ensembles=['r1i1p1'],
                 ensemble_name='Ensemble_historical'),
             *year_ranges((1850, 2005), (1971, 2000),
                          start_name='start_historical',
                          end_name='end_historical'),
             *model_experiment_ensemble(
-                models=['bcc-csm1-1'],
                 model_name='Model_projection',
-                experiments=['rcp85'],
                 experiment_name='Experiment_projection',
-                ensembles=['r1i1p1'],
                 ensemble_name='Ensemble_projection'),
             *year_ranges((2006, 2050), (2020, 2050),
                          start_name='start_projection',

@@ -11,14 +11,6 @@ MAGIC_ROLE_DOC = MAGIC_ROLE_BASE_URL + '/documentation'
 MAGIC_ROLE_METADATA = MAGIC_ROLE_BASE_URL + '/metadata'
 
 
-def diagdata_file(filepath):
-    return os.path.join(diagdata_directory(), filepath)
-
-
-def diagdata_directory():
-    return os.path.join(static_directory(), 'diagnosticsdata')
-
-
 def static_directory():
     """Helper function to return path to the static directory"""
     return os.path.join(os.path.dirname(__file__), 'static')

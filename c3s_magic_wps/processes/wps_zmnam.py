@@ -16,9 +16,6 @@ class ZMNAM(Process):
     def __init__(self):
         inputs = [
             *model_experiment_ensemble(
-                models=['MPI-ESM-MR'],
-                experiments=['amip'],
-                ensembles=['r1i1p1'],
                 start_end_year=(1850, 2005),
                 start_end_defaults=(1979, 2008)
             ),
@@ -142,7 +139,7 @@ class ZMNAM(Process):
                 path_filter=os.path.join('zmnam', 'main'),
                 name_filter="*_{}".format(plot),
                 output_format="png")
-        
+
         response.outputs['regr_map'].output_format = FORMATS.NETCDF
         response.outputs['regr_map'].file = runner.get_output(
             result['work_dir'],
@@ -156,14 +153,14 @@ class ZMNAM(Process):
             path_filter=os.path.join('zmnam', 'main'),
             name_filter="*eofs*",
             output_format="nc")
-        
+
         response.outputs['pc_mo'].output_format = FORMATS.NETCDF
         response.outputs['pc_mo'].file = runner.get_output(
             result['work_dir'],
             path_filter=os.path.join('zmnam', 'main'),
             name_filter="*pc_mo*",
             output_format="nc")
-        
+
         response.outputs['pc_da'].output_format = FORMATS.NETCDF
         response.outputs['pc_da'].file = runner.get_output(
             result['work_dir'],

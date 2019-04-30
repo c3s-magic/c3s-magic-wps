@@ -16,9 +16,6 @@ class WeatherRegimes(Process):
     def __init__(self):
         inputs = [
             *model_experiment_ensemble(
-                models=['EC-EARTH'],
-                experiments=['historical'],
-                ensembles=['r2i1p1'],
                 start_end_year=(1850, 2005),
                 start_end_defaults=(1980, 1989)
             ),
@@ -140,7 +137,7 @@ class WeatherRegimes(Process):
         else:
             LOGGER.exception('esmvaltool failed!')
             response.update_status("exception occured: " + result['exception'], 85)
-        
+
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
@@ -161,7 +158,7 @@ class WeatherRegimes(Process):
                                         subdir),
                 name_filter="{}_*".format(plot),
                 output_format="png")
-        
+
         response.outputs['data'].output_format = FORMATS.NETCDF
         response.outputs['data'].file = runner.get_output(
             result['work_dir'],

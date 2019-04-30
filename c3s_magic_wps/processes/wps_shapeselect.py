@@ -18,9 +18,6 @@ class ShapeSelect(Process):
     def __init__(self):
         inputs = [
             *model_experiment_ensemble(
-                models=['EC-EARTH'],
-                experiments=['historical'],
-                ensembles=['r12i1p1'],
                 start_end_year=(1979, 2005),
                 start_end_defaults=(1990, 1999)),
             LiteralInput('shape', 'Shape',

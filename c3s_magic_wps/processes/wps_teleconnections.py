@@ -16,9 +16,6 @@ class Teleconnections(Process):
     def __init__(self):
         inputs = [
             *model_experiment_ensemble(
-                models=['EC-EARTH'],
-                experiments=['historical'],
-                ensembles=['r2i1p1'],
                 start_end_year=(1850, 2005),
                 start_end_defaults=(1980, 1989)
             ),

@@ -15,9 +15,6 @@ class CVDP(Process):
     def __init__(self):
         inputs = [
             *model_experiment_ensemble(
-                models=['MPI-ESM-LR'],
-                experiments=['historical'],
-                ensembles=['r1i1p1'],
                 start_end_year=(1850, 2005),
                 start_end_defaults=(2000, 2002),
             ),
