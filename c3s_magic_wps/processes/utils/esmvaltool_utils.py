@@ -83,6 +83,15 @@ def model_experiment_ensemble(model_name='Model',
     model_long_name = model_name.replace('_', ' ').capitalize()
     experiment_long_name = experiment_name.replace('_', ' ').capitalize()
     ensemble_long_name = ensemble_name.replace('_', ' ').capitalize()
+
+    default_ensemble = 'r1i1p1'
+    if default_ensemble not in model_experiment_ensemble.available_ensembles:
+        default_ensemble = model_experiment_ensemble.available_ensembles[0]
+
+    default_experiment = 'historical'
+    if default_experiment not in model_experiment_ensemble.available_experiments:
+        default_experiment = model_experiment_ensemble.available_experiments[0]
+
     inputs = [
         LiteralInput(model_name.lower(),
                      model_long_name,
@@ -94,17 +103,16 @@ def model_experiment_ensemble(model_name='Model',
                      max_occurs=1),
         LiteralInput(experiment_name.lower(),
                      experiment_long_name,
-                     abstract='Choose an experiment like {}.'.format(
-                         model_experiment_ensemble.available_experiments[0]),
+                     abstract='Choose an experiment like {}.'.format(default_experiment),
                      data_type='string',
                      allowed_values=model_experiment_ensemble.available_experiments,
-                     default=model_experiment_ensemble.available_experiments[0]),
+                     default=default_experiment),
         LiteralInput(ensemble_name.lower(),
                      ensemble_long_name,
-                     abstract='Choose an ensemble like {}.'.format(model_experiment_ensemble.available_ensembles[0]),
+                     abstract='Choose an ensemble like {}.'.format(default_ensemble),
                      data_type='string',
                      allowed_values=model_experiment_ensemble.available_ensembles,
-                     default=model_experiment_ensemble.available_ensembles[0]),
+                     default=default_ensemble),
     ]
     if start_end_year is not None:
         inputs.extend(year_ranges(start_end_year, start_end_defaults))
