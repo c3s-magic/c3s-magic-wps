@@ -60,15 +60,19 @@ def default_outputs():
     )
 
 
+def ensemble_comp(key):
+    return [int(i) for i in re.findall('([0-9]+)', key)]  # Sort by the numbers in the ensemble
+
+
 def parse_model_lists():
     json_file = os.path.join(static_directory(), 'available_models.json')
     with open(json_file, 'r') as f:
         json_dict = json.load(f)
 
-    key = lambda key: [int(i) for i in re.findall('([0-9]+)', key)]  # Sort by the numbers in the ensemble
     model_experiment_ensemble.available_models = sorted(list(json_dict['facets']['model'].keys()))
     model_experiment_ensemble.available_experiments = sorted(list(json_dict['facets']['experiment'].keys()))
-    model_experiment_ensemble.available_ensembles = sorted(list(json_dict['facets']['ensemble'].keys()), key=key)
+    model_experiment_ensemble.available_ensembles = sorted(list(json_dict['facets']['ensemble'].keys()),
+                                                           key=ensemble_comp)
 
 
 def model_experiment_ensemble(model_name='Model',
