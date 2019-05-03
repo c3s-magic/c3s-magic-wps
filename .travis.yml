@@ -25,7 +25,7 @@ install:
   - conda install pytest flake8
   # ESMValTool
   - git clone -b version2_development https://github.com/ESMValGroup/ESMValTool.git esmvaltool
-  - conda env update -n c3s_magic_wps -f esmlvaltool/environment.yml
+  - conda env update -n c3s_magic_wps -f esmvaltool/environment.yml
   - python esmvaltool/setup.py install
   # Install Emu WPS
   - python setup.py install

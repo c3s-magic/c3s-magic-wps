@@ -1,16 +1,13 @@
 name: c3s_magic_wps
 channels:
-#- esmvalgroup
 - birdhouse
 - conda-forge
 - defaults
 dependencies:
+- pip
 - pywps=4.2
 - jinja2
 - click
 - psutil
-# - cdo=1.9.3 #for the zmnam recipe
 - pip:
   - j2cli
-# esmvaltool
-#- esmvaltool=2.0a0
