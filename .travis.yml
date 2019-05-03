@@ -26,7 +26,7 @@ install:
   # ESMValTool
   - git clone -b version2_development https://github.com/ESMValGroup/ESMValTool.git esmvaltool
   - conda env update -n c3s_magic_wps -f esmvaltool/environment.yml
-  - cd esmvaltool && python setup.py install
+  - pip install -U esmvaltool/
   # Install Emu WPS
   - python setup.py install
 before_script:
