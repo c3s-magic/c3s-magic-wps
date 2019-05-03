@@ -2,8 +2,7 @@ import json
 import logging
 import os
 
-from pywps import (FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput,
-                   LiteralOutput, Process)
+from pywps import (FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process)
 from pywps.app.Common import Metadata
 
 from ...util import static_directory
@@ -11,10 +10,7 @@ from ...util import static_directory
 LOGGER = logging.getLogger("PYWPS")
 
 
-def year_ranges(start_end_year,
-                start_end_defaults,
-                start_name='start_year',
-                end_name='end_year'):
+def year_ranges(start_end_year, start_end_defaults, start_name='start_year', end_name='end_year'):
     start_year, end_year = start_end_year
     if start_end_defaults is not None:
         default_start_year, default_end_year = start_end_defaults
@@ -40,12 +36,11 @@ def year_ranges(start_end_year,
 
 def default_outputs():
     return (
-        LiteralOutput(
-            'success',
-            'Success',
-            abstract="""True if the metric has been successfully calculated.
+        LiteralOutput('success',
+                      'Success',
+                      abstract="""True if the metric has been successfully calculated.
                         If false please check the log files""",
-            data_type='string'),
+                      data_type='string'),
         ComplexOutput('recipe',
                       'recipe',
                       abstract='ESMValTool recipe used for processing.',
@@ -69,12 +64,9 @@ def parse_model_lists():
     with open(json_file, 'r') as f:
         json_dict = json.load(f)
 
-    model_experiment_ensemble.available_models = list(
-        json_dict['facets']['model'].keys())
-    model_experiment_ensemble.available_experiments = list(
-        json_dict['facets']['experiment'].keys())
-    model_experiment_ensemble.available_ensembles = list(
-        json_dict['facets']['ensemble'].keys())
+    model_experiment_ensemble.available_models = list(json_dict['facets']['model'].keys())
+    model_experiment_ensemble.available_experiments = list(json_dict['facets']['experiment'].keys())
+    model_experiment_ensemble.available_ensembles = list(json_dict['facets']['ensemble'].keys())
 
 
 def model_experiment_ensemble(model_name='Model',
@@ -87,34 +79,30 @@ def model_experiment_ensemble(model_name='Model',
         parse_model_lists()
 
     model_long_name = model_name.replace('_', ' ').capitalize()
-    experiment_long_name = model_name.replace('_', ' ').capitalize()
-    ensemble_long_name = model_name.replace('_', ' ').capitalize()
+    experiment_long_name = experiment_name.replace('_', ' ').capitalize()
+    ensemble_long_name = ensemble_name.replace('_', ' ').capitalize()
     inputs = [
         LiteralInput(model_name.lower(),
                      model_long_name,
-                     abstract='Choose a model like {}.'.format(
-                         model_experiment_ensemble.available_models[0]),
+                     abstract='Choose a model like {}.'.format(model_experiment_ensemble.available_models[0]),
                      data_type='string',
                      allowed_values=model_experiment_ensemble.available_models,
                      default=model_experiment_ensemble.available_models[0],
                      min_occurs=1,
                      max_occurs=1),
-        LiteralInput(
-            experiment_name.lower(),
-            experiment_long_name,
-            abstract='Choose an experiment like {}.'.format(
-                model_experiment_ensemble.available_experiments[0]),
-            data_type='string',
-            allowed_values=model_experiment_ensemble.available_experiments,
-            default=model_experiment_ensemble.available_experiments[0]),
-        LiteralInput(
-            ensemble_name.lower(),
-            ensemble_long_name,
-            abstract='Choose an ensemble like {}.'.format(
-                model_experiment_ensemble.available_ensembles[0]),
-            data_type='string',
-            allowed_values=model_experiment_ensemble.available_ensembles,
-            default=model_experiment_ensemble.available_ensembles[0]),
+        LiteralInput(experiment_name.lower(),
+                     experiment_long_name,
+                     abstract='Choose an experiment like {}.'.format(
+                         model_experiment_ensemble.available_experiments[0]),
+                     data_type='string',
+                     allowed_values=model_experiment_ensemble.available_experiments,
+                     default=model_experiment_ensemble.available_experiments[0]),
+        LiteralInput(ensemble_name.lower(),
+                     ensemble_long_name,
+                     abstract='Choose an ensemble like {}.'.format(model_experiment_ensemble.available_ensembles[0]),
+                     data_type='string',
+                     allowed_values=model_experiment_ensemble.available_ensembles,
+                     default=model_experiment_ensemble.available_ensembles[0]),
     ]
     if start_end_year is not None:
         inputs.extend(year_ranges(start_end_year, start_end_defaults))
@@ -126,11 +114,9 @@ def outputs_from_plot_names(plotlist):
     plots = []
     for plot in plotlist:
         plots.append(
-            ComplexOutput(
-                '{}_plot'.format(plot.lower()),
-                '{} plot'.format(plot),
-                abstract='Generated {} plot of ESMValTool processing.'.format(
-                    plot),
-                as_reference=True,
-                supported_formats=[Format('image/png')]))
+            ComplexOutput('{}_plot'.format(plot.lower()),
+                          '{} plot'.format(plot),
+                          abstract='Generated {} plot of ESMValTool processing.'.format(plot),
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]))
     return plots
