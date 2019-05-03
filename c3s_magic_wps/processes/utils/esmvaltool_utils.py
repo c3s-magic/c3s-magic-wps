@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import re
 
 from pywps import (FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process)
 from pywps.app.Common import Metadata
@@ -64,9 +65,10 @@ def parse_model_lists():
     with open(json_file, 'r') as f:
         json_dict = json.load(f)
 
-    model_experiment_ensemble.available_models = list(json_dict['facets']['model'].keys())
-    model_experiment_ensemble.available_experiments = list(json_dict['facets']['experiment'].keys())
-    model_experiment_ensemble.available_ensembles = list(json_dict['facets']['ensemble'].keys())
+    key = lambda key: [int(i) for i in re.findall('([0-9]+)', key)]  # Sort by the numbers in the ensemble
+    model_experiment_ensemble.available_models = sorted(list(json_dict['facets']['model'].keys()))
+    model_experiment_ensemble.available_experiments = sorted(list(json_dict['facets']['experiment'].keys()))
+    model_experiment_ensemble.available_ensembles = sorted(list(json_dict['facets']['ensemble'].keys()), key=key)
 
 
 def model_experiment_ensemble(model_name='Model',

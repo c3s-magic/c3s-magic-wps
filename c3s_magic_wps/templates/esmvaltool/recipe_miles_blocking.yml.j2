@@ -11,7 +11,7 @@
 ## E. Arnone (ISAC-CNR, Italy - e.arnone@isac.cnr.it)
 ##
 ## Project
-## Copernicus C3S-MAGIC (C3S 34a Lot2) 
+## Copernicus C3S-MAGIC (C3S 34a Lot2)
 ##
 ## References:
 ## https://github.com/oloapinivad/MiLES
@@ -26,7 +26,7 @@
 ---
 documentation:
   description: |
-    Recipe for computing and plotting blocking statistics using 
+    Recipe for computing and plotting blocking statistics using
     the MiLES (Mid-Latitude Evaluation System) package
 
   authors:
@@ -74,14 +74,13 @@ preprocessors:
 
 diagnostics:
   miles_diagnostics:
-    description: MiLES Blocking Diagnostics 
+    description: MiLES Blocking Diagnostics
     variables:
       zg:
         preprocessor: preproc1
         mip: day
-        field: T3D
         reference_dataset: "ERA-Interim"
     scripts:
-        miles_block: 
+        miles_block:
             script: miles/miles_block.R
             seasons: {{options['season']}} #DJF # Select season ('DJF','MAM','JJA','SON')
