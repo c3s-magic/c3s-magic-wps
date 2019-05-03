@@ -15,57 +15,43 @@ LOGGER = logging.getLogger("PYWPS")
 class Blocking(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(
-                start_end_year=(1850, 2005),
-                start_end_defaults=(1980, 1989)),
-            LiteralInput(
-                'ref_model',
-                'Reference Model',
-                abstract='Choose a reference model like ERA-Interim.',
-                data_type='string',
-                allowed_values=['ERA-Interim'],
-                default='ERA-Interim',
-                min_occurs=1,
-                max_occurs=1),
-            LiteralInput(
-                'season',
-                'Season',
-                abstract='Choose a season like DJF.',
-                data_type='string',
-                allowed_values=['DJF', 'MAM', 'JJA', 'SON', 'ALL'],
-                default='DJF'),
+            *model_experiment_ensemble(start_end_year=(1850, 2005), start_end_defaults=(1980, 1989)),
+            LiteralInput('ref_model',
+                         'Reference Model',
+                         abstract='Choose a reference model like ERA-Interim.',
+                         data_type='string',
+                         allowed_values=['ERA-Interim'],
+                         default='ERA-Interim',
+                         min_occurs=1,
+                         max_occurs=1),
+            LiteralInput('season',
+                         'Season',
+                         abstract='Choose a season like DJF.',
+                         data_type='string',
+                         allowed_values=['DJF', 'MAM', 'JJA', 'SON', 'ALL'],
+                         default='DJF'),
         ]
         self.plotlist = [
-            'TM90',
-            'NumberEvents',
-            'DurationEvents',
-            'LongBlockEvents',
-            'BlockEvents',
-            'ACN',
-            'CN',
-            'BI',
-            'MGI',
-            'Z500',
-            'ExtraBlock',
-            'InstBlock'
+            'TM90', 'NumberEvents', 'DurationEvents', 'LongBlockEvents', 'BlockEvents', 'ACN', 'CN', 'BI', 'MGI',
+            'Z500', 'ExtraBlock', 'InstBlock'
         ]
         outputs = [
             *outputs_from_plot_names(self.plotlist),
-            ComplexOutput('data_full', 'Full Blocking Data',
+            ComplexOutput('data_full',
+                          'Full Blocking Data',
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[FORMATS.NETCDF]),
-            ComplexOutput('data_clim', 'Clim Blocking Data',
+            ComplexOutput('data_clim',
+                          'Clim Blocking Data',
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[FORMATS.NETCDF]),
-            ComplexOutput(
-                'archive',
-                'Archive',
-                abstract=
-                'The complete output of the ESMValTool processing as an zip archive.',
-                as_reference=True,
-                supported_formats=[Format('application/zip')]),
+            ComplexOutput('archive',
+                          'Archive',
+                          abstract='The complete output of the ESMValTool processing as an zip archive.',
+                          as_reference=True,
+                          supported_formats=[Format('application/zip')]),
             *default_outputs(),
         ]
 
@@ -77,10 +63,9 @@ class Blocking(Process):
             abstract="Calculate Blocking metrics that shows the mid-latitude 1D and 2D blocking indices.",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata(
-                    'Documentation',
-                    'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
-                    role=util.WPS_ROLE_DOC)
+                Metadata('Documentation',
+                         'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
+                         role=util.WPS_ROLE_DOC)
             ],
             inputs=inputs,
             outputs=outputs,
@@ -134,10 +119,8 @@ class Blocking(Process):
 
         if result['success']:
             try:
-                subdir = os.path.join(constraints['model'], constraints['experiment'],
-                        constraints['ensemble'],
-                        "{}-{}".format(start_year, end_year),
-                        options['season'], 'Block')
+                subdir = os.path.join(constraints['model'], constraints['experiment'], constraints['ensemble'],
+                                      "{}-{}".format(start_year, end_year), options['season'], 'Block')
 
                 self.get_outputs(result, subdir, response)
             except Exception as e:
@@ -149,8 +132,8 @@ class Blocking(Process):
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(
-            os.path.join(workdir, 'output'), 'diagnostic_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'),
+                                                                  'diagnostic_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -161,23 +144,22 @@ class Blocking(Process):
         for plot in self.plotlist:
             key = '{}_plot'.format(plot.lower())
             response.outputs[key].output_format = Format('application/png')
-            response.outputs[key].file = runner.get_output(
-                result['plot_dir'],
-                path_filter=os.path.join('miles_diagnostics', 'miles_block',
-                                        subdir),
-                name_filter="{}*".format(plot),
-                output_format="png")
+            response.outputs[key].file = runner.get_output(result['plot_dir'],
+                                                           path_filter=os.path.join(
+                                                               'miles_diagnostics', 'miles_block', subdir),
+                                                           name_filter="{}*".format(plot),
+                                                           output_format="png")
 
         response.outputs['data_full'].output_format = FORMATS.NETCDF
-        response.outputs['data_full'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('miles_diagnostics', 'miles_block', subdir),
-            name_filter="BlockFull*",
-            output_format="nc")
+        response.outputs['data_full'].file = runner.get_output(result['work_dir'],
+                                                               path_filter=os.path.join(
+                                                                   'miles_diagnostics', 'miles_block', subdir),
+                                                               name_filter="BlockFull*",
+                                                               output_format="nc")
 
         response.outputs['data_clim'].output_format = FORMATS.NETCDF
-        response.outputs['data_clim'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('miles_diagnostics', 'miles_block', subdir),
-            name_filter="BlockClim*",
-            output_format="nc")
+        response.outputs['data_clim'].file = runner.get_output(result['work_dir'],
+                                                               path_filter=os.path.join(
+                                                                   'miles_diagnostics', 'miles_block', subdir),
+                                                               name_filter="BlockClim*",
+                                                               output_format="nc")

@@ -15,40 +15,39 @@ LOGGER = logging.getLogger("PYWPS")
 class PreprocessExample(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(
-                model_name='model1',
-                ensemble_name='ensemble1',
-                start_end_year=(1850, 2005),
-                start_end_defaults=(2000, 2005)
-            ),
-            *model_experiment_ensemble(
-                model_name='model2',
-                ensemble_name='ensemble2',
-                start_end_year=(1850, 2005),
-                start_end_defaults=(2000, 2005)
-            ),
-            *model_experiment_ensemble(
-                model_name='model3',
-                ensemble_name='ensemble3',
-                start_end_year=(1850, 2005),
-                start_end_defaults=(2000, 2005)
-            ),
-            LiteralInput('extract_levels', 'Extraction levels',
-                         abstract='Choose an extraction level for the preprocessor.',
-                         data_type='float',
-                         #allowed_values=make_allowedvalues([0.0, 110000.0]),
-                         default=85000.0),
+            *model_experiment_ensemble(model_name='model1',
+                                       ensemble_name='ensemble1',
+                                       start_end_year=(1850, 2005),
+                                       start_end_defaults=(2000, 2005)),
+            *model_experiment_ensemble(model_name='model2',
+                                       ensemble_name='ensemble2',
+                                       start_end_year=(1850, 2005),
+                                       start_end_defaults=(2000, 2005)),
+            *model_experiment_ensemble(model_name='model3',
+                                       ensemble_name='ensemble3',
+                                       start_end_year=(1850, 2005),
+                                       start_end_defaults=(2000, 2005)),
+            LiteralInput(
+                'extract_levels',
+                'Extraction levels',
+                abstract='Choose an extraction level for the preprocessor.',
+                data_type='float',
+                # allowed_values=make_allowedvalues([0.0, 110000.0]),
+                default=85000.0),
         ]
         outputs = [
-            ComplexOutput('plot', 'Output plot',
+            ComplexOutput('plot',
+                          'Output plot',
                           abstract='Generated output plot of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[Format('image/png')]),
-            ComplexOutput('data', 'Data',
+            ComplexOutput('data',
+                          'Data',
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[FORMATS.NETCDF]),
-            ComplexOutput('archive', 'Archive',
+            ComplexOutput('archive',
+                          'Archive',
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
                           as_reference=True,
                           supported_formats=[Format('application/zip')]),
@@ -61,16 +60,14 @@ class PreprocessExample(Process):
             title="Preprocessing Demo",
             version=runner.VERSION,
             abstract="Generates a plot for temperature using ESMValTool."
-             " The default run uses the following CMIP5 data:"
-             " project=CMIP5, experiment=historical, ensemble=r1i1p1, variable=ta, model=MPI-ESM-LR, time_frequency=mon",  # noqa
+            " The default run uses the following CMIP5 data:"
+            " project=CMIP5, experiment=historical, ensemble=r1i1p1, variable=ta, model=MPI-ESM-LR, time_frequency=mon",  # noqa
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
                          'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
                          role=util.WPS_ROLE_DOC),
-                Metadata('Media',
-                         util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
-                         role=util.WPS_ROLE_MEDIA)
+                Metadata('Media', util.diagdata_url() + '/pydemo/pydemo_thumbnail.png', role=util.WPS_ROLE_MEDIA)
             ],
             inputs=inputs,
             outputs=outputs,
@@ -92,21 +89,17 @@ class PreprocessExample(Process):
             experiment=request.inputs['experiment'][0].data,
         )
 
-        options = dict(
-            extract_levels=request.inputs['extract_levels'][0].data
-        )
+        options = dict(extract_levels=request.inputs['extract_levels'][0].data)
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
-        recipe_file, config_file = runner.generate_recipe(
-            workdir=workdir,
-            diag='preproc',
-            constraints=constraints,
-            start_year=request.inputs['start_year'][0].data,
-            end_year=request.inputs['end_year'][0].data,
-            output_format='png',
-            options=options
-        )
+        recipe_file, config_file = runner.generate_recipe(workdir=workdir,
+                                                          diag='python',
+                                                          constraints=constraints,
+                                                          start_year=request.inputs['start_year'][0].data,
+                                                          end_year=request.inputs['end_year'][0].data,
+                                                          output_format='png',
+                                                          options=options)
 
         # recipe output
         response.outputs['recipe'].output_format = FORMATS.TEXT
@@ -138,7 +131,8 @@ class PreprocessExample(Process):
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'), 'diagnostic_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'),
+                                                                  'diagnostic_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -147,15 +141,13 @@ class PreprocessExample(Process):
         # result plot
         response.update_status("collecting output ...", 80)
         response.outputs['plot'].output_format = Format('application/png')
-        response.outputs['plot'].file = runner.get_output(
-            result['plot_dir'],
-            path_filter=os.path.join('diagnostic1', 'script1'),
-            name_filter="CMIP5*",
-            output_format="png")
+        response.outputs['plot'].file = runner.get_output(result['plot_dir'],
+                                                          path_filter=os.path.join('diagnostic1', 'script1'),
+                                                          name_filter="CMIP5*",
+                                                          output_format="png")
 
         response.outputs['data'].output_format = FORMATS.NETCDF
-        response.outputs['data'].file = runner.get_output(
-            result['plot_dir'],
-            path_filter=os.path.join('diagnostic1', 'script1'),
-            name_filter="CMIP5*",
-            output_format="nc")
+        response.outputs['data'].file = runner.get_output(result['plot_dir'],
+                                                          path_filter=os.path.join('diagnostic1', 'script1'),
+                                                          name_filter="CMIP5*",
+                                                          output_format="nc")

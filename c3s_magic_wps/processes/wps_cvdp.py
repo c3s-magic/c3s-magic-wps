@@ -26,37 +26,33 @@ class CVDP(Process):
             #     abstract='Generated output plot of ESMValTool processing.',
             #     as_reference=True,
             #     supported_formats=[Format('image/png')]),
-            ComplexOutput(
-                'archive',
-                'Archive',
-                abstract=
-                'The complete output of the ESMValTool processing as an zip archive.',
-                as_reference=True,
-                supported_formats=[Format('application/zip')]),
+            ComplexOutput('archive',
+                          'Archive',
+                          abstract='The complete output of the ESMValTool processing as an zip archive.',
+                          as_reference=True,
+                          supported_formats=[Format('application/zip')]),
             *default_outputs(),
         ]
 
-        super(CVDP, self).__init__(
-            self._handler,
-            identifier="cvdp",
-            title="NCAR CVDPackage",
-            version=runner.VERSION,
-            abstract="Run the NCAR CVDPackage",
-            metadata=[
-                Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata(
-                    'Documentation',
-                    'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
-                    role=util.WPS_ROLE_DOC),
-                Metadata(
-                    'Media',
-                    util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
-                    role=util.WPS_ROLE_MEDIA),
-            ],
-            inputs=inputs,
-            outputs=outputs,
-            status_supported=True,
-            store_supported=True)
+        super(CVDP,
+              self).__init__(self._handler,
+                             identifier="cvdp",
+                             title="NCAR CVDPackage",
+                             version=runner.VERSION,
+                             abstract="Run the NCAR CVDPackage",
+                             metadata=[
+                                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
+                                 Metadata('Documentation',
+                                          'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
+                                          role=util.WPS_ROLE_DOC),
+                                 Metadata('Media',
+                                          util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
+                                          role=util.WPS_ROLE_MEDIA),
+                             ],
+                             inputs=inputs,
+                             outputs=outputs,
+                             status_supported=True,
+                             store_supported=True)
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)
@@ -112,13 +108,13 @@ class CVDP(Process):
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(
-            os.path.join(workdir, 'output'), 'diagnostic_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'),
+                                                                  'diagnostic_result.zip')
 
         response.update_status("done.", 100)
         return response
 
-    def get_output(self, result, response):
+    def get_outputs(self, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
         # response.outputs['plot'].output_format = Format('application/png')

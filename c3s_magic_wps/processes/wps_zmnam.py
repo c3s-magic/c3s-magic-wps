@@ -15,61 +15,61 @@ LOGGER = logging.getLogger("PYWPS")
 class ZMNAM(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(
-                start_end_year=(1850, 2005),
-                start_end_defaults=(1979, 2008)
-            ),
+            *model_experiment_ensemble(start_end_year=(1850, 2005), start_end_defaults=(1979, 2008)),
         ]
         self.pressure_levels = [5000, 25000, 50000, 100000]
-        self.plotlist = ["{}Pa_mo_reg".format(i) for i in  self.pressure_levels]
-        self.plotlist.extend(
-            ["{}Pa_da_pdf".format(i) for i in  self.pressure_levels])
-        self.plotlist.extend(
-            ["{}Pa_mo_ts".format(i) for i in  self.pressure_levels])
+        self.plotlist = ["{}Pa_mo_reg".format(i) for i in self.pressure_levels]
+        self.plotlist.extend(["{}Pa_da_pdf".format(i) for i in self.pressure_levels])
+        self.plotlist.extend(["{}Pa_mo_ts".format(i) for i in self.pressure_levels])
         outputs = [
             *outputs_from_plot_names(self.plotlist),
-            ComplexOutput('regr_map', 'Regr Map Data',
+            ComplexOutput('regr_map',
+                          'Regr Map Data',
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[FORMATS.NETCDF]),
-            ComplexOutput('eofs', 'EOF Data',
+            ComplexOutput('eofs',
+                          'EOF Data',
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[FORMATS.NETCDF]),
-            ComplexOutput('pc_mo', 'PC Mo Data',
+            ComplexOutput('pc_mo',
+                          'PC Mo Data',
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[FORMATS.NETCDF]),
-            ComplexOutput('pc_da', 'PC Da Data',
+            ComplexOutput('pc_da',
+                          'PC Da Data',
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[FORMATS.NETCDF]),
-            ComplexOutput('archive', 'Archive',
-                        abstract='The complete output of the ESMValTool processing as an zip archive.',
-                        as_reference=True,
-                        supported_formats=[Format('application/zip')]),
+            ComplexOutput('archive',
+                          'Archive',
+                          abstract='The complete output of the ESMValTool processing as an zip archive.',
+                          as_reference=True,
+                          supported_formats=[Format('application/zip')]),
             *default_outputs(),
         ]
 
-        super(ZMNAM, self).__init__(
-            self._handler,
-            identifier="zmnam",
-            title="Stratosphere-troposphere coupling and annular modes indices (ZMNAM)",
-            version=runner.VERSION,
-            abstract="Stratosphere-troposphere coupling and annular modes indices (ZMNAM)",
-            metadata=[
-                Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata('Documentation',
-                         'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
-                         role=util.WPS_ROLE_DOC),
-                Metadata('Media',
-                         util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
-                         role=util.WPS_ROLE_MEDIA),
-            ],
-            inputs=inputs,
-            outputs=outputs,
-            status_supported=True,
-            store_supported=True)
+        super(ZMNAM,
+              self).__init__(self._handler,
+                             identifier="zmnam",
+                             title="Stratosphere-troposphere coupling and annular modes indices (ZMNAM)",
+                             version=runner.VERSION,
+                             abstract="Stratosphere-troposphere coupling and annular modes indices (ZMNAM)",
+                             metadata=[
+                                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
+                                 Metadata('Documentation',
+                                          'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
+                                          role=util.WPS_ROLE_DOC),
+                                 Metadata('Media',
+                                          util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
+                                          role=util.WPS_ROLE_MEDIA),
+                             ],
+                             inputs=inputs,
+                             outputs=outputs,
+                             status_supported=True,
+                             store_supported=True)
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)
@@ -123,7 +123,8 @@ class ZMNAM(Process):
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'), 'diagnostic_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'),
+                                                                  'diagnostic_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -134,36 +135,31 @@ class ZMNAM(Process):
         for plot in self.plotlist:
             key = '{}_plot'.format(plot.lower())
             response.outputs[key].output_format = Format('application/png')
-            response.outputs[key].file = runner.get_output(
-                result['plot_dir'],
-                path_filter=os.path.join('zmnam', 'main'),
-                name_filter="*_{}".format(plot),
-                output_format="png")
+            response.outputs[key].file = runner.get_output(result['plot_dir'],
+                                                           path_filter=os.path.join('zmnam', 'main'),
+                                                           name_filter="*_{}".format(plot),
+                                                           output_format="png")
 
         response.outputs['regr_map'].output_format = FORMATS.NETCDF
-        response.outputs['regr_map'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('zmnam', 'main'),
-            name_filter="*regr_map*",
-            output_format="nc")
+        response.outputs['regr_map'].file = runner.get_output(result['work_dir'],
+                                                              path_filter=os.path.join('zmnam', 'main'),
+                                                              name_filter="*regr_map*",
+                                                              output_format="nc")
 
         response.outputs['eofs'].output_format = FORMATS.NETCDF
-        response.outputs['eofs'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('zmnam', 'main'),
-            name_filter="*eofs*",
-            output_format="nc")
+        response.outputs['eofs'].file = runner.get_output(result['work_dir'],
+                                                          path_filter=os.path.join('zmnam', 'main'),
+                                                          name_filter="*eofs*",
+                                                          output_format="nc")
 
         response.outputs['pc_mo'].output_format = FORMATS.NETCDF
-        response.outputs['pc_mo'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('zmnam', 'main'),
-            name_filter="*pc_mo*",
-            output_format="nc")
+        response.outputs['pc_mo'].file = runner.get_output(result['work_dir'],
+                                                           path_filter=os.path.join('zmnam', 'main'),
+                                                           name_filter="*pc_mo*",
+                                                           output_format="nc")
 
         response.outputs['pc_da'].output_format = FORMATS.NETCDF
-        response.outputs['pc_da'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('zmnam', 'main'),
-            name_filter="*pc_da*",
-            output_format="nc")
+        response.outputs['pc_da'].file = runner.get_output(result['work_dir'],
+                                                           path_filter=os.path.join('zmnam', 'main'),
+                                                           name_filter="*pc_da*",
+                                                           output_format="nc")

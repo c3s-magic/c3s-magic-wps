@@ -15,55 +15,46 @@ LOGGER = logging.getLogger("PYWPS")
 class HeatwavesColdwaves(Process):
     def __init__(self):
         inputs = [
-            LiteralInput(
-                'quantile',
-                'Quantile',
-                abstract='quantile defining the exceedance/non-exceedance threshold',
-                data_type='float',
-                allowed_values=[0.5, 0.6, 0.7, 0.8, 0.9],
-                default=0.8),
-            LiteralInput(
-                'min_duration',
-                'Minimum duration',
-                abstract='Min duration in days of a heatwave/coldwave event',
-                data_type='integer',
-                default=5),
-            LiteralInput(
-                'operator',
-                'Operator',
-                abstract='either `>` for exceedances or `<` for non-exceedances',
-                data_type='string',
-                allowed_values=['exceedances', 'non-exceedances'],
-                default='non-exceedances'),
-            LiteralInput(
-                'season',
-                'Season',
-                abstract='Choose a season.',
-                data_type='string',
-                allowed_values=['summer', 'winter'],
-                default='winter'),
+            LiteralInput('quantile',
+                         'Quantile',
+                         abstract='quantile defining the exceedance/non-exceedance threshold',
+                         data_type='float',
+                         allowed_values=[0.5, 0.6, 0.7, 0.8, 0.9],
+                         default=0.8),
+            LiteralInput('min_duration',
+                         'Minimum duration',
+                         abstract='Min duration in days of a heatwave/coldwave event',
+                         data_type='integer',
+                         default=5),
+            LiteralInput('operator',
+                         'Operator',
+                         abstract='either `>` for exceedances or `<` for non-exceedances',
+                         data_type='string',
+                         allowed_values=['exceedances', 'non-exceedances'],
+                         default='non-exceedances'),
+            LiteralInput('season',
+                         'Season',
+                         abstract='Choose a season.',
+                         data_type='string',
+                         allowed_values=['summer', 'winter'],
+                         default='winter'),
         ]
         outputs = [
-            ComplexOutput(
-                'plot',
-                'Extreme spell duration tasmin plot',
-                abstract='Generated extreme spell duration tasmin plot.',
-                as_reference=True,
-                supported_formats=[Format('image/png')]),
-            ComplexOutput(
-                'data',
-                'Extreme spell duration tasmin data',
-                abstract=
-                'Extreme spell duration tasmin data.',
-                as_reference=True,
-                supported_formats=[Format('application/zip')]),
-            ComplexOutput(
-                'archive',
-                'Archive',
-                abstract=
-                'The complete output of the ESMValTool processing as an zip archive.',
-                as_reference=True,
-                supported_formats=[Format('application/zip')]),
+            ComplexOutput('plot',
+                          'Extreme spell duration tasmin plot',
+                          abstract='Generated extreme spell duration tasmin plot.',
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
+            ComplexOutput('data',
+                          'Extreme spell duration tasmin data',
+                          abstract='Extreme spell duration tasmin data.',
+                          as_reference=True,
+                          supported_formats=[Format('application/zip')]),
+            ComplexOutput('archive',
+                          'Archive',
+                          abstract='The complete output of the ESMValTool processing as an zip archive.',
+                          as_reference=True,
+                          supported_formats=[Format('application/zip')]),
             *default_outputs(),
         ]
 
@@ -72,17 +63,17 @@ class HeatwavesColdwaves(Process):
             identifier="heatwaves_coldwaves",
             title="Heatwave and coldwave duration",
             version=runner.VERSION,
-            abstract="""Metric showing the duration of heatwaves and coldwaves, to help understand potential changes in energy demand.""",
+            abstract="""Metric showing the duration of heatwaves and coldwaves, to help understand potential changes in
+                        energy demand.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
                     'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_heatwaves_coldwaves.html',
                     role=util.WPS_ROLE_DOC),
-                Metadata(
-                    'Media',
-                    util.diagdata_url() + '/heatwaves_coldwaves/extreme_spells_energy.png',
-                    role=util.WPS_ROLE_MEDIA),
+                Metadata('Media',
+                         util.diagdata_url() + '/heatwaves_coldwaves/extreme_spells_energy.png',
+                         role=util.WPS_ROLE_MEDIA),
             ],
             inputs=inputs,
             outputs=outputs,
@@ -142,8 +133,7 @@ class HeatwavesColdwaves(Process):
 
         if not result['success']:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'],
-                                   100)
+            response.update_status("exception occured: " + result['exception'], 100)
             return response
 
         try:
@@ -154,8 +144,8 @@ class HeatwavesColdwaves(Process):
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(
-            os.path.join(self.workdir, 'output'), 'diagnostic_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
+                                                                  'diagnostic_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -164,15 +154,13 @@ class HeatwavesColdwaves(Process):
         # result plot
         response.update_status("collecting output ...", 80)
         response.outputs['plot'].output_format = Format('application/png')
-        response.outputs['plot'].file = runner.get_output(
-            result['plot_dir'],
-            path_filter=os.path.join('heatwaves_coldwaves', 'main'),
-            name_filter="*extreme_spell*",
-            output_format="png")
+        response.outputs['plot'].file = runner.get_output(result['plot_dir'],
+                                                          path_filter=os.path.join('heatwaves_coldwaves', 'main'),
+                                                          name_filter="*extreme_spell*",
+                                                          output_format="png")
 
         response.outputs['data'].output_format = FORMATS.NETCDF
-        response.outputs['data'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('heatwaves_coldwaves', 'main'),
-            name_filter="*extreme_spell*",
-            output_format="nc")
+        response.outputs['data'].file = runner.get_output(result['work_dir'],
+                                                          path_filter=os.path.join('heatwaves_coldwaves', 'main'),
+                                                          name_filter="*extreme_spell*",
+                                                          output_format="nc")

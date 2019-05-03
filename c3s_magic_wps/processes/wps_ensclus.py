@@ -21,84 +21,71 @@ class EnsClus(Process):
             #     ensembles=['r1i1p1'],
             #     start_end_year=(1850, 2005),
             #     start_end_defaults=(1850, 2005)),
-             *year_ranges((1850, 2005),(1990, 2005)),
-            LiteralInput(
-                'season',
-                'Season',
-                abstract='Choose a season like DJF.',
-                data_type='string',
-                allowed_values=['DJF', 'DJFM', 'NDJFM', 'JJA'],
-                default='JJA'),
-            LiteralInput(
-                'area',
-                'Area',
-                abstract='Area',
-                data_type='string',
-                allowed_values=['EU', 'EAT', 'PNA', 'NH'],
-                default='EU'),
-            LiteralInput(
-                'extreme',
-                'Extreme',
-                abstract='Extreme',
-                data_type='string',
-                allowed_values=[
-                    '60th_percentile', '75th_percentile', '90th_percentile',
-                    'mean', 'maximum', 'std', 'trend'
-                ],
-                default='75th_percentile'),
-            LiteralInput(
-                'numclus',
-                'Number of Clusters',
-                abstract='Numclus',
-                data_type='string',
-                allowed_values=['2', '3', '4'],
-                default='3'),
-            LiteralInput(
-                'perc',
-                'Percentage',
-                abstract='Percentage of total Variance',
-                data_type='string',
-                allowed_values=['70', '80', '90'],
-                default='80'),
+            *year_ranges((1850, 2005), (1990, 2005)),
+            LiteralInput('season',
+                         'Season',
+                         abstract='Choose a season like DJF.',
+                         data_type='string',
+                         allowed_values=['DJF', 'DJFM', 'NDJFM', 'JJA'],
+                         default='JJA'),
+            LiteralInput('area',
+                         'Area',
+                         abstract='Area',
+                         data_type='string',
+                         allowed_values=['EU', 'EAT', 'PNA', 'NH'],
+                         default='EU'),
+            LiteralInput('extreme',
+                         'Extreme',
+                         abstract='Extreme',
+                         data_type='string',
+                         allowed_values=[
+                             '60th_percentile', '75th_percentile', '90th_percentile', 'mean', 'maximum', 'std', 'trend'
+                         ],
+                         default='75th_percentile'),
+            LiteralInput('numclus',
+                         'Number of Clusters',
+                         abstract='Numclus',
+                         data_type='string',
+                         allowed_values=['2', '3', '4'],
+                         default='3'),
+            LiteralInput('perc',
+                         'Percentage',
+                         abstract='Percentage of total Variance',
+                         data_type='string',
+                         allowed_values=['70', '80', '90'],
+                         default='80'),
         ]
         outputs = [
-            ComplexOutput(
-                'plot',
-                'Output plot',
-                abstract='Generated output plot of ESMValTool processing.',
-                as_reference=True,
-                supported_formats=[Format('image/eps')]),
-            ComplexOutput(
-                'ens_extreme',
-                'ens_extreme',
-                abstract='Generated output data of ESMValTool processing.',
-                as_reference=True,
-                supported_formats=[FORMATS.NETCDF]),
-            ComplexOutput(
-                'ens_climatologies',
-                'ens_climatologies',
-                abstract='Generated output data of ESMValTool processing.',
-                as_reference=True,
-                supported_formats=[FORMATS.NETCDF]),
-            ComplexOutput(
-                'ens_anomalies',
-                'ens_anomalies',
-                abstract='Generated output data of ESMValTool processing.',
-                as_reference=True,
-                supported_formats=[FORMATS.NETCDF]),
-            ComplexOutput(
-                'statistics',
-                'Statistics',
-                abstract='Clustering Statictics',
-                as_reference=True,
-                supported_formats=[Format('text/plain')]),
-            ComplexOutput(
-                'archive',
-                'Archive',
-                abstract=
-                'The complete output of the ESMValTool processing as an zip archive.',
-                as_reference=True,
-                supported_formats=[Format('application/zip')]),
+            ComplexOutput('plot',
+                          'Output plot',
+                          abstract='Generated output plot of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[Format('image/eps')]),
+            ComplexOutput('ens_extreme',
+                          'ens_extreme',
+                          abstract='Generated output data of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput('ens_climatologies',
+                          'ens_climatologies',
+                          abstract='Generated output data of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput('ens_anomalies',
+                          'ens_anomalies',
+                          abstract='Generated output data of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput('statistics',
+                          'Statistics',
+                          abstract='Clustering Statictics',
+                          as_reference=True,
+                          supported_formats=[Format('text/plain')]),
+            ComplexOutput('archive',
+                          'Archive',
+                          abstract='The complete output of the ESMValTool processing as an zip archive.',
+                          as_reference=True,
+                          supported_formats=[Format('application/zip')]),
             *default_outputs(),
         ]
 
@@ -115,14 +102,10 @@ class EnsClus(Process):
                 CanESM2, CCSM4, CESM1-BGC""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata(
-                    'Documentation',
-                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_ensclus.html',
-                    role=util.WPS_ROLE_DOC),
-                Metadata(
-                    'Media',
-                    util.diagdata_url() + '/ensclus/ensclus_thumbnail.png',
-                    role=util.WPS_ROLE_MEDIA),
+                Metadata('Documentation',
+                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_ensclus.html',
+                         role=util.WPS_ROLE_DOC),
+                Metadata('Media', util.diagdata_url() + '/ensclus/ensclus_thumbnail.png', role=util.WPS_ROLE_MEDIA),
             ],
             inputs=inputs,
             outputs=outputs,
@@ -136,9 +119,9 @@ class EnsClus(Process):
         # build esgf search constraints
         constraints = dict(
             # model=request.inputs['model'][0].data, # currently not used in recipy
-            experiment='historical', # request.inputs['experiment'][0].data,
+            experiment='historical',  # request.inputs['experiment'][0].data,
             mip='Amon',
-            ensemble='r1i1p1' # request.inputs['ensemble'][0].data,
+            ensemble='r1i1p1'  # request.inputs['ensemble'][0].data,
         )
 
         options = dict(
@@ -186,14 +169,13 @@ class EnsClus(Process):
                 response.update_status("exception occured: " + str(e), 85)
         else:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'],
-                                   85)
+            response.update_status("exception occured: " + result['exception'], 85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(
-            os.path.join(workdir, 'output'), 'diagnostic_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'),
+                                                                  'diagnostic_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -202,36 +184,31 @@ class EnsClus(Process):
         # result plot
         response.update_status("collecting output ...", 80)
         response.outputs['plot'].output_format = Format('application/eps')
-        response.outputs['plot'].file = runner.get_output(
-            result['plot_dir'],
-            path_filter=os.path.join('EnsClus', 'main'),
-            name_filter="anomalies*",
-            output_format="png")
+        response.outputs['plot'].file = runner.get_output(result['plot_dir'],
+                                                          path_filter=os.path.join('EnsClus', 'main'),
+                                                          name_filter="anomalies*",
+                                                          output_format="png")
 
         response.outputs['ens_extreme'].output_format = FORMATS.NETCDF
-        response.outputs['ens_extreme'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('EnsClus', 'main'),
-            name_filter="ens_extreme*",
-            output_format="nc")
+        response.outputs['ens_extreme'].file = runner.get_output(result['work_dir'],
+                                                                 path_filter=os.path.join('EnsClus', 'main'),
+                                                                 name_filter="ens_extreme*",
+                                                                 output_format="nc")
 
         response.outputs['ens_climatologies'].output_format = FORMATS.NETCDF
-        response.outputs['ens_climatologies'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('EnsClus', 'main'),
-            name_filter="ens_anomalies*",
-            output_format="nc")
+        response.outputs['ens_climatologies'].file = runner.get_output(result['work_dir'],
+                                                                       path_filter=os.path.join('EnsClus', 'main'),
+                                                                       name_filter="ens_anomalies*",
+                                                                       output_format="nc")
 
         response.outputs['ens_anomalies'].output_format = FORMATS.NETCDF
-        response.outputs['ens_anomalies'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('EnsClus', 'main'),
-            name_filter="ens_anomalies*",
-            output_format="nc")
+        response.outputs['ens_anomalies'].file = runner.get_output(result['work_dir'],
+                                                                   path_filter=os.path.join('EnsClus', 'main'),
+                                                                   name_filter="ens_anomalies*",
+                                                                   output_format="nc")
 
         response.outputs['statistics'].output_format = FORMATS.TEXT
-        response.outputs['statistics'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('EnsClus', 'main'),
-            name_filter="statistics*",
-            output_format="txt")
+        response.outputs['statistics'].file = runner.get_output(result['work_dir'],
+                                                                path_filter=os.path.join('EnsClus', 'main'),
+                                                                name_filter="statistics*",
+                                                                output_format="txt")

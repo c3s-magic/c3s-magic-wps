@@ -17,35 +17,35 @@ from .utils import default_outputs, model_experiment_ensemble, year_ranges, outp
 class ConsecDryDays(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(
-                start_end_year=(1850, 2012),
-                start_end_defaults=(2001, 2002)),
-            LiteralInput('frlim', 'frlim',
+            *model_experiment_ensemble(start_end_year=(1850, 2012), start_end_defaults=(2001, 2002)),
+            LiteralInput('frlim',
+                         'frlim',
                          abstract='Frlim',
                          data_type='string',
                          allowed_values=['2.5', '5', '10'],
                          default='5'),
-            LiteralInput('plim', 'plim',
+            LiteralInput('plim',
+                         'plim',
                          abstract='Plim',
                          data_type='string',
                          allowed_values=['0.5', '1', '2'],
                          default='1'),
         ]
-        self.plotlist = [
-            'dryfreq',
-            'drymax'
-        ]
+        self.plotlist = ['dryfreq', 'drymax']
         outputs = [
             *outputs_from_plot_names(self.plotlist),
-            ComplexOutput('data_drymax', 'Data Drymax',
+            ComplexOutput('data_drymax',
+                          'Data Drymax',
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[FORMATS.NETCDF]),
-            ComplexOutput('data_dryfreq', 'Data DryFreq',
+            ComplexOutput('data_dryfreq',
+                          'Data DryFreq',
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[FORMATS.NETCDF]),
-            ComplexOutput('archive', 'Archive',
+            ComplexOutput('archive',
+                          'Archive',
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
                           as_reference=True,
                           supported_formats=[Format('application/zip')]),
@@ -63,9 +63,7 @@ class ConsecDryDays(Process):
                 Metadata('Documentation',
                          'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_consecdrydays.html',
                          role=util.WPS_ROLE_DOC),
-                Metadata('Media',
-                         util.diagdata_url() + '/consecdrydays/drydays.png',
-                         role=util.WPS_ROLE_MEDIA),
+                Metadata('Media', util.diagdata_url() + '/consecdrydays/drydays.png', role=util.WPS_ROLE_MEDIA),
             ],
             inputs=inputs,
             outputs=outputs,
@@ -85,7 +83,7 @@ class ConsecDryDays(Process):
             ensemble=request.inputs['ensemble'][0].data,
         )
 
-        #build options
+        # build options
         options = dict(
             frlim=request.inputs['frlim'][0].data,
             plim=request.inputs['plim'][0].data,
@@ -99,7 +97,7 @@ class ConsecDryDays(Process):
             constraints=constraints,
             start_year=request.inputs['start_year'][0].data,
             end_year=request.inputs['end_year'][0].data,
-	    options=options,
+            options=options,
             output_format='png',
         )
 
@@ -133,7 +131,8 @@ class ConsecDryDays(Process):
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'), 'diagnostic_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
+                                                                  'diagnostic_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -142,22 +141,22 @@ class ConsecDryDays(Process):
         for plot in self.plotlist:
             key = '{}_plot'.format(plot.lower())
             response.outputs[key].output_format = Format('application/png')
-            response.outputs[key].file = runner.get_output(
-                result['plot_dir'],
-                path_filter=os.path.join('dry_days', 'consecutive_dry_days'),
-                name_filter="*{}".format(plot),
-                output_format="png")
+            response.outputs[key].file = runner.get_output(result['plot_dir'],
+                                                           path_filter=os.path.join(
+                                                               'dry_days', 'consecutive_dry_days'),
+                                                           name_filter="*{}".format(plot),
+                                                           output_format="png")
 
         response.outputs['data_drymax'].output_format = FORMATS.NETCDF
-        response.outputs['data_drymax'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('dry_days', 'consecutive_dry_days'),
-            name_filter="*drymax",
-            output_format="nc")
+        response.outputs['data_drymax'].file = runner.get_output(result['work_dir'],
+                                                                 path_filter=os.path.join(
+                                                                     'dry_days', 'consecutive_dry_days'),
+                                                                 name_filter="*drymax",
+                                                                 output_format="nc")
 
         response.outputs['data_dryfreq'].output_format = FORMATS.NETCDF
-        response.outputs['data_dryfreq'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('dry_days', 'consecutive_dry_days'),
-            name_filter="*dryfreq",
-            output_format="nc")
+        response.outputs['data_dryfreq'].file = runner.get_output(result['work_dir'],
+                                                                  path_filter=os.path.join(
+                                                                      'dry_days', 'consecutive_dry_days'),
+                                                                  name_filter="*dryfreq",
+                                                                  output_format="nc")

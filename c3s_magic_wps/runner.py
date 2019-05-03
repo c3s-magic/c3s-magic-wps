@@ -10,10 +10,10 @@ from pywps import configuration
 import logging
 LOGGER = logging.getLogger("PYWPS")
 
-template_env = Environment(
-    loader=PackageLoader('c3s_magic_wps', '/templates/esmvaltool'),
-    autoescape=select_autoescape(['yml', ])
-)
+template_env = Environment(loader=PackageLoader('c3s_magic_wps', '/templates/esmvaltool'),
+                           autoescape=select_autoescape([
+                               'yml',
+                           ]))
 
 VERSION = "2.0.0"
 
@@ -26,13 +26,11 @@ def run(recipe_file, config_file):
 
     # Create run dir
     if os.path.exists(cfg['run_dir']):
-        print("ERROR: run_dir {} already exists, aborting to "
-              "prevent data loss".format(cfg['run_dir']))
+        print("ERROR: run_dir {} already exists, aborting to " "prevent data loss".format(cfg['run_dir']))
     os.makedirs(cfg['run_dir'])
 
     # configure logging
-    configure_logging(
-        output=cfg['run_dir'], console_log_level=cfg['log_level'])
+    configure_logging(output=cfg['run_dir'], console_log_level=cfg['log_level'])
 
     # log header
     # LOGGER.info(__doc__)
@@ -51,10 +49,10 @@ def run(recipe_file, config_file):
         success = True
     except Exception as err:
         LOGGER.exception('esmvaltool failed!')
-        #For debugging purposes, exit here to keep the temp folder
-        #Should ideally be an option in PyWPS
-        #sys.exit(1)
-        #raise Exception('esmvaltool failed: {0}'.format(err))
+        # For debugging purposes, exit here to keep the temp folder
+        # Should ideally be an option in PyWPS
+        # sys.exit(1)
+        # raise Exception('esmvaltool failed: {0}'.format(err))
         success = False
         exception = str(err)
     # find the log
@@ -71,7 +69,13 @@ def run(recipe_file, config_file):
     }
 
 
-def generate_recipe(diag, constraints=None, options=None, start_year=2000, end_year=2005, output_format='pdf', workdir=None):
+def generate_recipe(diag,
+                    constraints=None,
+                    options=None,
+                    start_year=2000,
+                    end_year=2005,
+                    output_format='pdf',
+                    workdir=None):
     constraints = constraints or {}
     workdir = workdir or os.curdir
     workdir = os.path.abspath(workdir)
@@ -97,7 +101,7 @@ def generate_recipe(diag, constraints=None, options=None, start_year=2000, end_y
         constraints=constraints,
         start_year=start_year,
         end_year=end_year,
-	options=options,
+        options=options,
     )
     recipe_file = os.path.abspath(os.path.join(workdir, "recipe.yml"))
     with open(recipe_file, 'w') as fp:
@@ -108,8 +112,7 @@ def generate_recipe(diag, constraints=None, options=None, start_year=2000, end_y
 def get_output(output_dir, path_filter, name_filter=None, output_format='pdf'):
     name_filter = name_filter or '*'
     # output/recipe_20180130_111116/plots/diagnostic1/script1/MultiModelMean_T3M_ta_2001-2002_mean.pdf
-    output_filter = os.path.join(
-        output_dir, path_filter, '{0}.{1}'.format(name_filter, output_format))
+    output_filter = os.path.join(output_dir, path_filter, '{0}.{1}'.format(name_filter, output_format))
     LOGGER.debug("output_filter %s", output_filter)
     matches = glob.glob(output_filter)
     if len(matches) == 0:
@@ -120,6 +123,7 @@ def get_output(output_dir, path_filter, name_filter=None, output_format='pdf'):
     LOGGER.debug("output found=%s", matches[0])
     return matches[0]
 
+
 def compress_output(output_dir, archive_file):
     with zipfile.ZipFile(archive_file, 'w', zipfile.ZIP_DEFLATED) as ziph:
         for root, dirs, files in os.walk(output_dir):
@@ -129,4 +133,3 @@ def compress_output(output_dir, archive_file):
                 ziph.write(path, arcname)
 
     return archive_file
-

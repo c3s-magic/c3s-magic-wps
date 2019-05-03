@@ -17,26 +17,21 @@ class DiurnalTemperatureIndex(Process):
         inputs = []
         self.plotlist = []
         outputs = [
-            ComplexOutput(
-                'plot',
-                'Diurnal Temperature Variation (DTR) Indicator plot',
-                abstract='The diurnal temperature indicator to estimate energy demand.',
-                as_reference=True,
-                supported_formats=[Format('image/png')]),
-            ComplexOutput(
-                'data',
-                'Diurnal Temperature Variation (DTR) Indicator data',
-                abstract=
-                'The diurnal temperature indicator data.',
-                as_reference=True,
-                supported_formats=[Format('application/zip')]),
-            ComplexOutput(
-                'archive',
-                'Archive',
-                abstract=
-                'The complete output of the ESMValTool processing as an zip archive.',
-                as_reference=True,
-                supported_formats=[Format('application/zip')]),
+            ComplexOutput('plot',
+                          'Diurnal Temperature Variation (DTR) Indicator plot',
+                          abstract='The diurnal temperature indicator to estimate energy demand.',
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
+            ComplexOutput('data',
+                          'Diurnal Temperature Variation (DTR) Indicator data',
+                          abstract='The diurnal temperature indicator data.',
+                          as_reference=True,
+                          supported_formats=[Format('application/zip')]),
+            ComplexOutput('archive',
+                          'Archive',
+                          abstract='The complete output of the ESMValTool processing as an zip archive.',
+                          as_reference=True,
+                          supported_formats=[Format('application/zip')]),
             *default_outputs(),
         ]
 
@@ -50,12 +45,11 @@ class DiurnalTemperatureIndex(Process):
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
-                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_diurnal_temperature_index.html',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_diurnal_temperature_index.html',  # noqa
                     role=util.WPS_ROLE_DOC),
-                Metadata(
-                    'Media',
-                    util.diagdata_url() + '/dtr/diurnal_temperature_variation.png',
-                    role=util.WPS_ROLE_MEDIA),
+                Metadata('Media',
+                         util.diagdata_url() + '/dtr/diurnal_temperature_variation.png',
+                         role=util.WPS_ROLE_MEDIA),
             ],
             inputs=inputs,
             outputs=outputs,
@@ -102,8 +96,7 @@ class DiurnalTemperatureIndex(Process):
 
         if not result['success']:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'],
-                                   100)
+            response.update_status("exception occured: " + result['exception'], 100)
             return response
 
         try:
@@ -114,8 +107,8 @@ class DiurnalTemperatureIndex(Process):
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(
-            os.path.join(self.workdir, 'output'), 'diagnostic_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
+                                                                  'diagnostic_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -124,15 +117,15 @@ class DiurnalTemperatureIndex(Process):
         # result plot
         response.update_status("collecting output ...", 80)
         response.outputs['plot'].output_format = Format('application/png')
-        response.outputs['plot'].file = runner.get_output(
-            result['plot_dir'],
-            path_filter=os.path.join('diurnal_temperature_indicator', 'main'),
-            name_filter="*",
-            output_format="png")
+        response.outputs['plot'].file = runner.get_output(result['plot_dir'],
+                                                          path_filter=os.path.join('diurnal_temperature_indicator',
+                                                                                   'main'),
+                                                          name_filter="*",
+                                                          output_format="png")
 
         response.outputs['data'].output_format = FORMATS.NETCDF
-        response.outputs['data'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('diurnal_temperature_indicator', 'main'),
-            name_filter="Seasonal_DTRindicator*",
-            output_format="nc")
+        response.outputs['data'].file = runner.get_output(result['work_dir'],
+                                                          path_filter=os.path.join('diurnal_temperature_indicator',
+                                                                                   'main'),
+                                                          name_filter="Seasonal_DTRindicator*",
+                                                          output_format="nc")
