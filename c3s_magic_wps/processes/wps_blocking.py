@@ -16,9 +16,9 @@ class Blocking(Process):
     def __init__(self):
         inputs = [
             *model_experiment_ensemble(start_end_year=(1850, 2005), start_end_defaults=(1980, 1989)),
-            LiteralInput('ref_model',
-                         'Reference Model',
-                         abstract='Choose a reference model like ERA-Interim.',
+            LiteralInput('ref_dataset',
+                         'Reference Dataset',
+                         abstract='Choose a reference dataset like ERA-Interim.',
                          data_type='string',
                          allowed_values=['ERA-Interim'],
                          default='ERA-Interim',
