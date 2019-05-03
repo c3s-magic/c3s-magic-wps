@@ -14,7 +14,17 @@ LOGGER = logging.getLogger("PYWPS")
 
 class DroughtIndicator(Process):
     def __init__(self):
-        inputs = []
+        inputs = [
+            *model_experiment_ensemble(start_end_year=(1850, 2005), start_end_defaults=(2000, 2005)),
+            LiteralInput('ref_dataset',
+                         'Reference Dataset',
+                         abstract='Choose a reference dataset like ERA-Interim.',
+                         data_type='string',
+                         allowed_values=['ERA-Interim', 'CRU'],
+                         default='ERA-Interim',
+                         min_occurs=1,
+                         max_occurs=1),
+        ]
         self.plotlist = []
         outputs = [
             ComplexOutput('spi_plot',
@@ -76,19 +86,26 @@ class DroughtIndicator(Process):
         response.update_status("starting ...", 0)
 
         # build esgf search constraints
-        constraints = dict()
+        constraints = dict(
+            model=request.inputs['model'][0].data,
+            experiment=request.inputs['experiment'][0].data,
+            ensemble=request.inputs['ensemble'][0].data,
+            reference=request.inputs['ref_dataset'][0].data,
+        )
 
         options = dict()
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
+        start_year = request.inputs['start_year'][0].data
+        end_year = request.inputs['end_year'][0].data
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
             diag='spei',
             constraints=constraints,
             options=options,
-            start_year=2000,
-            end_year=2005,
+            start_year=start_year,
+            end_year=end_year,
             output_format='png',
         )
 

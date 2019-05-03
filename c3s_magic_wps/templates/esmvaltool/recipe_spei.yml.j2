@@ -7,8 +7,8 @@ documentation:
 
 datasets:
 #  - {dataset: CRU, project: OBS, type: reanaly, version: 1, tier: 3}
-  - {dataset: ERA-Interim, project: OBS, type: reanaly, version: 1, tier: 3}
-  - {dataset: ACCESS1-0, project: CMIP5, exp: historical, ensemble: r1i1p1}
+#  - {dataset: ERA-Interim, project: OBS, type: reanaly, version: 1, tier: 3}
+#  - {dataset: ACCESS1-0, project: CMIP5, exp: historical, ensemble: r1i1p1}
 #  - {dataset: ACCESS1-0, project: CMIP5, exp: historical, ensemble: r1i1p1}
 #  - {dataset: ACCESS1-3, project: CMIP5, exp: historical, ensemble: r1i1p1}
 #  - {dataset: BNU-ESM, project: CMIP5, exp: historical, ensemble: r1i1p1}
@@ -24,6 +24,15 @@ datasets:
 #  - {dataset: IPSL-CM5B-LR, project: CMIP5, exp: historical, ensemble: r1i1p1}
 #  - {dataset: MPI-ESM-MR, project: CMIP5, exp: historical, ensemble: r1i1p1}
 #  - {dataset: NorESM1-M, project: CMIP5, exp: historical, ensemble: r1i1p1}
+   - dataset: {{constraints['model']}}
+     project: CMIP5
+     exp: {{constraints['experiment']}}
+     ensemble: {{constraints['ensemble']}}
+   - dataset: {{constraints['reference']}}
+     project: OBS
+     type: reanaly
+     version: 1
+     tier: 3
 
 preprocessors:
   preprocessor:
@@ -38,10 +47,9 @@ diagnostics:
       pr: &var
         reference_dataset: ERA-Interim
         preprocessor: preprocessor
-        start_year: 2000
-        end_year: 2005
+        start_year: {{start_year}}
+        end_year: {{end_year}}
         mip: Amon
-        field: T2Ms
       tas: *var
     scripts:
       spi:
