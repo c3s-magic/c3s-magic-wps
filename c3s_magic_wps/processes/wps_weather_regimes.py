@@ -15,22 +15,15 @@ LOGGER = logging.getLogger("PYWPS")
 class WeatherRegimes(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(
-                models=['EC-EARTH'],
-                experiments=['historical'],
-                ensembles=['r2i1p1'],
-                start_end_year=(1850, 2005),
-                start_end_defaults=(1980, 1989)
-            ),
-            LiteralInput(
-                'ref_model',
-                'Reference Model',
-                abstract='Choose a reference model like ERA-Interim.',
-                data_type='string',
-                allowed_values=['ERA-Interim'],
-                default='ERA-Interim',
-                min_occurs=1,
-                max_occurs=1),
+            *model_experiment_ensemble(start_end_year=(1850, 2005), start_end_defaults=(1980, 1989)),
+            LiteralInput('ref_model',
+                         'Reference Model',
+                         abstract='Choose a reference model like ERA-Interim.',
+                         data_type='string',
+                         allowed_values=['ERA-Interim'],
+                         default='ERA-Interim',
+                         min_occurs=1,
+                         max_occurs=1),
             # Removed on request of Jost
             # LiteralInput('season', 'Season',
             #              abstract='Choose a season like DJF.',
@@ -43,41 +36,41 @@ class WeatherRegimes(Process):
             #              allowed_values=['4'],
             #              default='4'),
         ]
-        self.plotlist = [
-            "Regime{}".format(i) for i in range(1,5)
-        ]
+        self.plotlist = ["Regime{}".format(i) for i in range(1, 5)]
         outputs = [
             *outputs_from_plot_names(self.plotlist),
-            ComplexOutput('data', 'Regime Data',
+            ComplexOutput('data',
+                          'Regime Data',
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[FORMATS.NETCDF]),
-            ComplexOutput('archive', 'Archive',
-                        abstract='The complete output of the ESMValTool processing as an zip archive.',
-                        as_reference=True,
-                        supported_formats=[Format('application/zip')]),
+            ComplexOutput('archive',
+                          'Archive',
+                          abstract='The complete output of the ESMValTool processing as an zip archive.',
+                          as_reference=True,
+                          supported_formats=[Format('application/zip')]),
             *default_outputs(),
         ]
 
-        super(WeatherRegimes, self).__init__(
-            self._handler,
-            identifier="weather_regimes",
-            title="Weather regimes",
-            version=runner.VERSION,
-            abstract="Diagnostic providing North-Atlantic Weather Regimes",
-            metadata=[
-                Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata('Documentation',
-                         'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
-                         role=util.WPS_ROLE_DOC),
-                Metadata('Media',
-                         util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
-                         role=util.WPS_ROLE_MEDIA),
-            ],
-            inputs=inputs,
-            outputs=outputs,
-            status_supported=True,
-            store_supported=True)
+        super(WeatherRegimes,
+              self).__init__(self._handler,
+                             identifier="weather_regimes",
+                             title="Weather regimes",
+                             version=runner.VERSION,
+                             abstract="Diagnostic providing North-Atlantic Weather Regimes",
+                             metadata=[
+                                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
+                                 Metadata('Documentation',
+                                          'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
+                                          role=util.WPS_ROLE_DOC),
+                                 Metadata('Media',
+                                          util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
+                                          role=util.WPS_ROLE_MEDIA),
+                             ],
+                             inputs=inputs,
+                             outputs=outputs,
+                             status_supported=True,
+                             store_supported=True)
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)
@@ -92,8 +85,8 @@ class WeatherRegimes(Process):
 
         # Only DJF and 4 clusters is supported currently
         options = dict(
-            season= 'DJF', # request.inputs['season'][0].data,
-            nclusters=4 # int(request.inputs['nclusters'][0].data)
+            season='DJF',  # request.inputs['season'][0].data,
+            nclusters=4  # int(request.inputs['nclusters'][0].data)
         )
 
         # generate recipe
@@ -130,21 +123,20 @@ class WeatherRegimes(Process):
 
         if result['success']:
             try:
-                subdir = os.path.join(constraints['model'], constraints['experiment'],
-                              constraints['ensemble'],
-                              "{}-{}".format(start_year, end_year),
-                              options['season'], 'Regimes')
+                subdir = os.path.join(constraints['model'], constraints['experiment'], constraints['ensemble'],
+                                      "{}-{}".format(start_year, end_year), options['season'], 'Regimes')
                 self.get_outputs(result, subdir, response)
             except Exception as e:
                 response.update_status("exception occured: " + str(e), 85)
         else:
             LOGGER.exception('esmvaltool failed!')
             response.update_status("exception occured: " + result['exception'], 85)
-        
+
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'), 'diagnostic_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'),
+                                                                  'diagnostic_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -155,16 +147,15 @@ class WeatherRegimes(Process):
         for plot in self.plotlist:
             key = '{}_plot'.format(plot.lower())
             response.outputs[key].output_format = Format('application/png')
-            response.outputs[key].file = runner.get_output(
-                result['plot_dir'],
-                path_filter=os.path.join('miles_diagnostics', 'miles_regimes',
-                                        subdir),
-                name_filter="{}_*".format(plot),
-                output_format="png")
-        
+            response.outputs[key].file = runner.get_output(result['plot_dir'],
+                                                           path_filter=os.path.join(
+                                                               'miles_diagnostics', 'miles_regimes', subdir),
+                                                           name_filter="{}_*".format(plot),
+                                                           output_format="png")
+
         response.outputs['data'].output_format = FORMATS.NETCDF
-        response.outputs['data'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('miles_diagnostics', 'miles_regimes', subdir),
-            name_filter="RegimesPattern*",
-            output_format="nc")
+        response.outputs['data'].file = runner.get_output(result['work_dir'],
+                                                          path_filter=os.path.join('miles_diagnostics',
+                                                                                   'miles_regimes', subdir),
+                                                          name_filter="RegimesPattern*",
+                                                          output_format="nc")

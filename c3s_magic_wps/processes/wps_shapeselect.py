@@ -17,28 +17,27 @@ LOGGER = logging.getLogger("PYWPS")
 class ShapeSelect(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(
-                models=['EC-EARTH'],
-                experiments=['historical'],
-                ensembles=['r12i1p1'],
-                start_end_year=(1979, 2005),
-                start_end_defaults=(1990, 1999)),
-            LiteralInput('shape', 'Shape',
+            *model_experiment_ensemble(start_end_year=(1979, 2005), start_end_defaults=(1990, 1999)),
+            LiteralInput('shape',
+                         'Shape',
                          abstract='Shape of the area',
                          data_type='string',
                          allowed_values=['MotalaStrom', 'Elbe', 'multicatchment', 'testfile', 'Thames'],
                          default='MotalaStrom'),
-         ]
+        ]
         outputs = [
-            ComplexOutput('data', 'Data',
+            ComplexOutput('data',
+                          'Data',
                           abstract='Generated NetCDF file with precipitation for the selected area.',
                           as_reference=True,
                           supported_formats=[FORMATS.NETCDF]),
-            ComplexOutput('xlsx_data', 'XLSX Data',
+            ComplexOutput('xlsx_data',
+                          'XLSX Data',
                           abstract='Generated excel file with precipitation for the selected area',
                           as_reference=True,
                           supported_formats=[Format('application/vnd.ms-excel')]),
-             ComplexOutput('archive', 'Archive',
+            ComplexOutput('archive',
+                          'Archive',
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
                           as_reference=True,
                           supported_formats=[Format('application/zip')]),
@@ -50,7 +49,9 @@ class ShapeSelect(Process):
             identifier="shapefile_selection",
             title="Shapefile selection",
             version=runner.VERSION,
-            abstract= "Metric showing selected gridded data within a user defined polygon shapefile and outputting as NetCDF or csv file.",
+            abstract="""Metric showing selected gridded data within a user
+                        defined polygon shapefile and outputting as NetCDF
+                        or csv file.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
@@ -77,9 +78,7 @@ class ShapeSelect(Process):
             ensemble=request.inputs['ensemble'][0].data,
         )
 
-        options = dict(
-            shape=request.inputs['shape'][0].data,
-        )
+        options = dict(shape=request.inputs['shape'][0].data, )
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
@@ -123,7 +122,8 @@ class ShapeSelect(Process):
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'), 'diagnostic_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
+                                                                  'diagnostic_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -132,15 +132,13 @@ class ShapeSelect(Process):
         # result plot
         response.update_status("collecting output ...", 80)
         response.outputs['data'].output_format = Format('application/png')
-        response.outputs['data'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('diagnostic1', 'script1'),
-            name_filter="CMIP5*",
-            output_format="nc")
+        response.outputs['data'].file = runner.get_output(result['work_dir'],
+                                                          path_filter=os.path.join('diagnostic1', 'script1'),
+                                                          name_filter="CMIP5*",
+                                                          output_format="nc")
 
         response.outputs['xlsx_data'].output_format = Format('application/vnd.ms-excel')
-        response.outputs['xlsx_data'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('diagnostic1', 'script1'),
-            name_filter="CMIP5*",
-            output_format="xlsx")
+        response.outputs['xlsx_data'].file = runner.get_output(result['work_dir'],
+                                                               path_filter=os.path.join('diagnostic1', 'script1'),
+                                                               name_filter="CMIP5*",
+                                                               output_format="xlsx")

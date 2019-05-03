@@ -17,50 +17,43 @@ class CapacityFactor(Process):
         inputs = []
         self.plotlist = []
         outputs = [
-            ComplexOutput(
-                'plot',
-                'Capacity Factor of Wind Power plot',
-                abstract='Ratio of average estimated power to theoretical maximum power.',
-                as_reference=True,
-                supported_formats=[Format('image/png')]),
-            ComplexOutput(
-                'data',
-                'Capacity Factor of Wind Power data',
-                abstract=
-                'Ratio of average estimated power to theoretical maximum power.',
-                as_reference=True,
-                supported_formats=[Format('application/zip')]),
-            ComplexOutput(
-                'archive',
-                'Archive',
-                abstract=
-                'The complete output of the ESMValTool processing as an zip archive.',
-                as_reference=True,
-                supported_formats=[Format('application/zip')]),
+            ComplexOutput('plot',
+                          'Capacity Factor of Wind Power plot',
+                          abstract='Ratio of average estimated power to theoretical maximum power.',
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
+            ComplexOutput('data',
+                          'Capacity Factor of Wind Power data',
+                          abstract='Ratio of average estimated power to theoretical maximum power.',
+                          as_reference=True,
+                          supported_formats=[Format('application/zip')]),
+            ComplexOutput('archive',
+                          'Archive',
+                          abstract='The complete output of the ESMValTool processing as an zip archive.',
+                          as_reference=True,
+                          supported_formats=[Format('application/zip')]),
             *default_outputs(),
         ]
 
-        super(CapacityFactor, self).__init__(
-            self._handler,
-            identifier="capacity_factor",
-            title="Capacity factor of wind power",
-            version=runner.VERSION,
-            abstract="""Metric showing the wind capacity factor to estimate energy supply.""",
-            metadata=[
-                Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata(
-                    'Documentation',
-                    'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
-                    role=util.WPS_ROLE_DOC),
-                Metadata(
-                    'Media',
-                    util.diagdata_url() + '/capacity_factor/diurnal_temperature_variation.png',
-                    role=util.WPS_ROLE_MEDIA),
-            ],
-            inputs=inputs,
-            outputs=outputs,
-            status_supported=True,
-            store_supported=True)
+        super(CapacityFactor,
+              self).__init__(self._handler,
+                             identifier="capacity_factor",
+                             title="Capacity factor of wind power",
+                             version=runner.VERSION,
+                             abstract="""Metric showing the wind capacity factor to estimate energy supply.""",
+                             metadata=[
+                                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
+                                 Metadata('Documentation',
+                                          'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
+                                          role=util.WPS_ROLE_DOC),
+                                 Metadata('Media',
+                                          util.diagdata_url() + '/capacity_factor/diurnal_temperature_variation.png',
+                                          role=util.WPS_ROLE_MEDIA),
+                             ],
+                             inputs=inputs,
+                             outputs=outputs,
+                             status_supported=True,
+                             store_supported=True)
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)
@@ -102,8 +95,7 @@ class CapacityFactor(Process):
 
         if not result['success']:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'],
-                                   100)
+            response.update_status("exception occured: " + result['exception'], 100)
             return response
 
         try:
@@ -114,8 +106,8 @@ class CapacityFactor(Process):
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(
-            os.path.join(self.workdir, 'output'), 'diagnostic_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
+                                                                  'diagnostic_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -124,15 +116,13 @@ class CapacityFactor(Process):
         # result plot
         response.update_status("collecting output ...", 80)
         response.outputs['plot'].output_format = Format('application/png')
-        response.outputs['plot'].file = runner.get_output(
-            result['plot_dir'],
-            path_filter=os.path.join('capacity_factor', 'main'),
-            name_filter="capacity_factor*",
-            output_format="png")
+        response.outputs['plot'].file = runner.get_output(result['plot_dir'],
+                                                          path_filter=os.path.join('capacity_factor', 'main'),
+                                                          name_filter="capacity_factor*",
+                                                          output_format="png")
 
         response.outputs['data'].output_format = FORMATS.NETCDF
-        response.outputs['data'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('capacity_factor', 'main'),
-            name_filter="capacity_factor*",
-            output_format="nc")
+        response.outputs['data'].file = runner.get_output(result['work_dir'],
+                                                          path_filter=os.path.join('capacity_factor', 'main'),
+                                                          name_filter="capacity_factor*",
+                                                          output_format="nc")

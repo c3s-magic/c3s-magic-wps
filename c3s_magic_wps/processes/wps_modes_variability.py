@@ -15,156 +15,138 @@ LOGGER = logging.getLogger("PYWPS")
 class ModesVariability(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(
-                models=['bcc-csm1-1'],
-                model_name='Model_historical',
-                experiments=['historical'],
-                experiment_name='Experiment_historical',
-                ensembles=['r1i1p1'],
-                ensemble_name='Ensemble_historical'),
-            *year_ranges((1850, 2005), (1971, 2000),
-                         start_name='start_historical',
-                         end_name='end_historical'),
-            *model_experiment_ensemble(
-                models=['bcc-csm1-1'],
-                model_name='Model_projection',
-                experiments=['rcp85'],
-                experiment_name='Experiment_projection',
-                ensembles=['r1i1p1'],
-                ensemble_name='Ensemble_projection'),
-            *year_ranges((2006, 2050), (2020, 2050),
-                         start_name='start_projection',
-                         end_name='end_projection'),
-            LiteralInput(
-                'region',
-                'Region',
-                abstract='Choose a region like Polar',
-                data_type='string',
-                allowed_values=['Polar', 'North-Atlantic'],
-                default='North-Atlantic'),
-            LiteralInput(
-                'ncenters',
-                'Cluster Centers',
-                abstract='Choose a number of cluster centers.',
-                data_type='string',
-                allowed_values=['3', '4', '5'],
-                default='4'),
-            LiteralInput(
-                'detrend_order',
-                'Detrend Order',
-                abstract='Choose a order of detrend.',
-                data_type='string',
-                allowed_values=['2', '1'],
-                default='2'),
-            LiteralInput(
-                'cluster_method',
-                'Cluster Method',
-                abstract='Choose a clustering method.',
-                data_type='string',
-                allowed_values=['kmeans', 'hclust'],
-                default='kmeans'),
-            LiteralInput(
-                'eofs',
-                'EOFs',
-                abstract='Calculate EOFs?',
-                data_type='string',
-                allowed_values=['True', 'False'],
-                default=True),
+            *model_experiment_ensemble(model_name='Model_historical',
+                                       experiment_name='Experiment_historical',
+                                       ensemble_name='Ensemble_historical'),
+            *year_ranges((1850, 2005), (1971, 2000), start_name='start_historical', end_name='end_historical'),
+            *model_experiment_ensemble(model_name='Model_projection',
+                                       experiment_name='Experiment_projection',
+                                       ensemble_name='Ensemble_projection'),
+            *year_ranges((2006, 2050), (2020, 2050), start_name='start_projection', end_name='end_projection'),
+            LiteralInput('region',
+                         'Region',
+                         abstract='Choose a region like Polar',
+                         data_type='string',
+                         allowed_values=['Polar', 'North-Atlantic'],
+                         default='North-Atlantic'),
+            LiteralInput('ncenters',
+                         'Cluster Centers',
+                         abstract='Choose a number of cluster centers.',
+                         data_type='string',
+                         allowed_values=['3', '4', '5'],
+                         default='4'),
+            LiteralInput('detrend_order',
+                         'Detrend Order',
+                         abstract='Choose a order of detrend.',
+                         data_type='string',
+                         allowed_values=['2', '1'],
+                         default='2'),
+            LiteralInput('cluster_method',
+                         'Cluster Method',
+                         abstract='Choose a clustering method.',
+                         data_type='string',
+                         allowed_values=['kmeans', 'hclust'],
+                         default='kmeans'),
+            LiteralInput('eofs',
+                         'EOFs',
+                         abstract='Calculate EOFs?',
+                         data_type='string',
+                         allowed_values=['True', 'False'],
+                         default=True),
             LiteralInput(
                 'frequency',
                 'Frequency',
                 abstract='Choose a frequency like JAN.',
                 data_type='string',
                 allowed_values=[
-                    'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG',
-                    'SEP', 'OCT', 'NOV', 'DEC', 'JJA', 'SON', 'DJF' # 'MAM' <- does not work yet
+                    'JAN',
+                    'FEB',
+                    'MAR',
+                    'APR',
+                    'MAY',
+                    'JUN',
+                    'JUL',
+                    'AUG',
+                    'SEP',
+                    'OCT',
+                    'NOV',
+                    'DEC',
+                    'JJA',
+                    'SON',
+                    'DJF'  # 'MAM' <- does not work yet
                 ],
                 default='JJA'),
         ]
-        self.plotlist = [
-            'Table_psl', 'psl_predicted_regimes', 'psl_observed_regimes'
-        ]
+        self.plotlist = ['Table_psl', 'psl_predicted_regimes', 'psl_observed_regimes']
         outputs = [
             *outputs_from_plot_names(self.plotlist),
-            ComplexOutput(
-                'rmse',
-                'RMSE Data',
-                abstract='Generated output data of ESMValTool processing.',
-                as_reference=True,
-                supported_formats=[FORMATS.NETCDF]),
-            ComplexOutput(
-                'exp',
-                'EXP Data',
-                abstract='Generated output data of ESMValTool processing.',
-                as_reference=True,
-                supported_formats=[FORMATS.NETCDF]),
-            ComplexOutput(
-                'obs',
-                'OBS Data',
-                abstract='Generated output data of ESMValTool processing.',
-                as_reference=True,
-                supported_formats=[FORMATS.NETCDF]),
-            ComplexOutput(
-                'archive',
-                'Archive',
-                abstract=
-                'The complete output of the ESMValTool processing as an zip archive.',
-                as_reference=True,
-                supported_formats=[Format('application/zip')]),
+            ComplexOutput('rmse',
+                          'RMSE Data',
+                          abstract='Generated output data of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput('exp',
+                          'EXP Data',
+                          abstract='Generated output data of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput('obs',
+                          'OBS Data',
+                          abstract='Generated output data of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput('archive',
+                          'Archive',
+                          abstract='The complete output of the ESMValTool processing as an zip archive.',
+                          as_reference=True,
+                          supported_formats=[Format('application/zip')]),
             *default_outputs(),
         ]
 
-        super(ModesVariability, self).__init__(
-            self._handler,
-            identifier="modes_of_variability",
-            title="Modes of variability",
-            version=runner.VERSION,
-            abstract="""Diagnostics showing the RMSE between the observed and
+        super(ModesVariability,
+              self).__init__(self._handler,
+                             identifier="modes_of_variability",
+                             title="Modes of variability",
+                             version=runner.VERSION,
+                             abstract="""Diagnostics showing the RMSE between the observed and
             modelled patterns of variability obtained through classification
             and their relative relative bias (percentage) in the frequency of
             occurrence and the persistence of each mode.""",
-            metadata=[
-                Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata(
-                    'Documentation',
-                    'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
-                    role=util.WPS_ROLE_DOC),
-                Metadata(
-                    'Media',
-                    util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
-                    role=util.WPS_ROLE_MEDIA),
-            ],
-            inputs=inputs,
-            outputs=outputs,
-            status_supported=True,
-            store_supported=True)
+                             metadata=[
+                                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
+                                 Metadata('Documentation',
+                                          'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
+                                          role=util.WPS_ROLE_DOC),
+                                 Metadata('Media',
+                                          util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
+                                          role=util.WPS_ROLE_MEDIA),
+                             ],
+                             inputs=inputs,
+                             outputs=outputs,
+                             status_supported=True,
+                             store_supported=True)
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)
 
         # build esgf search constraints
-        constraints = dict(
-            model_historical=request.inputs['model_historical'][0].data,
-            experiment_historical=request.inputs['experiment_historical'][0].data,
-            ensemble_historical=request.inputs['ensemble_historical'][0].data,
-            start_year_historical=request.inputs['start_historical'][0].data,
-            end_year_historical=request.inputs['end_historical'][0].data,
-            model_projection=request.inputs['model_projection'][0].data,
-            experiment_projection=request.inputs['experiment_projection'][0].data,
-            ensemble_projection=request.inputs['ensemble_projection'][0].data,
-            start_year_projection=request.inputs['start_projection'][0].data,
-            end_year_projection=request.inputs['end_projection'][0].data)
+        constraints = dict(model_historical=request.inputs['model_historical'][0].data,
+                           experiment_historical=request.inputs['experiment_historical'][0].data,
+                           ensemble_historical=request.inputs['ensemble_historical'][0].data,
+                           start_year_historical=request.inputs['start_historical'][0].data,
+                           end_year_historical=request.inputs['end_historical'][0].data,
+                           model_projection=request.inputs['model_projection'][0].data,
+                           experiment_projection=request.inputs['experiment_projection'][0].data,
+                           ensemble_projection=request.inputs['ensemble_projection'][0].data,
+                           start_year_projection=request.inputs['start_projection'][0].data,
+                           end_year_projection=request.inputs['end_projection'][0].data)
 
         options = dict(
             region=request.inputs['region'][0].data,
-            start_historical='{}-01-01'.format(
-                request.inputs['start_historical'][0].data),
-            end_historical='{}-12-31'.format(
-                request.inputs['end_historical'][0].data),
-            start_projection='{}-01-01'.format(
-                request.inputs['start_projection'][0].data),
-            end_projection='{}-12-31'.format(
-                request.inputs['end_projection'][0].data),
+            start_historical='{}-01-01'.format(request.inputs['start_historical'][0].data),
+            end_historical='{}-12-31'.format(request.inputs['end_historical'][0].data),
+            start_projection='{}-01-01'.format(request.inputs['start_projection'][0].data),
+            end_projection='{}-12-31'.format(request.inputs['end_projection'][0].data),
             ncenters=int(request.inputs['ncenters'][0].data),
             detrend_order=int(request.inputs['detrend_order'][0].data),
             cluster_method=request.inputs['cluster_method'][0].data,
@@ -204,8 +186,7 @@ class ModesVariability(Process):
 
         if not result['success']:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'],
-                                   100)
+            response.update_status("exception occured: " + result['exception'], 100)
             return response
 
         try:
@@ -216,8 +197,8 @@ class ModesVariability(Process):
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(
-            os.path.join(self.workdir, 'output'), 'diagnostic_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
+                                                                  'diagnostic_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -228,29 +209,25 @@ class ModesVariability(Process):
         for plot in self.plotlist:
             key = '{}_plot'.format(plot.lower())
             response.outputs[key].output_format = Format('application/png')
-            response.outputs[key].file = runner.get_output(
-                result['plot_dir'],
-                path_filter=os.path.join('weather_regime', 'main'),
-                name_filter="*{}*".format(plot),
-                output_format="png")
+            response.outputs[key].file = runner.get_output(result['plot_dir'],
+                                                           path_filter=os.path.join('weather_regime', 'main'),
+                                                           name_filter="*{}*".format(plot),
+                                                           output_format="png")
 
         response.outputs['rmse'].output_format = FORMATS.NETCDF
-        response.outputs['rmse'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('weather_regime', 'main'),
-            name_filter="*rmse*",
-            output_format="nc")
+        response.outputs['rmse'].file = runner.get_output(result['work_dir'],
+                                                          path_filter=os.path.join('weather_regime', 'main'),
+                                                          name_filter="*rmse*",
+                                                          output_format="nc")
 
         response.outputs['exp'].output_format = FORMATS.NETCDF
-        response.outputs['exp'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('weather_regime', 'main'),
-            name_filter="*exp*",
-            output_format="nc")
+        response.outputs['exp'].file = runner.get_output(result['work_dir'],
+                                                         path_filter=os.path.join('weather_regime', 'main'),
+                                                         name_filter="*exp*",
+                                                         output_format="nc")
 
         response.outputs['obs'].output_format = FORMATS.NETCDF
-        response.outputs['obs'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('weather_regime', 'main'),
-            name_filter="*obs*",
-            output_format="nc")
+        response.outputs['obs'].file = runner.get_output(result['work_dir'],
+                                                         path_filter=os.path.join('weather_regime', 'main'),
+                                                         name_filter="*obs*",
+                                                         output_format="nc")

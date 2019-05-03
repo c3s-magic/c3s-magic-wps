@@ -15,73 +15,68 @@ LOGGER = logging.getLogger("PYWPS")
 class CombinedIndices(Process):
     def __init__(self):
         inputs = [
-            LiteralInput(
-                'weights',
-                'Weights',
-                abstract='Either `equal`, for equal weights, `null` for no weights.',
-                data_type='string',
-                allowed_values=['equal', 'null'],
-                default='equal'),
+            LiteralInput('weights',
+                         'Weights',
+                         abstract='Either `equal`, for equal weights, `null` for no weights.',
+                         data_type='string',
+                         allowed_values=['equal', 'null'],
+                         default='equal'),
             LiteralInput(
                 'moninf',
                 'First month month of the seasonal mean period',
-                abstract='The first month of the seasonal mean period to be computed, if none the monthly anomalies will be computed.',
+                abstract="""The first month of the seasonal mean period to be computed, if none the monthly anomalies
+                            will be computed.""",
                 data_type='string',
-                allowed_values=['1', '2', '3', '4','5', '6', '7', '8', '9', '10', '11', '12', 'null'],
+                allowed_values=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', 'null'],
                 default='1'),
             LiteralInput(
                 'monsup',
                 'Last month month of the seasonal mean period',
-                abstract='the last month of the seasonal mean period to be computed, if none the monthly anomalies will be computed.',
+                abstract="""the last month of the seasonal mean period to be computed, if none the monthly anomalies
+                            will be computed.""",
                 data_type='string',
-                allowed_values=['1', '2', '3', '4','5', '6', '7', '8', '9', '10', '11', '12'],
+                allowed_values=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
                 default='3'),
         ]
         outputs = [
-            ComplexOutput(
-                'data',
-                'Data',
-                abstract='Generated combined indices data.',
-                as_reference=True,
-                supported_formats=[FORMATS.NETCDF]),
-            ComplexOutput(
-                'archive',
-                'Archive',
-                abstract=
-                'The complete output of the ESMValTool processing as an zip archive.',
-                as_reference=True,
-                supported_formats=[Format('application/zip')]),
+            ComplexOutput('data',
+                          'Data',
+                          abstract='Generated combined indices data.',
+                          as_reference=True,
+                          supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput('archive',
+                          'Archive',
+                          abstract='The complete output of the ESMValTool processing as an zip archive.',
+                          as_reference=True,
+                          supported_formats=[Format('application/zip')]),
             *default_outputs(),
         ]
 
-        super(CombinedIndices, self).__init__(
-            self._handler,
-            identifier="combined_indices",
-            title="Single and multi-model indices based on area averages",
-            version=runner.VERSION,
-            abstract="""Metric showning single and multi model indices based on area averages.""",
-            metadata=[
-                Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata(
-                    'Documentation',
-                    'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
-                    role=util.WPS_ROLE_DOC),
-                Metadata(
-                    'Media',
-                    util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
-                    role=util.WPS_ROLE_MEDIA),
-            ],
-            inputs=inputs,
-            outputs=outputs,
-            status_supported=True,
-            store_supported=True)
+        super(CombinedIndices,
+              self).__init__(self._handler,
+                             identifier="combined_indices",
+                             title="Single and multi-model indices based on area averages",
+                             version=runner.VERSION,
+                             abstract="""Metric showning single and multi model indices based on area averages.""",
+                             metadata=[
+                                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
+                                 Metadata('Documentation',
+                                          'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
+                                          role=util.WPS_ROLE_DOC),
+                                 Metadata('Media',
+                                          util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
+                                          role=util.WPS_ROLE_MEDIA),
+                             ],
+                             inputs=inputs,
+                             outputs=outputs,
+                             status_supported=True,
+                             store_supported=True)
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)
 
         # build esgf search constraints
-        constraints = dict(
-        )
+        constraints = dict()
 
         options = dict(
             weights=request.inputs['weights'][0].data,
@@ -121,8 +116,7 @@ class CombinedIndices(Process):
 
         if not result['success']:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'],
-                                   100)
+            response.update_status("exception occured: " + result['exception'], 100)
             return response
 
         try:
@@ -133,8 +127,8 @@ class CombinedIndices(Process):
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(
-            os.path.join(self.workdir, 'output'), 'diagnostic_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
+                                                                  'diagnostic_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -143,8 +137,7 @@ class CombinedIndices(Process):
         # result plot
         response.update_status("collecting output ...", 80)
         response.outputs['data'].output_format = FORMATS.NETCDF
-        response.outputs['data'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('combine_indices', 'main'),
-            name_filter="*",
-            output_format="nc")
+        response.outputs['data'].file = runner.get_output(result['work_dir'],
+                                                          path_filter=os.path.join('combine_indices', 'main'),
+                                                          name_filter="*",
+                                                          output_format="nc")

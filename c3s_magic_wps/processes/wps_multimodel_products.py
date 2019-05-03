@@ -20,53 +20,48 @@ class MultimodelProducts(Process):
             LiteralInput(
                 'moninf',
                 'First month month of the seasonal mean period',
-                abstract='The first month of the seasonal mean period to be computed, if none the monthly anomalies will be computed.',
+                abstract="""The first month of the seasonal mean period to be computed, if none the monthly anomalies
+                            will be computed.""",
                 data_type='string',
-                allowed_values=['1', '2', '3', '4','5', '6', '7', '8', '9', '10', '11', '12', 'null'],
+                allowed_values=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', 'null'],
                 default='6'),
             LiteralInput(
                 'monsup',
                 'Last month month of the seasonal mean period',
-                abstract='the last month of the seasonal mean period to be computed, if none the monthly anomalies will be computed.',
+                abstract="""the last month of the seasonal mean period to be computed, if none the monthly anomalies
+                            will be computed.""",
                 data_type='string',
-                allowed_values=['1', '2', '3', '4','5', '6', '7', '8', '9', '10', '11', '12'],
+                allowed_values=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
                 default='6'),
             LiteralInput(
                 'agreement_threshold',
                 'Agreement Threshold',
-                abstract='Integer between 0 and 100 indicating the threshold in percent for the minimum agreement between models on the sign of the multi-model mean anomaly for the stipling to be plotted.',
+                abstract="""Integer between 0 and 100 indicating the threshold in percent for the minimum agreement
+                            between models on the sign of the multi-model mean anomaly for the stipling to be
+                            plotted.""",
                 data_type='integer',
-                allowed_values=[i for i in range(0,101)],
+                allowed_values=[i for i in range(0, 101)],
                 default=80),
-            LiteralInput(
-                'running_mean',
-                'Running Mean',
-                abstract='integer indictating the length of the window for the running mean to be computed.',
-                data_type='integer',
-                allowed_values=AllowedValue(
-                    allowed_type=ALLOWEDVALUETYPE.RANGE,
-                    minval=1,
-                    maxval=365
-                ),
-                default=5),
+            LiteralInput('running_mean',
+                         'Running Mean',
+                         abstract='integer indictating the length of the window for the running mean to be computed.',
+                         data_type='integer',
+                         allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1, maxval=365),
+                         default=5),
         ]
-        self.plotlist = [
-            'tas',
-            'Area'
-        ]
+        self.plotlist = ['tas', 'Area']
         outputs = [
             *outputs_from_plot_names(self.plotlist),
-            ComplexOutput('data', 'Data',
+            ComplexOutput('data',
+                          'Data',
                           abstract='Generated output data of ESMValTool processing.',
                           as_reference=True,
                           supported_formats=[FORMATS.NETCDF]),
-            ComplexOutput(
-                'archive',
-                'Archive',
-                abstract=
-                'The complete output of the ESMValTool processing as an zip archive.',
-                as_reference=True,
-                supported_formats=[Format('application/zip')]),
+            ComplexOutput('archive',
+                          'Archive',
+                          abstract='The complete output of the ESMValTool processing as an zip archive.',
+                          as_reference=True,
+                          supported_formats=[Format('application/zip')]),
             *default_outputs(),
         ]
 
@@ -84,10 +79,9 @@ class MultimodelProducts(Process):
                     'Documentation',
                     'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_multimodel_products.html',
                     role=util.WPS_ROLE_DOC),
-                Metadata(
-                    'Media',
-                    util.diagdata_url() + '/multimodel_products/bsc_anomaly_timeseries.png',
-                    role=util.WPS_ROLE_MEDIA),
+                Metadata('Media',
+                         util.diagdata_url() + '/multimodel_products/bsc_anomaly_timeseries.png',
+                         role=util.WPS_ROLE_MEDIA),
             ],
             inputs=inputs,
             outputs=outputs,
@@ -139,8 +133,7 @@ class MultimodelProducts(Process):
 
         if not result['success']:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'],
-                                   100)
+            response.update_status("exception occured: " + result['exception'], 100)
             return response
 
         try:
@@ -151,8 +144,8 @@ class MultimodelProducts(Process):
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(
-            os.path.join(self.workdir, 'output'), 'diagnostic_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
+                                                                  'diagnostic_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -163,15 +156,13 @@ class MultimodelProducts(Process):
         for plot in self.plotlist:
             key = '{}_plot'.format(plot.lower())
             response.outputs[key].output_format = Format('application/png')
-            response.outputs[key].file = runner.get_output(
-                result['plot_dir'],
-                path_filter=os.path.join('anomaly_agreement', 'main'),
-                name_filter="{}*".format(plot),
-                output_format="png")
+            response.outputs[key].file = runner.get_output(result['plot_dir'],
+                                                           path_filter=os.path.join('anomaly_agreement', 'main'),
+                                                           name_filter="{}*".format(plot),
+                                                           output_format="png")
 
         response.outputs['data'].output_format = FORMATS.NETCDF
-        response.outputs['data'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('anomaly_agreement', 'main'),
-            name_filter="tas*",
-            output_format="nc")
+        response.outputs['data'].file = runner.get_output(result['work_dir'],
+                                                          path_filter=os.path.join('anomaly_agreement', 'main'),
+                                                          name_filter="tas*",
+                                                          output_format="nc")

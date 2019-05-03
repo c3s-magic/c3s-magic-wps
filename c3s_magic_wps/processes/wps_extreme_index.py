@@ -20,31 +20,26 @@ class ExtremeIndex(Process):
                 'Metric',
                 abstract='Choose a metric to calculate.',
                 data_type='string',
-                allowed_values=['t10p', 't90p', 'rx5day', 'Wx'], # 'cdd' <- these do not work
+                allowed_values=['t10p', 't90p', 'rx5day', 'Wx'],  # 'cdd' <- these do not work
                 default='Wx'),
         ]
         self.plotlist = []
         outputs = [
-            ComplexOutput(
-                'plot',
-                'Combined Climate Extreme Index plot',
-                abstract='Combined Climate Extreme Index plot.',
-                as_reference=True,
-                supported_formats=[Format('image/png')]),
-            ComplexOutput(
-                'data',
-                'Combined Climate Extreme Index data',
-                abstract=
-                'Combined Climate Extreme Index data.',
-                as_reference=True,
-                supported_formats=[Format('application/zip')]),
-            ComplexOutput(
-                'archive',
-                'Archive',
-                abstract=
-                'The complete output of the ESMValTool processing as an zip archive.',
-                as_reference=True,
-                supported_formats=[Format('application/zip')]),
+            ComplexOutput('plot',
+                          'Combined Climate Extreme Index plot',
+                          abstract='Combined Climate Extreme Index plot.',
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
+            ComplexOutput('data',
+                          'Combined Climate Extreme Index data',
+                          abstract='Combined Climate Extreme Index data.',
+                          as_reference=True,
+                          supported_formats=[Format('application/zip')]),
+            ComplexOutput('archive',
+                          'Archive',
+                          abstract='The complete output of the ESMValTool processing as an zip archive.',
+                          as_reference=True,
+                          supported_formats=[Format('application/zip')]),
             *default_outputs(),
         ]
 
@@ -53,17 +48,16 @@ class ExtremeIndex(Process):
             identifier="extreme_index",
             title="Combined Climate Extreme Index",
             version=runner.VERSION,
-            abstract="""Metric showing extreme indices relevant to the insurance industry (heat, cold, wind, flood and drought indices).""",
+            abstract="""Metric showing extreme indices relevant to the insurance industry (heat, cold, wind, flood and
+                        drought indices).""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata(
-                    'Documentation',
-                    'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
-                    role=util.WPS_ROLE_DOC),
-                Metadata(
-                    'Media',
-                    util.diagdata_url() + '/risk_index/insurance_risk_indices.png',
-                    role=util.WPS_ROLE_MEDIA),
+                Metadata('Documentation',
+                         'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
+                         role=util.WPS_ROLE_DOC),
+                Metadata('Media',
+                         util.diagdata_url() + '/risk_index/insurance_risk_indices.png',
+                         role=util.WPS_ROLE_MEDIA),
             ],
             inputs=inputs,
             outputs=outputs,
@@ -76,9 +70,7 @@ class ExtremeIndex(Process):
         # build esgf search constraints
         constraints = dict()
 
-        options = dict(
-            metric=request.inputs['metric'][0].data
-        )
+        options = dict(metric=request.inputs['metric'][0].data)
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
@@ -112,8 +104,7 @@ class ExtremeIndex(Process):
 
         if not result['success']:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'],
-                                   100)
+            response.update_status("exception occured: " + result['exception'], 100)
             return response
 
         try:
@@ -124,8 +115,8 @@ class ExtremeIndex(Process):
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(
-            os.path.join(self.workdir, 'output'), 'diagnostic_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
+                                                                  'diagnostic_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -134,15 +125,13 @@ class ExtremeIndex(Process):
         # result plot
         response.update_status("collecting output ...", 80)
         response.outputs['plot'].output_format = Format('application/png')
-        response.outputs['plot'].file = runner.get_output(
-            result['plot_dir'],
-            path_filter=os.path.join('extreme_index', 'main'),
-            name_filter="{}*".format(options['metric']),
-            output_format="png")
+        response.outputs['plot'].file = runner.get_output(result['plot_dir'],
+                                                          path_filter=os.path.join('extreme_index', 'main'),
+                                                          name_filter="{}*".format(options['metric']),
+                                                          output_format="png")
 
         response.outputs['data'].output_format = FORMATS.NETCDF
-        response.outputs['data'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('extreme_index', 'main'),
-            name_filter="*risk_insurance_index*",
-            output_format="nc")
+        response.outputs['data'].file = runner.get_output(result['work_dir'],
+                                                          path_filter=os.path.join('extreme_index', 'main'),
+                                                          name_filter="*risk_insurance_index*",
+                                                          output_format="nc")
