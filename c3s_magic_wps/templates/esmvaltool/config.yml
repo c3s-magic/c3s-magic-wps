@@ -20,4 +20,4 @@ rootpath:
   default: {{ obs_root }}
 
 drs:
-  CMIP5: BADC
+  CMIP5: CP4CDS
