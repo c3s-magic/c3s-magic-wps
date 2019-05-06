@@ -3,20 +3,20 @@
 documentation:
   description: |
     Recipe for zonal mean Northern Annular Mode.
-    The diagnostics compute the index and the spatial 
-    pattern to assess the simulation of the 
+    The diagnostics compute the index and the spatial
+    pattern to assess the simulation of the
     strat-trop coupling in the boreal hemisphere
 
   authors:
-    - serv_fe      
+    - serv_fe
     - hard_jo
     - arno_en
-    - cagn_ch  
+    - cagn_ch
 
   maintainer:
     - serv_fe
 
-  references: 
+  references:
     - baldwin09qjrms
 
   projects:
@@ -44,8 +44,8 @@ preprocessors:
     extract_levels:
       levels: [100000., 50000., 25000., 5000.]
       scheme: nearest
-    regrid:  
-      target_grid: 3x3 
+    regrid:
+      target_grid: 3x3
       scheme: area_weighted
     extract_region:
       start_longitude: 0.
@@ -57,11 +57,10 @@ preprocessors:
 diagnostics:
   zmnam:
     description: Zonal mean Northern Annular Mode
-    variables: 
+    variables:
       zg:
         preprocessor: preproc
-        field: T3D
-    scripts: 
-      main: 
-        script: zmnam/zmnam.py                              
+    scripts:
+      main:
+        script: zmnam/zmnam.py
         title: "Zonal mean NAM diagnostics"
