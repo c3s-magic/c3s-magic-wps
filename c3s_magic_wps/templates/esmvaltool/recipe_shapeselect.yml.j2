@@ -13,19 +13,13 @@ datasets:
   ensemble: {{constraints['ensemble']}}
   start_year: {{start_year}}
   end_year: {{end_year}}
-  {# - {dataset: EC-EARTH, project: CMIP5, mip: Amon, exp: historical, ensemble: r12i1p1, start_year: 1990, end_year: 1999} #}
-#  - {dataset: CRU, mip: Amon, project: OBS, type: reanaly, version: 1, start_year: 1990, end_year: 1994, tier: 3}
-#  - {dataset: bcc-csm1-1-m,  project: CMIP5,  mip: day,  exp: historical,  ensemble: r1i1p1,  start_year: 1998,  end_year: 1999}
-
 
 diagnostics:
   diagnostic1:
     description: Extracting data for user defined shapefile.
     variables:
       tas:
-        field: T2Ms
       pr:
-        field: T2Ms
     scripts:
       script1:
         script: shapeselect/diag_shapeselect.py
