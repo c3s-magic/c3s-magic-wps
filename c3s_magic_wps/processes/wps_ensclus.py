@@ -54,6 +54,12 @@ class EnsClus(Process):
                          data_type='string',
                          allowed_values=['70', '80', '90'],
                          default='80'),
+            LiteralInput('numpcs',
+                         'Number of PCs',
+                         abstract='Number of PCs to retain. Has priority over Percentage unless set to 0',
+                         data_type='string',
+                         allowed_values=['0', '5', '10', '20', '30', '40'],
+                         default='0'),
         ]
         outputs = [
             ComplexOutput('plot',
@@ -130,6 +136,7 @@ class EnsClus(Process):
             extreme=request.inputs['extreme'][0].data,
             numclus=request.inputs['numclus'][0].data,
             perc=request.inputs['perc'][0].data,
+            numpcs=request.inputs['numpcs'][0].data,
         )
 
         # generate recipe
