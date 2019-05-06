@@ -30,14 +30,6 @@ datasets:
     ensemble: {{constraints['ensemble']}}
     start_year: {{start_year}}
     end_year: {{end_year}}
-  {# - dataset: MPI-ESM-MR
-    project: CMIP5
-    mip: day
-    exp: amip
-    ensemble: r1i1p1
-    start_year: 1979
-    end_year: 2008 #}
-    #- {model: MPI-ESM-MR, project: CMIP5, mip: day, exp: historical, ensemble: r1i1p1, start_year: 1979, end_year: 2008} #}
 
 preprocessors:
   preproc:
@@ -60,7 +52,6 @@ diagnostics:
     variables: 
       zg:
         preprocessor: preproc
-        field: T3D
     scripts: 
       main: 
         script: zmnam/zmnam.py                              
