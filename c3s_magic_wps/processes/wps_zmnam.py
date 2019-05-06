@@ -60,7 +60,7 @@ class ZMNAM(Process):
                              metadata=[
                                  Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                                  Metadata('Documentation',
-                                          'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
+                                          'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_zmnam.html',
                                           role=util.WPS_ROLE_DOC),
                                  Metadata('Media',
                                           util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
