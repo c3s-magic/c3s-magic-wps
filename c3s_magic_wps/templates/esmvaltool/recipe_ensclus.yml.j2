@@ -69,7 +69,7 @@ preprocessors:
     extract_levels: false
     regrid:
       target_grid: 2.5x2.5
-      scheme: linear
+      scheme: linear_extrapolate
 
 
 diagnostics:
@@ -78,7 +78,6 @@ diagnostics:
     variables:
       pr:
         preprocessor: preproc
-        field: T2Ms
     scripts:
       main:
         script: ensclus/ensclus.py
@@ -93,10 +92,11 @@ diagnostics:
                                     #                           'PNA': Pacific North American
                                     #                           'NH': Northern Hemisphere)
                                     #                           'Eu': Europe)
-        extreme: {{options['extreme']}}   #75th_percentile, mean, maximum, std, trend
+        extreme: {{options['extreme']}}   #XXth_percentile (XX arbitrary), mean, maximum, std, trend
         #---------------------about cluster analysis------------------------------------------
-        numclus: {{options['numclus']}}             #number of clusters
+        numclus: {{options['numclus']}}   #number of clusters
         #Either set perc or numpcs:
-        perc: {{options['perc']}}               #cluster analysis is applied on a number of PCs such as they explain
-                               #'perc' of total variance
-        numpcs: 'no'           #number of PCs
+        perc: {{options['perc']}}   #cluster analysis is applied on a number of PCs such as they explain
+                                    #'perc' of total variance
+        numpcs: 'no'           #number of PCs to retain. Has priority over perc unless set to 0
+        max_plot_panels: 72    #threshold in number of panels in a plot to create multiple figures
