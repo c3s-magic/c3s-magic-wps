@@ -11,12 +11,12 @@
 ## E. Arnone (ISAC-CNR, Italy - e.arnone@isac.cnr.it)
 ##
 ## Project
-## Copernicus C3S-MAGIC (C3S 34a Lot2) 
+## Copernicus C3S-MAGIC (C3S 34a Lot2)
 ##
 ## References:
 ## https://github.com/oloapinivad/MiLES
-## S. Corti, F. Molteni and T. N. Palmer, 1999 
-##   Signature of recent climate change in frequencies of natural 
+## S. Corti, F. Molteni and T. N. Palmer, 1999
+##   Signature of recent climate change in frequencies of natural
 ##   atmospheric circulation regimes". Nature 398, 799-802
 ##
 ## This namelist is part of the ESMValTool
@@ -27,7 +27,7 @@
 ---
 documentation:
   description: |
-    Recipe for computing and plotting weather regimes using 
+    Recipe for computing and plotting weather regimes using
     the MiLES (Mid-Latitude Evaluation System) package
 
   authors:
@@ -78,15 +78,14 @@ preprocessors:
 diagnostics:
 
   miles_diagnostics:
-    description: MiLES Weather Regimes Diagnostics 
+    description: MiLES Weather Regimes Diagnostics
     variables:
       zg:
         preprocessor: preproc1
         mip: day
-        field: T3D
         reference_dataset: "ERA-Interim"
     scripts:
-        miles_regimes: 
+        miles_regimes:
             script: miles/miles_regimes.R
             seasons: {{options['season']}} # Select season (beta: 'DJF' only possible option for now)
             nclusters: {{options['nclusters']}} # beta: only 4 possible for now
