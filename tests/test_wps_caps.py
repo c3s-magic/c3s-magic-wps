@@ -7,13 +7,8 @@ from c3s_magic_wps.processes import processes
 
 def test_wps_caps():
     client = client_for(Service(processes=processes))
-    resp = client.get(service='wps',
-                      request='getcapabilities',
-                      version='1.0.0')
-    names = resp.xpath_text('/wps:Capabilities'
-                            '/wps:ProcessOfferings'
-                            '/wps:Process'
-                            '/ows:Identifier')
+    resp = client.get(service='wps', request='getcapabilities', version='1.0.0')
+    names = resp.xpath_text('/wps:Capabilities' '/wps:ProcessOfferings' '/wps:Process' '/ows:Identifier')
     # 'consecdrydays',
     # 'shape_select',
     # 'perfmetrics',
@@ -35,7 +30,8 @@ def test_wps_caps():
         'sleep',
         'teleconnections',
         'weather_regimes',
-        'zmnam'
+        'zmnam',
+        'toymodel',
     ])
     print(sorted(names.split()))
     print(expected_caps)
