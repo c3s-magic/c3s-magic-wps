@@ -3,8 +3,8 @@
 documentation:
   description: |
     Recipe for sub-ensemble selection.
-    The diagnostics groups ensemble members according to similar 
-    characteristics and selects the most representative member 
+    The diagnostics groups ensemble members according to similar
+    characteristics and selects the most representative member
     for each cluster based on a k-means algorithm
 
   authors:
@@ -86,7 +86,7 @@ diagnostics:
         ## Information required:
         ##-------------------------------about data-------------------------------------------
         ## Write only letters or numbers, no punctuation marks!
-        ## If you want to leave the field empty write 'no' 
+        ## If you want to leave the field empty write 'no'
         season: {{options['season']}} # 'JJA'               #seasonal average
         area: {{options['area']}}   #regional average (examples:'EAT':Euro-Atlantic
                                     #                           'PNA': Pacific North American
@@ -98,5 +98,5 @@ diagnostics:
         #Either set perc or numpcs:
         perc: {{options['perc']}}   #cluster analysis is applied on a number of PCs such as they explain
                                     #'perc' of total variance
-        numpcs: 'no'           #number of PCs to retain. Has priority over perc unless set to 0
+        numpcs: {{options['numpcs']}}           #number of PCs to retain. Has priority over perc unless set to 0
         max_plot_panels: 72    #threshold in number of panels in a plot to create multiple figures
