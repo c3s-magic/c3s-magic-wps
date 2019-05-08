@@ -50,7 +50,8 @@ class MultimodelProducts(Process):
                          default=5),
             LiteralInput('time_series_plot',
                          'Time series plot',
-                         abstract='Either single or maxmin (plot the individual or the mean with shading between the max and min).',
+                         abstract="""Either single or maxmin (plot the individual or the mean with shading between the
+                                     max and min).""",
                          data_type='string',
                          allowed_values=['single', 'maxmin'],
                          default='single'),
