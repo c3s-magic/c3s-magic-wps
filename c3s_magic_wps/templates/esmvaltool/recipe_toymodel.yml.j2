@@ -32,7 +32,7 @@ datasets:
 preprocessors:
   preproc:
     regrid:
-      target_grid: bcc-csm1-1
+      target_grid: reference_dataset
       scheme: linear
     mask_fillvalues:
       threshold_fraction: 0.95
@@ -50,7 +50,7 @@ diagnostics:
       psl:
         preprocessor: preproc
         mip: Amon
-
+        reference_dataset: {{constraints['model']}}
     scripts:
       main:
         script: magic_bsc/toymodel.r

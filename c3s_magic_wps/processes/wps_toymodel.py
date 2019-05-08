@@ -65,11 +65,16 @@ class Toymodel(Process):
         # ]
         outputs = [
             # *outputs_from_plot_names(self.plotlist),
-            # ComplexOutput('data_clim',
-            #               'Clim Blocking Data',
-            #               abstract='Generated output data of ESMValTool processing.',
-            #               as_reference=True,
-            #               supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput('plot',
+                          'Toy Model plot',
+                          abstract='Generated synthetic model plt.',
+                          as_reference=True,
+                          supported_formats=['image/jpg']),
+            ComplexOutput('model',
+                          'Toy Model',
+                          abstract='Generated synthetic model.',
+                          as_reference=True,
+                          supported_formats=[FORMATS.NETCDF]),
             ComplexOutput('archive',
                           'Archive',
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
@@ -150,10 +155,7 @@ class Toymodel(Process):
 
         if result['success']:
             try:
-                subdir = os.path.join(constraints['model'], constraints['experiment'], constraints['ensemble'],
-                                      "{}-{}".format(start_year, end_year), options['season'], 'Block')
-
-                self.get_outputs(result, subdir, response)
+                self.get_outputs(result, response)
             except Exception as e:
                 response.update_status("exception occured: " + str(e), 85)
         else:
@@ -164,33 +166,23 @@ class Toymodel(Process):
 
         response.outputs['archive'].output_format = Format('application/zip')
         response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'),
-                                                                  'diagnostic_result.zip')
+                                                                  'toymodel_result.zip')
 
         response.update_status("done.", 100)
         return response
 
-    def get_outputs(self, result, subdir, response):
+    def get_outputs(self, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
-        # for plot in self.plotlist:
-        #     key = '{}_plot'.format(plot.lower())
-        #     response.outputs[key].output_format = Format('application/png')
-        #     response.outputs[key].file = runner.get_output(result['plot_dir'],
-        #                                                    path_filter=os.path.join(
-        #                                                        'miles_diagnostics', 'miles_block', subdir),
-        #                                                    name_filter="{}*".format(plot),
-        #                                                    output_format="png")
 
-        # response.outputs['data_full'].output_format = FORMATS.NETCDF
-        # response.outputs['data_full'].file = runner.get_output(result['work_dir'],
-        #                                                        path_filter=os.path.join(
-        #                                                            'miles_diagnostics', 'miles_block', subdir),
-        #                                                        name_filter="BlockFull*",
-        #                                                        output_format="nc")
+        response.outputs['plot'].output_format = Format('image/jpg')
+        response.outputs['plot'].file = runner.get_output(result['plot_dir'],
+                                                          path_filter=os.path.join('toymodel', 'main'),
+                                                          name_filter="synthetic*",
+                                                          output_format="png")
 
-        # response.outputs['data_clim'].output_format = FORMATS.NETCDF
-        # response.outputs['data_clim'].file = runner.get_output(result['work_dir'],
-        #                                                        path_filter=os.path.join(
-        #                                                            'miles_diagnostics', 'miles_block', subdir),
-        #                                                        name_filter="BlockClim*",
-        #                                                        output_format="nc")
+        response.outputs['model'].output_format = FORMATS.NETCDF
+        response.outputs['model'].file = runner.get_output(result['work_dir'],
+                                                           path_filter=os.path.join('toymodel', 'main'),
+                                                           name_filter="synthetic*",
+                                                           output_format="nc")
