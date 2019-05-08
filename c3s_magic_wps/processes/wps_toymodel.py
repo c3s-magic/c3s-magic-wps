@@ -179,7 +179,7 @@ class Toymodel(Process):
         response.outputs['plot'].file = runner.get_output(result['plot_dir'],
                                                           path_filter=os.path.join('toymodel', 'main'),
                                                           name_filter="synthetic*",
-                                                          output_format="png")
+                                                          output_format="jpg")
 
         response.outputs['model'].output_format = FORMATS.NETCDF
         response.outputs['model'].file = runner.get_output(result['work_dir'],
