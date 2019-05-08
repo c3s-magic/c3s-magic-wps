@@ -77,7 +77,11 @@ class ModesVariability(Process):
                 ],
                 default='JJA'),
         ]
-        self.plotlist = ['Table_psl', 'psl_predicted_regimes', 'psl_observed_regimes']
+        self.plotlist = [
+            ('Table_psl', [Format('image/png')]),
+            ('psl_predicted_regimes', [Format('image/png')]),
+            ('psl_observed_regimes', [Format('image/png')]),
+        ]
         outputs = [
             *outputs_from_plot_names(self.plotlist),
             ComplexOutput('rmse',

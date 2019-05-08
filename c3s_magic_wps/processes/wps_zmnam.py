@@ -18,9 +18,9 @@ class ZMNAM(Process):
             *model_experiment_ensemble(start_end_year=(1850, 2005), start_end_defaults=(1979, 2008)),
         ]
         self.pressure_levels = [5000, 25000, 50000, 100000]
-        self.plotlist = ["{}Pa_mo_reg".format(i) for i in self.pressure_levels]
-        self.plotlist.extend(["{}Pa_da_pdf".format(i) for i in self.pressure_levels])
-        self.plotlist.extend(["{}Pa_mo_ts".format(i) for i in self.pressure_levels])
+        self.plotlist = [("{}Pa_mo_reg".format(i), [Format('image/png')]) for i in self.pressure_levels]
+        self.plotlist.extend([("{}Pa_da_pdf".format(i), [Format('image/png')]) for i in self.pressure_levels])
+        self.plotlist.extend([("{}Pa_mo_ts".format(i), [Format('image/png')]) for i in self.pressure_levels])
         outputs = [
             *outputs_from_plot_names(self.plotlist),
             ComplexOutput('regr_map',

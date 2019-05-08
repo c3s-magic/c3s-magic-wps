@@ -12,59 +12,55 @@ from .. import runner, util
 LOGGER = logging.getLogger("PYWPS")
 
 
-class Teleconnections(Process):
+class QuantileBias(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(start_end_year=(1850, 2005), start_end_defaults=(1980, 1989)),
-            LiteralInput('ref_model',
-                         'Reference Model',
-                         abstract='Choose a reference model like ERA-Interim.',
+            *model_experiment_ensemble(start_end_year=(1850, 2005), start_end_defaults=(1997, 1997)),
+            LiteralInput('ref_dataset',
+                         'Reference Dataset',
+                         abstract='Choose a reference dataset like GPCP-SG.',
                          data_type='string',
-                         allowed_values=['ERA-Interim'],
-                         default='ERA-Interim',
+                         allowed_values=['GPCP-SG'],
+                         default='GPCP-SG',
                          min_occurs=1,
                          max_occurs=1),
-            LiteralInput('season',
-                         'Season',
-                         abstract='Choose a season like DJF.',
-                         data_type='string',
-                         allowed_values=['DJF', 'MAM', 'JJA', 'SON', 'ALL'],
-                         default='DJF'),
-            LiteralInput('teles',
-                         'Teles (EOFs)',
-                         abstract='Choose an EOF like NAO.',
-                         data_type='string',
-                         allowed_values=['NAO', 'AO', 'PNA'],
-                         default='NAO'),
+            LiteralInput('perc_lev',
+                         'Quantile',
+                         abstract='Quantile in percentage (%)',
+                         data_type='integer',
+                         default=75),
         ]
-        self.plotlist = [("EOF{}".format(i), [Format('image/png')]) for i in range(1, 5)]
+
         outputs = [
-            *outputs_from_plot_names(self.plotlist),
-            ComplexOutput('data',
-                          'EOF Data',
+            ComplexOutput('model',
+                          'Model Quantile Data',
                           abstract='Generated output data of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[FORMATS.NETCDF]),
+            ComplexOutput('reference',
+                          'Reference Quantile Data',
+                          abstract='Generated output data of the reference data.',
                           as_reference=True,
                           supported_formats=[FORMATS.NETCDF]),
             ComplexOutput('archive',
                           'Archive',
-                          abstract='The complete output of the ESMValTool processing as an zip archive.',
+                          abstract='The complete output of the ESMValTool processing as a zip archive.',
                           as_reference=True,
                           supported_formats=[Format('application/zip')]),
             *default_outputs(),
         ]
 
-        super(Teleconnections, self).__init__(
+        super(QuantileBias, self).__init__(
             self._handler,
-            identifier="teleconnections",
-            title="Teleconnection indices",
+            identifier="quantile_bias",
+            title="Quantile Bias",
             version=runner.VERSION,
-            abstract="Diagnostic providing teleconnection indices (Z500 empirical orthogonal functions)",
+            abstract="""Diagnostic showing the quantile bias between models and a reference dataset.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
-                         'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
-                         role=util.WPS_ROLE_DOC),
-                Metadata('Media', util.diagdata_url() + '/pydemo/pydemo_thumbnail.png', role=util.WPS_ROLE_MEDIA),
+                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_quantilebias.html',
+                         role=util.WPS_ROLE_DOC)
             ],
             inputs=inputs,
             outputs=outputs,
@@ -80,9 +76,10 @@ class Teleconnections(Process):
             model=request.inputs['model'][0].data,
             experiment=request.inputs['experiment'][0].data,
             ensemble=request.inputs['ensemble'][0].data,
+            reference=request.inputs['reference'][0].data,
         )
 
-        options = dict(season=request.inputs['season'][0].data, teles=request.inputs['teles'][0].data)
+        options = dict(perc_lev=request.inputs['perc_lev'][0].data)
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
@@ -90,12 +87,12 @@ class Teleconnections(Process):
         end_year = request.inputs['end_year'][0].data
         recipe_file, config_file = runner.generate_recipe(
             workdir=workdir,
-            diag='miles_eof',
+            diag='quantile_bias',
             constraints=constraints,
             options=options,
             start_year=start_year,
             end_year=end_year,
-            output_format='png',
+            output_format='svg',
         )
 
         # recipe output
@@ -118,10 +115,7 @@ class Teleconnections(Process):
 
         if result['success']:
             try:
-                subdir = os.path.join(constraints['model'], constraints['experiment'], constraints['ensemble'],
-                                      "{}-{}".format(start_year,
-                                                     end_year), options['season'], 'EOFs', options['teles'])
-                self.get_outputs(result, subdir, response)
+                self.get_outputs(constraints['model'], constraints['reference'], result, response)
             except Exception as e:
                 response.update_status("exception occured: " + str(e), 85)
         else:
@@ -137,21 +131,21 @@ class Teleconnections(Process):
         response.update_status("done.", 100)
         return response
 
-    def get_outputs(self, result, subdir, response):
+    def get_outputs(self, model, reference, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
-        for plot in self.plotlist:
-            key = '{}_plot'.format(plot.lower())
-            response.outputs[key].output_format = Format('application/png')
-            response.outputs[key].file = runner.get_output(result['plot_dir'],
-                                                           path_filter=os.path.join(
-                                                               'miles_diagnostics', 'miles_eof', subdir),
-                                                           name_filter="{}_*".format(plot),
-                                                           output_format="png")
 
-        response.outputs['data'].output_format = FORMATS.NETCDF
-        response.outputs['data'].file = runner.get_output(result['work_dir'],
-                                                          path_filter=os.path.join('miles_diagnostics', 'miles_eof',
-                                                                                   subdir),
-                                                          name_filter="EOFs*",
-                                                          output_format="nc")
+        response.outputs['model'].output_format = FORMATS.NETCDF
+        response.outputs['model'].file = runner.get_output(result['work_dir'],
+                                                               path_filter=os.path.join(
+                                                                   'quantilebias', 'main' ),
+                                                               name_filter="{}*".format(model),
+                                                               output_format="nc")
+
+        response.outputs['reference'].output_format = FORMATS.NETCDF
+        response.outputs['reference'].file = runner.get_output(result['work_dir'],
+                                                               path_filter=os.path.join(
+                                                                   'quantilebias', 'main'),
+                                                               name_filter="{}*".format(reference),
+                                                               output_format="nc")
+

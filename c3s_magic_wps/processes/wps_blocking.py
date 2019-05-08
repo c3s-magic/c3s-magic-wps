@@ -32,8 +32,18 @@ class Blocking(Process):
                          default='DJF'),
         ]
         self.plotlist = [
-            'TM90', 'NumberEvents', 'DurationEvents', 'LongBlockEvents', 'BlockEvents', 'ACN', 'CN', 'BI', 'MGI',
-            'Z500', 'ExtraBlock', 'InstBlock'
+            ('TM90', [Format('image/png')]),
+            ('NumberEvents', [Format('image/png')]),
+            ('DurationEvents', [Format('image/png')]),
+            ('LongBlockEvents', [Format('image/png')]),
+            ('BlockEvents', [Format('image/png')]),
+            ('ACN', [Format('image/png')]),
+            ('CN', [Format('image/png')]),
+            ('BI', [Format('image/png')]),
+            ('MGI', [Format('image/png')]),
+            ('Z500', [Format('image/png')]),
+            ('ExtraBlock', [Format('image/png')]),
+            ('InstBlock', [Format('image/png')]),
         ]
         outputs = [
             *outputs_from_plot_names(self.plotlist),
