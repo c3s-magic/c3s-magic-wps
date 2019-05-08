@@ -70,7 +70,7 @@ def parse_model_lists():
         json_dict = json.load(f)
 
     model_experiment_ensemble.available_models = sorted(
-        [s.replace('.', '-') for s in json_dict['facets']['model'].keys()])
+        [s.replace('.', '-') for s in json_dict['facets']['model'].keys()], key=str.lower)
     model_experiment_ensemble.available_experiments = sorted(list(json_dict['facets']['experiment'].keys()))
     model_experiment_ensemble.available_ensembles = sorted(list(json_dict['facets']['ensemble'].keys()),
                                                            key=ensemble_comp)

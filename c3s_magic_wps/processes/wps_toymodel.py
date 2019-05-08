@@ -69,7 +69,7 @@ class Toymodel(Process):
                           'Toy Model plot',
                           abstract='Generated synthetic model plt.',
                           as_reference=True,
-                          supported_formats=[Format('image/jpg')]),
+                          supported_formats=[Format('image/jpeg')]),
             ComplexOutput('model',
                           'Toy Model',
                           abstract='Generated synthetic model.',
@@ -175,7 +175,7 @@ class Toymodel(Process):
         # result plot
         response.update_status("collecting output ...", 80)
 
-        response.outputs['plot'].output_format = Format('image/jpg')
+        response.outputs['plot'].output_format = Format('image/jpeg')
         response.outputs['plot'].file = runner.get_output(result['plot_dir'],
                                                           path_filter=os.path.join('toymodel', 'main'),
                                                           name_filter="synthetic*",
