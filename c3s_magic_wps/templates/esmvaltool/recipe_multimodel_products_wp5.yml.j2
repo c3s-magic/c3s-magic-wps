@@ -25,7 +25,7 @@ datasets:
   - {dataset: MPI-ESM-MR, type: exp, project: CMIP5,  mip: Amon,  exp: rcp26,  ensemble: r1i1p1,  start_year: 2006,  end_year: 2099}
   - {dataset: bcc-csm1-1, type: exp, project: CMIP5,  mip: Amon,  exp: rcp26,  ensemble: r1i1p1,  start_year: 2006,  end_year: 2099}
   - {dataset: EC-EARTH, type: exp, project: CMIP5,  mip: Amon,  exp: rcp26,  ensemble: r12i1p1,  start_year: 2006,  end_year: 2099}
-  
+
 preprocessors:
   preproc:
     regrid:
@@ -46,7 +46,6 @@ diagnostics:
       tas:
         preprocessor: preproc
         mip: Amon
-        field: T2M
     scripts:
       main:
         script: magic_bsc/multimodel_products.r
@@ -69,4 +68,4 @@ diagnostics:
         running_mean: {{options['running_mean']}}  # 5 #Length of running mean to use for the time series plot
 
         # Timeseries plot
-        time_series_plot: single # Either single or maxmin (plot the mean with/without shading between the max and min.
+        time_series_plot: {{options['time_series_plot']}} # single # Either single or maxmin (plot the mean with/without shading between the max and min.

@@ -28,6 +28,6 @@ diagnostics:
         # Relative paths are relative to 'auxiliary_data_dir' as configured in
         # the config-user.yml file.
         shapefile: '{{options['shape']}}.shp'
-        weighting_method: 'mean_inside'
+        weighting_method: {{options['weighting_method']}}
         write_xlsx: true
         write_netcdf: true
