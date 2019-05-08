@@ -69,7 +69,7 @@ class Toymodel(Process):
                           'Toy Model plot',
                           abstract='Generated synthetic model plt.',
                           as_reference=True,
-                          supported_formats=['image/jpg']),
+                          supported_formats=[Format('image/jpg')]),
             ComplexOutput('model',
                           'Toy Model',
                           abstract='Generated synthetic model.',
