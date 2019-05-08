@@ -16,6 +16,7 @@ from .wps_diurnal_temperature_index import DiurnalTemperatureIndex
 from .wps_capacity_factor import CapacityFactor
 from .wps_extreme_index import ExtremeIndex
 from .wps_drought_indicator import DroughtIndicator
+from .wps_quantile_bias import QuantileBias
 
 processes = [
     CVDP(),
@@ -36,4 +37,5 @@ processes = [
     DroughtIndicator(),
     ConsecDryDays(),
     ShapeSelect(),
+    QuantileBias(),
 ]
