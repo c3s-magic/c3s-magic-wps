@@ -33,7 +33,7 @@ settings:
   - Extreme: 75th_percentile
   - Number of clusters: 6
   - Percentage of variance explained by PCs (perc): 80
-  - Number of PCs (numpcs): 'no' 
+  - Number of PCs (numpcs): 0
 youtube: MktvzcvflL8
 
 

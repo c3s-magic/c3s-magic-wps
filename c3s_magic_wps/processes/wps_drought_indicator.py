@@ -41,22 +41,22 @@ class DroughtIndicator(Process):
                           'SPI Data for the model',
                           abstract='The complete SPI Data for the model.',
                           as_reference=True,
-                          supported_formats=[Format('application/zip')]),
+                          supported_formats=[FORMATS.NETCDF]),
             ComplexOutput('spi_reference',
                           'SPI Data for the reference model',
                           abstract='The complete SPI Data for the reference model.',
                           as_reference=True,
-                          supported_formats=[Format('application/zip')]),
+                          supported_formats=[FORMATS.NETCDF]),
             ComplexOutput('spei_model',
                           'SPEI Data for the model',
                           abstract='The complete SPEI Data for the model.',
                           as_reference=True,
-                          supported_formats=[Format('application/zip')]),
+                          supported_formats=[FORMATS.NETCDF]),
             ComplexOutput('spei_reference',
                           'SPEI Data for the reference model',
                           abstract='The complete SPEI Data for the reference model.',
                           as_reference=True,
-                          supported_formats=[Format('application/zip')]),
+                          supported_formats=[FORMATS.NETCDF]),
             ComplexOutput('archive',
                           'Archive',
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
@@ -141,7 +141,7 @@ class DroughtIndicator(Process):
 
         response.outputs['archive'].output_format = Format('application/zip')
         response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
-                                                                  'diagnostic_result.zip')
+                                                                  'drought_indicator_result.zip')
 
         response.update_status("done.", 100)
         return response

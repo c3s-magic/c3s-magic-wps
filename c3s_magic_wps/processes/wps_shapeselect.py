@@ -24,6 +24,15 @@ class ShapeSelect(Process):
                          data_type='string',
                          allowed_values=['MotalaStrom', 'Elbe', 'multicatchment', 'testfile', 'Thames'],
                          default='MotalaStrom'),
+            LiteralInput(
+                'weighting_method',
+                'Weighting method',
+                abstract="""The preferred weighting method ‘mean_inside’ - mean of all grid points inside polygon;
+                         ‘representative’ - one point inside or close to the polygon is used to represent the complete
+                         area.""",
+                data_type='string',
+                allowed_values=['mean_inside', 'representative'],
+                default='mean_inside'),
         ]
         outputs = [
             ComplexOutput('data',
@@ -78,7 +87,10 @@ class ShapeSelect(Process):
             ensemble=request.inputs['ensemble'][0].data,
         )
 
-        options = dict(shape=request.inputs['shape'][0].data, )
+        options = dict(
+            shape=request.inputs['shape'][0].data,
+            weighting_method=request.inputs['weighting_method'][0].data,
+        )
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
@@ -123,7 +135,7 @@ class ShapeSelect(Process):
 
         response.outputs['archive'].output_format = Format('application/zip')
         response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
-                                                                  'diagnostic_result.zip')
+                                                                  'shapeselect_result.zip')
 
         response.update_status("done.", 100)
         return response

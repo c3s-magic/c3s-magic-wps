@@ -48,6 +48,13 @@ class MultimodelProducts(Process):
                          data_type='integer',
                          allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1, maxval=365),
                          default=5),
+            LiteralInput('time_series_plot',
+                         'Time series plot',
+                         abstract="""Either single or maxmin (plot the individual or the mean with shading between the
+                                     max and min).""",
+                         data_type='string',
+                         allowed_values=['single', 'maxmin'],
+                         default='single'),
         ]
         self.plotlist = [
             ('tas', [Format('image/png')]),
@@ -148,7 +155,7 @@ class MultimodelProducts(Process):
 
         response.outputs['archive'].output_format = Format('application/zip')
         response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
-                                                                  'diagnostic_result.zip')
+                                                                  'multimodel_products_result.zip')
 
         response.update_status("done.", 100)
         return response

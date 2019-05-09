@@ -17,6 +17,7 @@ from .wps_capacity_factor import CapacityFactor
 from .wps_extreme_index import ExtremeIndex
 from .wps_drought_indicator import DroughtIndicator
 from .wps_quantilebias import QuantileBias
+from .wps_toymodel import Toymodel
 
 processes = [
     CVDP(),
@@ -38,4 +39,5 @@ processes = [
     ConsecDryDays(),
     ShapeSelect(),
     QuantileBias(),
+    Toymodel(),
 ]
