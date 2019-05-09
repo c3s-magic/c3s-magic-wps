@@ -141,7 +141,7 @@ class ConsecDryDays(Process):
         return response
 
     def get_outputs(self, result, response):
-        for plot in self.plotlist:
+        for plot, _ in self.plotlist:
             key = '{}_plot'.format(plot.lower())
             response.outputs[key].output_format = Format('application/png')
             response.outputs[key].file = runner.get_output(result['plot_dir'],
