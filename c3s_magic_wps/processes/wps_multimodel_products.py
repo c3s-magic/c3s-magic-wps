@@ -59,7 +59,7 @@ class MultimodelProducts(Process):
         self.plotlist = [
             ('tas', [Format('image/png')]),
             ('Area', [Format('image/png')]),
-            ]
+        ]
         outputs = [
             *outputs_from_plot_names(self.plotlist),
             ComplexOutput('data',
