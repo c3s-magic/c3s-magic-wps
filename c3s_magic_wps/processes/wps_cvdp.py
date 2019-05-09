@@ -34,25 +34,22 @@ class CVDP(Process):
             *default_outputs(),
         ]
 
-        super(CVDP,
-              self).__init__(self._handler,
-                             identifier="cvdp",
-                             title="NCAR CVDPackage",
-                             version=runner.VERSION,
-                             abstract="Run the NCAR CVDPackage",
-                             metadata=[
-                                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                                 Metadata('Documentation',
-                                          'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
-                                          role=util.WPS_ROLE_DOC),
-                                 Metadata('Media',
-                                          util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
-                                          role=util.WPS_ROLE_MEDIA),
-                             ],
-                             inputs=inputs,
-                             outputs=outputs,
-                             status_supported=True,
-                             store_supported=True)
+        super(CVDP, self).__init__(
+            self._handler,
+            identifier="cvdp",
+            title="NCAR CVDPackage",
+            version=runner.VERSION,
+            abstract="Run the NCAR CVDPackage",
+            metadata=[
+                Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
+                Metadata('Documentation',
+                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_cvdp.html',
+                         role=util.WPS_ROLE_DOC),
+            ],
+            inputs=inputs,
+            outputs=outputs,
+            status_supported=True,
+            store_supported=True)
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)

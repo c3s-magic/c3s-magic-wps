@@ -107,28 +107,26 @@ class ModesVariability(Process):
             *default_outputs(),
         ]
 
-        super(ModesVariability,
-              self).__init__(self._handler,
-                             identifier="modes_of_variability",
-                             title="Modes of variability",
-                             version=runner.VERSION,
-                             abstract="""Diagnostics showing the RMSE between the observed and
+        super(ModesVariability, self).__init__(
+            self._handler,
+            identifier="modes_of_variability",
+            title="Modes of variability",
+            version=runner.VERSION,
+            abstract="""Diagnostics showing the RMSE between the observed and
             modelled patterns of variability obtained through classification
             and their relative relative bias (percentage) in the frequency of
             occurrence and the persistence of each mode.""",
-                             metadata=[
-                                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                                 Metadata('Documentation',
-                                          'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
-                                          role=util.WPS_ROLE_DOC),
-                                 Metadata('Media',
-                                          util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
-                                          role=util.WPS_ROLE_MEDIA),
-                             ],
-                             inputs=inputs,
-                             outputs=outputs,
-                             status_supported=True,
-                             store_supported=True)
+            metadata=[
+                Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
+                Metadata(
+                    'Documentation',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_modes_of_variability.html',
+                    role=util.WPS_ROLE_DOC),
+            ],
+            inputs=inputs,
+            outputs=outputs,
+            status_supported=True,
+            store_supported=True)
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)

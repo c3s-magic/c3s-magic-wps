@@ -64,9 +64,7 @@ class PreprocessExample(Process):
             " project=CMIP5, experiment=historical, ensemble=r1i1p1, variable=ta, model=MPI-ESM-LR, time_frequency=mon",  # noqa
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata('Documentation',
-                         'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
-                         role=util.WPS_ROLE_DOC),
+                Metadata('Documentation', '', role=util.WPS_ROLE_DOC),
                 Metadata('Media', util.diagdata_url() + '/pydemo/pydemo_thumbnail.png', role=util.WPS_ROLE_MEDIA)
             ],
             inputs=inputs,

@@ -52,25 +52,23 @@ class WeatherRegimes(Process):
             *default_outputs(),
         ]
 
-        super(WeatherRegimes,
-              self).__init__(self._handler,
-                             identifier="weather_regimes",
-                             title="Weather regimes",
-                             version=runner.VERSION,
-                             abstract="Diagnostic providing North-Atlantic Weather Regimes",
-                             metadata=[
-                                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                                 Metadata('Documentation',
-                                          'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
-                                          role=util.WPS_ROLE_DOC),
-                                 Metadata('Media',
-                                          util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
-                                          role=util.WPS_ROLE_MEDIA),
-                             ],
-                             inputs=inputs,
-                             outputs=outputs,
-                             status_supported=True,
-                             store_supported=True)
+        super(WeatherRegimes, self).__init__(
+            self._handler,
+            identifier="weather_regimes",
+            title="Weather regimes",
+            version=runner.VERSION,
+            abstract="Diagnostic providing North-Atlantic Weather Regimes",
+            metadata=[
+                Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
+                Metadata('Documentation',
+                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_miles.html',
+                         role=util.WPS_ROLE_DOC),
+                Metadata('Media', util.diagdata_url() + '/pydemo/pydemo_thumbnail.png', role=util.WPS_ROLE_MEDIA),
+            ],
+            inputs=inputs,
+            outputs=outputs,
+            status_supported=True,
+            store_supported=True)
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)
