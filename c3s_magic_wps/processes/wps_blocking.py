@@ -32,8 +32,18 @@ class Blocking(Process):
                          default='DJF'),
         ]
         self.plotlist = [
-            'TM90', 'NumberEvents', 'DurationEvents', 'LongBlockEvents', 'BlockEvents', 'ACN', 'CN', 'BI', 'MGI',
-            'Z500', 'ExtraBlock', 'InstBlock'
+            ('TM90', [Format('image/png')]),
+            ('NumberEvents', [Format('image/png')]),
+            ('DurationEvents', [Format('image/png')]),
+            ('LongBlockEvents', [Format('image/png')]),
+            ('BlockEvents', [Format('image/png')]),
+            ('ACN', [Format('image/png')]),
+            ('CN', [Format('image/png')]),
+            ('BI', [Format('image/png')]),
+            ('MGI', [Format('image/png')]),
+            ('Z500', [Format('image/png')]),
+            ('ExtraBlock', [Format('image/png')]),
+            ('InstBlock', [Format('image/png')]),
         ]
         outputs = [
             *outputs_from_plot_names(self.plotlist),
@@ -64,7 +74,7 @@ class Blocking(Process):
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
-                         'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
+                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_miles.html',
                          role=util.WPS_ROLE_DOC)
             ],
             inputs=inputs,
@@ -133,7 +143,7 @@ class Blocking(Process):
 
         response.outputs['archive'].output_format = Format('application/zip')
         response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'),
-                                                                  'diagnostic_result.zip')
+                                                                  'blocking_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -141,7 +151,7 @@ class Blocking(Process):
     def get_outputs(self, result, subdir, response):
         # result plot
         response.update_status("collecting output ...", 80)
-        for plot in self.plotlist:
+        for plot, _ in self.plotlist:
             key = '{}_plot'.format(plot.lower())
             response.outputs[key].output_format = Format('application/png')
             response.outputs[key].file = runner.get_output(result['plot_dir'],

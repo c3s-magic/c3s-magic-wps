@@ -16,28 +16,33 @@ from .wps_diurnal_temperature_index import DiurnalTemperatureIndex
 from .wps_capacity_factor import CapacityFactor
 from .wps_extreme_index import ExtremeIndex
 from .wps_drought_indicator import DroughtIndicator
+from .wps_quantilebias import QuantileBias
 from .wps_toymodel import Toymodel
 from .wps_rainfarm import RainFARM
 
-processes = [
-    CVDP(),
-    EnsClus(),
-    Sleep(),
-    Blocking(),
-    PreprocessExample(),
-    ZMNAM(),
-    Teleconnections(),
-    WeatherRegimes(),
-    ModesVariability(),
-    CombinedIndices(),
-    MultimodelProducts(),
-    HeatwavesColdwaves(),
-    DiurnalTemperatureIndex(),
-    CapacityFactor(),
-    ExtremeIndex(),
-    DroughtIndicator(),
-    ConsecDryDays(),
-    ShapeSelect(),
-    Toymodel(),
-    RainFARM(),
-]
+processes = sorted(
+    [
+        CVDP(),
+        EnsClus(),
+        Sleep(),
+        Blocking(),
+        PreprocessExample(),
+        ZMNAM(),
+        Teleconnections(),
+        WeatherRegimes(),
+        ModesVariability(),
+        CombinedIndices(),
+        MultimodelProducts(),
+        HeatwavesColdwaves(),
+        DiurnalTemperatureIndex(),
+        CapacityFactor(),
+        ExtremeIndex(),
+        DroughtIndicator(),
+        ConsecDryDays(),
+        ShapeSelect(),
+        QuantileBias(),
+        RainFARM(),
+        Toymodel(),
+    ],
+    key=lambda process: process.title,
+)

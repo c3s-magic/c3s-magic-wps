@@ -77,7 +77,11 @@ class ModesVariability(Process):
                 ],
                 default='JJA'),
         ]
-        self.plotlist = ['Table_psl', 'psl_predicted_regimes', 'psl_observed_regimes']
+        self.plotlist = [
+            ('Table_psl', [Format('image/png')]),
+            ('psl_predicted_regimes', [Format('image/png')]),
+            ('psl_observed_regimes', [Format('image/png')]),
+        ]
         outputs = [
             *outputs_from_plot_names(self.plotlist),
             ComplexOutput('rmse',
@@ -103,28 +107,26 @@ class ModesVariability(Process):
             *default_outputs(),
         ]
 
-        super(ModesVariability,
-              self).__init__(self._handler,
-                             identifier="modes_of_variability",
-                             title="Modes of variability",
-                             version=runner.VERSION,
-                             abstract="""Diagnostics showing the RMSE between the observed and
+        super(ModesVariability, self).__init__(
+            self._handler,
+            identifier="modes_of_variability",
+            title="Modes of variability",
+            version=runner.VERSION,
+            abstract="""Diagnostics showing the RMSE between the observed and
             modelled patterns of variability obtained through classification
             and their relative relative bias (percentage) in the frequency of
             occurrence and the persistence of each mode.""",
-                             metadata=[
-                                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                                 Metadata('Documentation',
-                                          'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
-                                          role=util.WPS_ROLE_DOC),
-                                 Metadata('Media',
-                                          util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
-                                          role=util.WPS_ROLE_MEDIA),
-                             ],
-                             inputs=inputs,
-                             outputs=outputs,
-                             status_supported=True,
-                             store_supported=True)
+            metadata=[
+                Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
+                Metadata(
+                    'Documentation',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_modes_of_variability.html',
+                    role=util.WPS_ROLE_DOC),
+            ],
+            inputs=inputs,
+            outputs=outputs,
+            status_supported=True,
+            store_supported=True)
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)
@@ -198,7 +200,7 @@ class ModesVariability(Process):
 
         response.outputs['archive'].output_format = Format('application/zip')
         response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
-                                                                  'diagnostic_result.zip')
+                                                                  'modes_of_variability_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -206,7 +208,7 @@ class ModesVariability(Process):
     def get_outputs(self, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
-        for plot in self.plotlist:
+        for plot, _ in self.plotlist:
             key = '{}_plot'.format(plot.lower())
             response.outputs[key].output_format = Format('application/png')
             response.outputs[key].file = runner.get_output(result['plot_dir'],

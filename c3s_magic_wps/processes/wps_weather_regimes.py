@@ -36,7 +36,7 @@ class WeatherRegimes(Process):
             #              allowed_values=['4'],
             #              default='4'),
         ]
-        self.plotlist = ["Regime{}".format(i) for i in range(1, 5)]
+        self.plotlist = [("Regime{}".format(i), [Format('image/png')]) for i in range(1, 5)]
         outputs = [
             *outputs_from_plot_names(self.plotlist),
             ComplexOutput('data',
@@ -52,25 +52,23 @@ class WeatherRegimes(Process):
             *default_outputs(),
         ]
 
-        super(WeatherRegimes,
-              self).__init__(self._handler,
-                             identifier="weather_regimes",
-                             title="Weather regimes",
-                             version=runner.VERSION,
-                             abstract="Diagnostic providing North-Atlantic Weather Regimes",
-                             metadata=[
-                                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                                 Metadata('Documentation',
-                                          'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
-                                          role=util.WPS_ROLE_DOC),
-                                 Metadata('Media',
-                                          util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
-                                          role=util.WPS_ROLE_MEDIA),
-                             ],
-                             inputs=inputs,
-                             outputs=outputs,
-                             status_supported=True,
-                             store_supported=True)
+        super(WeatherRegimes, self).__init__(
+            self._handler,
+            identifier="weather_regimes",
+            title="Weather regimes",
+            version=runner.VERSION,
+            abstract="Diagnostic providing North-Atlantic Weather Regimes",
+            metadata=[
+                Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
+                Metadata('Documentation',
+                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_miles.html',
+                         role=util.WPS_ROLE_DOC),
+                Metadata('Media', util.diagdata_url() + '/pydemo/pydemo_thumbnail.png', role=util.WPS_ROLE_MEDIA),
+            ],
+            inputs=inputs,
+            outputs=outputs,
+            status_supported=True,
+            store_supported=True)
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)
@@ -144,7 +142,7 @@ class WeatherRegimes(Process):
     def get_outputs(self, result, subdir, response):
         # result plot
         response.update_status("collecting output ...", 80)
-        for plot in self.plotlist:
+        for plot, _ in self.plotlist:
             key = '{}_plot'.format(plot.lower())
             response.outputs[key].output_format = Format('application/png')
             response.outputs[key].file = runner.get_output(result['plot_dir'],

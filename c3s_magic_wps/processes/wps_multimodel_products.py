@@ -56,7 +56,10 @@ class MultimodelProducts(Process):
                          allowed_values=['single', 'maxmin'],
                          default='single'),
         ]
-        self.plotlist = ['tas', 'Area']
+        self.plotlist = [
+            ('tas', [Format('image/png')]),
+            ('Area', [Format('image/png')]),
+        ]
         outputs = [
             *outputs_from_plot_names(self.plotlist),
             ComplexOutput('data',
@@ -160,7 +163,7 @@ class MultimodelProducts(Process):
     def get_outputs(self, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
-        for plot in self.plotlist:
+        for plot, _ in self.plotlist:
             key = '{}_plot'.format(plot.lower())
             response.outputs[key].output_format = Format('application/png')
             response.outputs[key].file = runner.get_output(result['plot_dir'],

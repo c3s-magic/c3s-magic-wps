@@ -52,9 +52,10 @@ class ExtremeIndex(Process):
                         drought indices).""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata('Documentation',
-                         'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
-                         role=util.WPS_ROLE_DOC),
+                Metadata(
+                    'Documentation',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_combined_climate_extreme_index.html',
+                    role=util.WPS_ROLE_DOC),
                 Metadata('Media',
                          util.diagdata_url() + '/risk_index/insurance_risk_indices.png',
                          role=util.WPS_ROLE_MEDIA),
@@ -116,7 +117,7 @@ class ExtremeIndex(Process):
 
         response.outputs['archive'].output_format = Format('application/zip')
         response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
-                                                                  'diagnostic_result.zip')
+                                                                  'extreme_index_result.zip')
 
         response.update_status("done.", 100)
         return response

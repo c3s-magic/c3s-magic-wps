@@ -61,11 +61,8 @@ class CombinedIndices(Process):
                              metadata=[
                                  Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                                  Metadata('Documentation',
-                                          'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
+                                          'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_combined_climate_extreme_index.html',
                                           role=util.WPS_ROLE_DOC),
-                                 Metadata('Media',
-                                          util.diagdata_url() + '/pydemo/pydemo_thumbnail.png',
-                                          role=util.WPS_ROLE_MEDIA),
                              ],
                              inputs=inputs,
                              outputs=outputs,
@@ -128,7 +125,7 @@ class CombinedIndices(Process):
 
         response.outputs['archive'].output_format = Format('application/zip')
         response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
-                                                                  'diagnostic_result.zip')
+                                                                  'combined_indices_result.zip')
 
         response.update_status("done.", 100)
         return response

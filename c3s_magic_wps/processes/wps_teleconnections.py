@@ -37,7 +37,7 @@ class Teleconnections(Process):
                          allowed_values=['NAO', 'AO', 'PNA'],
                          default='NAO'),
         ]
-        self.plotlist = ["EOF{}".format(i) for i in range(1, 5)]
+        self.plotlist = [("EOF{}".format(i), [Format('image/png')]) for i in range(1, 5)]
         outputs = [
             *outputs_from_plot_names(self.plotlist),
             ComplexOutput('data',
@@ -140,7 +140,7 @@ class Teleconnections(Process):
     def get_outputs(self, result, subdir, response):
         # result plot
         response.update_status("collecting output ...", 80)
-        for plot in self.plotlist:
+        for plot, _ in self.plotlist:
             key = '{}_plot'.format(plot.lower())
             response.outputs[key].output_format = Format('application/png')
             response.outputs[key].file = runner.get_output(result['plot_dir'],

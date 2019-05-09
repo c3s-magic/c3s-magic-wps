@@ -35,25 +35,23 @@ class CapacityFactor(Process):
             *default_outputs(),
         ]
 
-        super(CapacityFactor,
-              self).__init__(self._handler,
-                             identifier="capacity_factor",
-                             title="Capacity factor of wind power",
-                             version=runner.VERSION,
-                             abstract="""Metric showing the wind capacity factor to estimate energy supply.""",
-                             metadata=[
-                                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                                 Metadata('Documentation',
-                                          'https://copernicus-wps-demo.readthedocs.io/en/latest/processes.html#pydemo',
-                                          role=util.WPS_ROLE_DOC),
-                                 Metadata('Media',
-                                          util.diagdata_url() + '/capacity_factor/diurnal_temperature_variation.png',
-                                          role=util.WPS_ROLE_MEDIA),
-                             ],
-                             inputs=inputs,
-                             outputs=outputs,
-                             status_supported=True,
-                             store_supported=True)
+        super(CapacityFactor, self).__init__(
+            self._handler,
+            identifier="capacity_factor",
+            title="Capacity factor of wind power",
+            version=runner.VERSION,
+            abstract="""Metric showing the wind capacity factor to estimate energy supply.""",
+            metadata=[
+                Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
+                Metadata(
+                    'Documentation',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_capacity_factor.html',
+                    role=util.WPS_ROLE_DOC),
+            ],
+            inputs=inputs,
+            outputs=outputs,
+            status_supported=True,
+            store_supported=True)
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)
@@ -107,7 +105,7 @@ class CapacityFactor(Process):
 
         response.outputs['archive'].output_format = Format('application/zip')
         response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
-                                                                  'diagnostic_result.zip')
+                                                                  'capacity_factor_result.zip')
 
         response.update_status("done.", 100)
         return response

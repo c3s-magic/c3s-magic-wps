@@ -31,7 +31,10 @@ class ConsecDryDays(Process):
                          allowed_values=['0.5', '1', '2'],
                          default='1'),
         ]
-        self.plotlist = ['dryfreq', 'drymax']
+        self.plotlist = [
+            ('dryfreq', [Format('image/png')]),
+            ('drymax', [Format('image/png')]),
+        ]
         outputs = [
             *outputs_from_plot_names(self.plotlist),
             ComplexOutput('data_drymax',
@@ -55,9 +58,11 @@ class ConsecDryDays(Process):
         super(ConsecDryDays, self).__init__(
             self._handler,
             identifier="consecdrydays",
-            title="Calculating number of dry days",
+            title="Consecutive Dry Days",
             version=runner.VERSION,
-            abstract="Calculating number of dry days",
+            abstract="""Calculates the longest period of consecutive dry days (days with at least 'prlim' mm/day) in
+                        the provided time series, as well as the number of periods of at least 'frlim' consecutive dry
+                        days. 'prlim' and 'frlim' are provided by the user.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
@@ -138,7 +143,7 @@ class ConsecDryDays(Process):
         return response
 
     def get_outputs(self, result, response):
-        for plot in self.plotlist:
+        for plot, _ in self.plotlist:
             key = '{}_plot'.format(plot.lower())
             response.outputs[key].output_format = Format('application/png')
             response.outputs[key].file = runner.get_output(result['plot_dir'],
