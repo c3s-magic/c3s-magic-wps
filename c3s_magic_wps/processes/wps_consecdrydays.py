@@ -58,9 +58,11 @@ class ConsecDryDays(Process):
         super(ConsecDryDays, self).__init__(
             self._handler,
             identifier="consecdrydays",
-            title="Calculating number of dry days",
+            title="Consecutive Dry Days",
             version=runner.VERSION,
-            abstract="Calculating number of dry days",
+            abstract="""Calculates the longest period of consecutive dry days (days with at least 'prlim' mm/day) in
+                        the provided time series, as well as the number of periods of at least 'frlim' consecutive dry
+                        days. 'prlim' and 'frlim' are provided by the user.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
