@@ -36,7 +36,7 @@ class WeatherRegimes(Process):
             #              allowed_values=['4'],
             #              default='4'),
         ]
-        self.plotlist = ["Regime{}".format(i) for i in range(1, 5)]
+        self.plotlist = [("Regime{}".format(i), [Format('image/png')]) for i in range(1, 5)]
         outputs = [
             *outputs_from_plot_names(self.plotlist),
             ComplexOutput('data',

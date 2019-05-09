@@ -56,7 +56,10 @@ class MultimodelProducts(Process):
                          allowed_values=['single', 'maxmin'],
                          default='single'),
         ]
-        self.plotlist = ['tas', 'Area']
+        self.plotlist = [
+            ('tas', [Format('image/png')]),
+            ('Area', [Format('image/png')]),
+            ]
         outputs = [
             *outputs_from_plot_names(self.plotlist),
             ComplexOutput('data',

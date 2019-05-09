@@ -127,11 +127,11 @@ def model_experiment_ensemble(model_name='Model',
 
 def outputs_from_plot_names(plotlist):
     plots = []
-    for plot in plotlist:
+    for plot, plot_formats in plotlist:
         plots.append(
             ComplexOutput('{}_plot'.format(plot.lower()),
                           '{} plot'.format(plot),
                           abstract='Generated {} plot of ESMValTool processing.'.format(plot),
                           as_reference=True,
-                          supported_formats=[Format('image/png')]))
+                          supported_formats=plot_formats))
     return plots

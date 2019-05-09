@@ -31,7 +31,10 @@ class ConsecDryDays(Process):
                          allowed_values=['0.5', '1', '2'],
                          default='1'),
         ]
-        self.plotlist = ['dryfreq', 'drymax']
+        self.plotlist = [
+            ('dryfreq', [Format('image/png')]),
+            ('drymax', [Format('image/png')]),
+        ]
         outputs = [
             *outputs_from_plot_names(self.plotlist),
             ComplexOutput('data_drymax',
