@@ -131,10 +131,6 @@ class QuantileBias(Process):
 
         response.outputs['model'].output_format = FORMATS.NETCDF
         response.outputs['model'].file = runner.get_output(result['work_dir'],
-                                                               path_filter=os.path.join(
-                                                                   'quantilebias', 'main' ),
-                                                               name_filter="{}*".format(model),
-                                                               output_format="nc")
-
-    
-
+                                                           path_filter=os.path.join('quantilebias', 'main'),
+                                                           name_filter="{}*".format(model),
+                                                           output_format="nc")
