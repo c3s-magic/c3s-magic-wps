@@ -31,13 +31,13 @@ preprocessors:
       # The selected region needs to have equal and even number of longitude (in any case it is cut)
       # and latitude grid points (e.g., 2x2, 4x4, ...). 
       # Warning: downcaling can reach very high resolution, so select a limited area.
-      start_longitude: {{options['start_longitude']}}
-      end_longitude: {{options['end_longitude']}}
-      start_latitude: {{options['start_latitude']}}
-      end_latitude: {{options['end_latitude']}}
+      start_longitude: {{options['start_longitude']}} #5
+      end_longitude: {{options['end_longitude']}} # 15
+      start_latitude: {{options['start_latitude']}} # 40
+      end_latitude: {{options['end_latitude']}} # 50
     regrid:
-      target_grid: {{options['target_grid']}} # in degrees, can also be the name of one of the datasets to use the grid from that dataset
-      scheme: {{options['scheme']}}  # can be linear, nearest, area_weighted, unstructured_nearest
+      target_grid: {{options['target_grid']}} # 1x1  # in degrees, can also be the name of one of the datasets to use the grid from that dataset
+      scheme: {{options['scheme']}} # area_weighted  # can be linear, nearest, area_weighted, unstructured_nearest
 diagnostics:
   rainfarm:
     description: RainFARM stochastic downscaling of precipitation fields
