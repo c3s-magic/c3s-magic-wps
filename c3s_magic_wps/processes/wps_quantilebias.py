@@ -76,7 +76,7 @@ class QuantileBias(Process):
             model=request.inputs['model'][0].data,
             experiment=request.inputs['experiment'][0].data,
             ensemble=request.inputs['ensemble'][0].data,
-            reference=request.inputs['reference'][0].data,
+            reference=request.inputs['ref_dataset'][0].data,
         )
 
         options = dict(perc_lev=request.inputs['perc_lev'][0].data)
@@ -87,7 +87,7 @@ class QuantileBias(Process):
         end_year = request.inputs['end_year'][0].data
         recipe_file, config_file = runner.generate_recipe(
             workdir=workdir,
-            diag='quantile_bias',
+            diag='quantilebias',
             constraints=constraints,
             options=options,
             start_year=start_year,
@@ -115,7 +115,7 @@ class QuantileBias(Process):
 
         if result['success']:
             try:
-                self.get_outputs(constraints['model'], constraints['reference'], result, response)
+                self.get_outputs(constraints['model'], result, response)
             except Exception as e:
                 response.update_status("exception occured: " + str(e), 85)
         else:
@@ -126,12 +126,11 @@ class QuantileBias(Process):
 
         response.outputs['archive'].output_format = Format('application/zip')
         response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'),
-                                                                  'diagnostic_result.zip')
-
+                                                                  'quantilebias_result.zip')
         response.update_status("done.", 100)
         return response
 
-    def get_outputs(self, model, reference, result, response):
+    def get_outputs(self, model, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
 
@@ -142,10 +141,5 @@ class QuantileBias(Process):
                                                                name_filter="{}*".format(model),
                                                                output_format="nc")
 
-        response.outputs['reference'].output_format = FORMATS.NETCDF
-        response.outputs['reference'].file = runner.get_output(result['work_dir'],
-                                                               path_filter=os.path.join(
-                                                                   'quantilebias', 'main'),
-                                                               name_filter="{}*".format(reference),
-                                                               output_format="nc")
+    
 
