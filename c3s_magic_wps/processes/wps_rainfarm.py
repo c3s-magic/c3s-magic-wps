@@ -151,8 +151,14 @@ class RainFARM(Process):
             end_longitude=request.inputs['end_longitude'][0].data,
             start_latitude=request.inputs['start_latitude'][0].data,
             end_latitude=request.inputs['end_latitude'][0].data,
-            beta=request.inputs['beta'][0].data,
-            number_of_members=request.inputs['number_of_members'][0].data,
+            target_grid=request.inputs['target_grid'][0].data,
+            scheme=request.inputs['scheme'][0].data,
+            slope=request.inputs['slope'][0].data,
+            nens=request.inputs['nens'][0].data,
+            nf=request.inputs['nf'][0].data,
+            conserv_glob=request.inputs['conserv_glob'][0].data,
+            conserv_smooth=request.inputs['conserv_smooth'][0].data,
+            weights_climo=request.inputs['weights_climo'][0].data,
         )
 
         # generate recipe
