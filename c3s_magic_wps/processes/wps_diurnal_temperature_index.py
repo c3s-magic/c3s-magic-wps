@@ -108,7 +108,7 @@ class DiurnalTemperatureIndex(Process):
 
         response.outputs['archive'].output_format = Format('application/zip')
         response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
-                                                                  'diagnostic_result.zip')
+                                                                  'diurnal_temperature_result.zip')
 
         response.update_status("done.", 100)
         return response
