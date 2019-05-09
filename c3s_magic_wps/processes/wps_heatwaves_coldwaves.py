@@ -15,6 +15,14 @@ LOGGER = logging.getLogger("PYWPS")
 class HeatwavesColdwaves(Process):
     def __init__(self):
         inputs = [
+            *model_experiment_ensemble(model_name='Model_historical',
+                                       experiment_name='Experiment_historical',
+                                       ensemble_name='Ensemble_historical'),
+            *year_ranges((1850, 2005), (1971, 2000), start_name='start_historical', end_name='end_historical'),
+            *model_experiment_ensemble(model_name='Model_projection',
+                                       experiment_name='Experiment_projection',
+                                       ensemble_name='Ensemble_projection'),
+            *year_ranges((2006, 2050), (2020, 2050), start_name='start_projection', end_name='end_projection'),
             LiteralInput('quantile',
                          'Quantile',
                          abstract='quantile defining the exceedance/non-exceedance threshold',
@@ -84,7 +92,16 @@ class HeatwavesColdwaves(Process):
         response.update_status("starting ...", 0)
 
         # build esgf search constraints
-        constraints = dict()
+        constraints = dict(model_historical=request.inputs['model_historical'][0].data,
+                           experiment_historical=request.inputs['experiment_historical'][0].data,
+                           ensemble_historical=request.inputs['ensemble_historical'][0].data,
+                           start_year_historical=request.inputs['start_historical'][0].data,
+                           end_year_historical=request.inputs['end_historical'][0].data,
+                           model_projection=request.inputs['model_projection'][0].data,
+                           experiment_projection=request.inputs['experiment_projection'][0].data,
+                           ensemble_projection=request.inputs['ensemble_projection'][0].data,
+                           start_year_projection=request.inputs['start_projection'][0].data,
+                           end_year_projection=request.inputs['end_projection'][0].data)
 
         op = request.inputs['operator'][0].data
         if op == 'exceedances':
@@ -99,6 +116,10 @@ class HeatwavesColdwaves(Process):
             min_duration=request.inputs['min_duration'][0].data,
             operator=operator,
             season=request.inputs['season'][0].data,
+            start_historical='{}-01-01'.format(request.inputs['start_historical'][0].data),
+            end_historical='{}-12-31'.format(request.inputs['end_historical'][0].data),
+            start_projection='{}-01-01'.format(request.inputs['start_projection'][0].data),
+            end_projection='{}-12-31'.format(request.inputs['end_projection'][0].data),
         )
 
         # generate recipe
