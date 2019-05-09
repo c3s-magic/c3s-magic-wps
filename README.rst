@@ -5,13 +5,9 @@ c3s magic wps
    :target: http://c3s-magic-wps.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
-.. image:: https://travis-ci.org/c3s-magic/c3s-magic-wps.svg?branch=master
-   :target: https://travis-ci.org/c3s-magic/c3s-magic-wps
+.. image:: https://travis-ci.com/c3s-magic/c3s-magic-wps.svg?branch=master
+   :target: https://travis-ci.com/c3s-magic/c3s-magic-wps
    :alt: Travis Build
-
-.. image:: https://img.shields.io/github/license/c3s-magic/c3s-magic-wps.svg
-    :target: https://github.com/c3s-magic/c3s-magic-wps/blob/master/LICENSE
-    :alt: GitHub license
 
 .. image:: https://badges.gitter.im/bird-house/birdhouse.svg
     :target: https://gitter.im/bird-house/birdhouse?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
