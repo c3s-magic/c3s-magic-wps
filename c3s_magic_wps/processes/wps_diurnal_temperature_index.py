@@ -16,7 +16,7 @@ class DiurnalTemperatureIndex(Process):
     def __init__(self):
         inputs = [
             *model_experiment_ensemble(
-                model_name='Model', experiment_name='Future_experiment', ensemble_name='Ensemble'),
+                model_name='Model', experiment_name='future_experiment', ensemble_name='Ensemble'),
             *year_ranges(start_end_year=(1850, 2000),
                          start_end_defaults=(1961, 2000),
                          start_name='reference_start_year',
@@ -103,8 +103,10 @@ class DiurnalTemperatureIndex(Process):
         # build esgf search constraints
         constraints = dict(
             model=request.inputs['model'][0].data,
-            experiment=request.inputs['experiment'][0].data,
+            experiment=request.inputs['future_experiment'][0].data,
             ensemble=request.inputs['ensemble'][0].data,
+            start_year_future=request.inputs['future_start_year'][0].data,
+            end_year_future=request.inputs['future_end_year'][0].data,
         )
 
         options = dict(
@@ -112,8 +114,6 @@ class DiurnalTemperatureIndex(Process):
             end_longitude=request.inputs['end_longitude'][0].data,
             start_latitude=request.inputs['start_latitude'][0].data,
             end_latitude=request.inputs['end_latitude'][0].data,
-            start_year_future=request.inputs['reference_start_year'][0].data,
-            end_year_future=request.inputs['reference_end_year'][0].data,
         )
 
         # generate recipe
