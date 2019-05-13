@@ -48,9 +48,9 @@ diagnostics:
     scripts:
       rainfarm:
         script: rainfarm/rainfarm.R
-        slope: {{options['slope']}} # spatial spectral slope (set to 0 to compute from large scales)
-        nens: {{options['nens']}}                # number of ensemble members to be calculated
-        nf: {{options['nf']}}                  # subdivisions for downscaling
-        conserv_glob: {{options['conserv_glob']}}    # conserve precipitation over full domain (choose either glob or smooth, glob has priority)
-        conserv_smooth: {{options['conserv_smooth']}}   # conserve precipitation using convolution (if neither is chosen box conservation is used)
-        weights_climo: {{options['weights_climo']}}   # orographic weights: set to false or full path to a fine-scale precipitation climatology file
+        slope: {{options['slope']}} # 1.7 # spatial spectral slope (set to 0 to compute from large scales)
+        nens: {{options['nens']}} # 2 # number of ensemble members to be calculated
+        nf: {{options['nf']}} # 8 # subdivisions for downscaling
+        conserv_glob: {{options['conserv_glob']}} # false # conserve precipitation over full domainSoesterberg (choose either glob or smooth, glob has priority)
+        conserv_smooth: {{options['conserv_smooth']}} # true # conserve precipitation using convolution (if neither is chosen box conservation is used)
+        weights_climo: {{options['weights_climo']}} # false # orographic weights: set to false or full path to a fine-scale precipitation climatology file

@@ -101,7 +101,7 @@ class RainFARM(Process):
                 'Weights Climo',
                 abstract='set to false if no orographic weights are to be used',
                 data_type='string',
-                allowed_values=['false'],
+                allowed_values=['true', 'false'],
                 default='false',
             ),
         ]
@@ -176,7 +176,11 @@ class RainFARM(Process):
 
         # run diag
         response.update_status("running diagnostic ...", 20)
+        # Disable HDF5 library version mismatched error for rainfarm metric
+        os.environ["HDF5_DISABLE_VERSION_CHECK"] = "1"
         result = runner.run(recipe_file, config_file)
+        del os.environ["HDF5_DISABLE_VERSION_CHECK"]
+
 
         response.outputs['success'].data = result['success']
 
