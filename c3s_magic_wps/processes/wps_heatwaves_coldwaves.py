@@ -22,7 +22,7 @@ class HeatwavesColdwaves(Process):
             *model_experiment_ensemble(model_name='Model_projection',
                                        experiment_name='Experiment_projection',
                                        ensemble_name='Ensemble_projection'),
-            *year_ranges((2006, 2050), (2020, 2050), start_name='start_projection', end_name='end_projection'),
+            *year_ranges((2006, 2100), (2060, 2080), start_name='start_projection', end_name='end_projection'),
             LiteralInput('quantile',
                          'Quantile',
                          abstract='quantile defining the exceedance/non-exceedance threshold',
@@ -93,7 +93,6 @@ class HeatwavesColdwaves(Process):
 
         # build esgf search constraints
         constraints = dict(model_historical=request.inputs['model_historical'][0].data,
-                           experiment_historical=request.inputs['experiment_historical'][0].data,
                            ensemble_historical=request.inputs['ensemble_historical'][0].data,
                            start_year_historical=request.inputs['start_historical'][0].data,
                            end_year_historical=request.inputs['end_historical'][0].data,
@@ -129,8 +128,8 @@ class HeatwavesColdwaves(Process):
             diag='heatwaves_coldwaves_wp7',
             constraints=constraints,
             options=options,
-            start_year=1971,
-            end_year=2080,
+            start_year = request.inputs['start_historical'][0].data,
+            end_year = request.inputs['end_projection'][0].data,
             output_format='png',
         )
 
@@ -166,7 +165,7 @@ class HeatwavesColdwaves(Process):
 
         response.outputs['archive'].output_format = Format('application/zip')
         response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
-                                                                  'diagnostic_result.zip')
+                                                                  'heatwaves_coldwaves_result.zip')
 
         response.update_status("done.", 100)
         return response
