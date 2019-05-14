@@ -88,9 +88,9 @@ class CapacityFactor(Process):
             identifier="capacity_factor",
             title="Capacity factor of wind power",
             version=runner.VERSION,
-            abstract:("The goal of this diagnostic is to compute the wind capacity factor, taking as input the daily "
-                      "instantaneous surface wind speed, which is then extrapolated to obtain the wind speed at a height of "
-                      "100 m as described in Lledó (2017)."),
+            abstract: ("The goal of this diagnostic is to compute the wind capacity factor, taking as input the daily "
+                       "instantaneous surface wind speed, which is then extrapolated to obtain the wind speed at a "
+                       "height of 100 m as described in Lledó (2017)."),
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(

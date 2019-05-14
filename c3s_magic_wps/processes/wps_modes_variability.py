@@ -120,7 +120,8 @@ class ModesVariability(Process):
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
-                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_modes_of_variability.html',
+                    ('https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_modes_of_'
+                     'variability.html'),
                     role=util.WPS_ROLE_DOC),
             ],
             inputs=inputs,
