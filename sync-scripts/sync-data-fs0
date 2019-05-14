@@ -5,8 +5,11 @@
 #Eg. sync-data-fs0 user
 TARGET_USER=$1
 
-#Synchronize CMIP files
+#Synchronize CMIP files matching the recipes for ESMValTool used in MAGIC
 rsync -vhr --progress --copy-links --files-from=CMIP-SELECTION /group_workspaces/jasmin2/cp4cds1/data/c3s-cmip5/output1/ $TARGET_USER@fs0.das5.cs.vu.nl:/var/scratch2/$TARGET_USER/cp4cds/
+
+#Synchronize CMIP files matching all possible wps settings in metrics used in MAGIC
+rsync -vhr --progress --copy-links --files-from=WPS-CMIP-SELECTION /group_workspaces/jasmin2/cp4cds1/data/c3s-cmip5/output1/ $TARGET_USER@fs0.das5.cs.vu.nl:/var/scratch2/$TARGET_USER/cp4cds-wps
 
 #Also synchronize OBS files
 rsync -vhr --progress --copy-links --files-from=OBS-SELECTION /group_workspaces/jasmin2/cp4cds1/data/dkrz_pool/ $TARGET_USER@fs0.das5.cs.vu.nl:/var/scratch2/$TARGET_USER/dkrz_pool/
