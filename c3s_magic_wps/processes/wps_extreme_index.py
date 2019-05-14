@@ -4,6 +4,8 @@ import os
 from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
+from pywps.inout.literaltypes import AllowedValue
+from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
 
@@ -27,13 +29,12 @@ class ExtremeIndex(Process):
             *year_ranges((2006, 2100), (2060, 2080),
                          start_name='start_projection',
                          end_name='end_projection'),
-            LiteralInput(
-                'metric',
-                'Metric',
-                abstract='Choose a metric to calculate.',
-                data_type='string',
-                allowed_values=['t10p', 't90p', 'rx5day', 'Wx'],  # 'cdd' <- these do not work
-                default='Wx'),
+            LiteralInput('running_mean',
+                         'Running Mean',
+                         abstract='integer indictating the length of the window for the running mean to be computed.',
+                         data_type='integer',
+                         allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1, maxval=365),
+                         default=5),
         ]
         self.plotlist = []
         outputs = [
@@ -91,7 +92,7 @@ class ExtremeIndex(Process):
                            start_year_projection=request.inputs['start_projection'][0].data,
                            end_year_projection=request.inputs['end_projection'][0].data
                            )
-        options = dict(metric=request.inputs['metric'][0].data,
+        options = dict(running_mean=int(request.inputs['running_mean'][0].data),
                        start_historical='{}-01-01'.format(request.inputs['start_historical'][0].data),
                        end_historical='{}-12-31'.format(request.inputs['end_historical'][0].data),
                        start_projection='{}-01-01'.format(request.inputs['start_projection'][0].data),
