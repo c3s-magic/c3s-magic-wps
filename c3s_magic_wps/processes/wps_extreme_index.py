@@ -20,15 +20,11 @@ class ExtremeIndex(Process):
             *model_experiment_ensemble(model_name='Model_historical',
                                        experiment_name='Experiment_historical',
                                        ensemble_name='Ensemble_historical'),
-            *year_ranges((1850, 2005), (1971, 2000),
-                         start_name='start_historical',
-                         end_name='end_historical'),
+            *year_ranges((1850, 2005), (1971, 2000), start_name='start_historical', end_name='end_historical'),
             *model_experiment_ensemble(model_name='Model_projection',
                                        experiment_name='Experiment_projection',
                                        ensemble_name='Ensemble_projection'),
-            *year_ranges((2006, 2100), (2060, 2080),
-                         start_name='start_projection',
-                         end_name='end_projection'),
+            *year_ranges((2006, 2100), (2060, 2080), start_name='start_projection', end_name='end_projection'),
             LiteralInput('running_mean',
                          'Running Mean',
                          abstract='integer indictating the length of the window for the running mean to be computed.',
@@ -90,14 +86,14 @@ class ExtremeIndex(Process):
                            experiment_projection=request.inputs['experiment_projection'][0].data,
                            ensemble_projection=request.inputs['ensemble_projection'][0].data,
                            start_year_projection=request.inputs['start_projection'][0].data,
-                           end_year_projection=request.inputs['end_projection'][0].data
-                           )
-        options = dict(running_mean=int(request.inputs['running_mean'][0].data),
-                       start_historical='{}-01-01'.format(request.inputs['start_historical'][0].data),
-                       end_historical='{}-12-31'.format(request.inputs['end_historical'][0].data),
-                       start_projection='{}-01-01'.format(request.inputs['start_projection'][0].data),
-                       end_projection='{}-12-31'.format(request.inputs['end_projection'][0].data),
-                       )
+                           end_year_projection=request.inputs['end_projection'][0].data)
+        options = dict(
+            running_mean=int(request.inputs['running_mean'][0].data),
+            start_historical='{}-01-01'.format(request.inputs['start_historical'][0].data),
+            end_historical='{}-12-31'.format(request.inputs['end_historical'][0].data),
+            start_projection='{}-01-01'.format(request.inputs['start_projection'][0].data),
+            end_projection='{}-12-31'.format(request.inputs['end_projection'][0].data),
+        )
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
@@ -131,8 +127,7 @@ class ExtremeIndex(Process):
 
         if not result['success']:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'],
-                                   100)
+            response.update_status("exception occured: " + result['exception'], 100)
             return response
 
         try:
