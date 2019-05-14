@@ -135,3 +135,15 @@ def outputs_from_plot_names(plotlist):
                           as_reference=True,
                           supported_formats=plot_formats))
     return plots
+
+
+def outputs_from_data_names(datalist):
+    data_outputs = []
+    for data_output, file_formats in datalist:
+        data_outputs.append(
+            ComplexOutput('{}_data'.format(data_output.lower()),
+                          '{} data'.format(data_output),
+                          abstract='Generated output {} data of ESMValTool processing..'.format(data_output),
+                          as_reference=True,
+                          supported_formats=file_formats))
+    return data_outputs
