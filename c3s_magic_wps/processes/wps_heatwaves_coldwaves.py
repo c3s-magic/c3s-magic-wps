@@ -128,8 +128,8 @@ class HeatwavesColdwaves(Process):
             diag='heatwaves_coldwaves_wp7',
             constraints=constraints,
             options=options,
-            start_year = request.inputs['start_historical'][0].data,
-            end_year = request.inputs['end_projection'][0].data,
+            start_year=request.inputs['start_historical'][0].data,
+            end_year=request.inputs['end_projection'][0].data,
             output_format='png',
         )
 
