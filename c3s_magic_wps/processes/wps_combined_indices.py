@@ -61,7 +61,8 @@ class CombinedIndices(Process):
                              metadata=[
                                  Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                                  Metadata('Documentation',
-                                          'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_combined_climate_extreme_index.html',
+                                          ('https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_'
+                                           'combined_climate_extreme_index.html'),
                                           role=util.WPS_ROLE_DOC),
                              ],
                              inputs=inputs,

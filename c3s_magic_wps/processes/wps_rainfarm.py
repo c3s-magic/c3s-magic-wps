@@ -196,7 +196,6 @@ class RainFARM(Process):
         result = runner.run(recipe_file, config_file)
         del os.environ["HDF5_DISABLE_VERSION_CHECK"]
 
-
         response.outputs['success'].data = result['success']
 
         # log output
