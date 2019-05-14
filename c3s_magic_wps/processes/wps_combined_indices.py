@@ -52,23 +52,24 @@ class CombinedIndices(Process):
             *default_outputs(),
         ]
 
-        super(CombinedIndices,
-              self).__init__(self._handler,
-                             identifier="combined_indices",
-                             title="Single and multi-model indices based on area averages",
-                             version=runner.VERSION,
-                             abstract="""Metric showning single and multi model indices based on area averages.""",
-                             metadata=[
-                                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                                 Metadata('Documentation',
-                                          ('https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_'
-                                           'combined_climate_extreme_index.html'),
-                                          role=util.WPS_ROLE_DOC),
-                             ],
-                             inputs=inputs,
-                             outputs=outputs,
-                             status_supported=True,
-                             store_supported=True)
+        super(CombinedIndices, self).__init__(
+            self._handler,
+            identifier="combined_indices",
+            title="Single and multi-model indices based on area averages",
+            version=runner.VERSION,
+            abstract="""Metric showning single and multi model indices based on area averages.""",
+            metadata=[
+                Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
+                Metadata(
+                    'Documentation',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_combined_climate_extreme_index.html',  # noqa
+                    role=util.WPS_ROLE_DOC),
+            ],
+            inputs=inputs,
+            outputs=outputs,
+            status_supported=True,
+            store_supported=True,
+        )
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)
