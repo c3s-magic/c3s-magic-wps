@@ -15,6 +15,18 @@ LOGGER = logging.getLogger("PYWPS")
 class ExtremeIndex(Process):
     def __init__(self):
         inputs = [
+            *model_experiment_ensemble(model_name='Model_historical',
+                                       experiment_name='Experiment_historical',
+                                       ensemble_name='Ensemble_historical'),
+            *year_ranges((1850, 2005), (1971, 2000),
+                         start_name='start_historical',
+                         end_name='end_historical'),
+            *model_experiment_ensemble(model_name='Model_projection',
+                                       experiment_name='Experiment_projection',
+                                       ensemble_name='Ensemble_projection'),
+            *year_ranges((2006, 2100), (2060, 2080),
+                         start_name='start_projection',
+                         end_name='end_projection'),
             LiteralInput(
                 'metric',
                 'Metric',
@@ -69,9 +81,22 @@ class ExtremeIndex(Process):
         response.update_status("starting ...", 0)
 
         # build esgf search constraints
-        constraints = dict()
-
-        options = dict(metric=request.inputs['metric'][0].data)
+        constraints = dict(model_historical=request.inputs['model_historical'][0].data,
+                           ensemble_historical=request.inputs['ensemble_historical'][0].data,
+                           start_year_historical=request.inputs['start_historical'][0].data,
+                           end_year_historical=request.inputs['end_historical'][0].data,
+                           model_projection=request.inputs['model_projection'][0].data,
+                           experiment_projection=request.inputs['experiment_projection'][0].data,
+                           ensemble_projection=request.inputs['ensemble_projection'][0].data,
+                           start_year_projection=request.inputs['start_projection'][0].data,
+                           end_year_projection=request.inputs['end_projection'][0].data
+                           )
+        options = dict(metric=request.inputs['metric'][0].data,
+                       start_historical='{}-01-01'.format(request.inputs['start_historical'][0].data),
+                       end_historical='{}-12-31'.format(request.inputs['end_historical'][0].data),
+                       start_projection='{}-01-01'.format(request.inputs['start_projection'][0].data),
+                       end_projection='{}-12-31'.format(request.inputs['end_projection'][0].data),
+                       )
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
@@ -80,8 +105,8 @@ class ExtremeIndex(Process):
             diag='extreme_index_wp7',
             constraints=constraints,
             options=options,
-            start_year=1971,
-            end_year=2040,
+            start_year=request.inputs['start_historical'][0].data,
+            end_year=request.inputs['end_projection'][0].data,
             output_format='png',
         )
 
@@ -105,7 +130,8 @@ class ExtremeIndex(Process):
 
         if not result['success']:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'], 100)
+            response.update_status("exception occured: " + result['exception'],
+                                   100)
             return response
 
         try:

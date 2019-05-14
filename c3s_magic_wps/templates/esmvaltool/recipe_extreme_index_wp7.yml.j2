@@ -19,13 +19,25 @@ documentation:
     - alexander
 
 datasets:
-  - {dataset: IPSL-CM5A-MR, type: exp, project: CMIP5,  mip: day,  exp: historical,  ensemble: r1i1p1,  start_year: 1971,  end_year: 2000}
-  - {dataset: IPSL-CM5A-MR, type: exp, project: CMIP5,  mip: day,  exp: rcp85,  ensemble: r1i1p1,  start_year: 2020,  end_year: 2040}
+  - dataset: {{constraints['model_historical']}}
+    project: CMIP5
+    mip: day
+    exp: historical
+    ensemble: {{constraints['ensemble_historical']}}
+    start_year: {{constraints['start_year_historical']}}
+    end_year: {{constraints['end_year_historical']}}
+  - dataset: {{constraints['model_projection']}}
+    project: CMIP5
+    mip: day
+    exp: {{constraints['experiment_projection']}}
+    ensemble: {{constraints['ensemble_projection']}}
+    start_year: {{constraints['start_year_projection']}}
+    end_year: {{constraints['end_year_projection']}}
 
 preprocessors:
   preproc:
     regrid:
-      target_grid: IPSL-CM5A-MR
+      target_grid: {{constraints['model_historical']}}
       scheme: linear
     mask_fillvalues:
       threshold_fraction: 0.95
@@ -42,7 +54,6 @@ diagnostics:
       sfcWind:
         preprocessor: preproc
         mip: day
-        field: T2D
 
     scripts:
       main:
