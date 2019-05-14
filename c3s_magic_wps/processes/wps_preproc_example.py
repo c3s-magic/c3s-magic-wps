@@ -162,12 +162,15 @@ class PreprocessExample(Process):
         for var in ['mean', 'median']:
             plotkey = 'multi_model_{}_ta_plot'.format(var)
             datakey = 'multi_model_{}_ta_data'.format(var)
+
+            LOGGER.info('Setting response for: {}'.format(plotkey))
             response.outputs[plotkey].output_format = Format('application/png')
             response.outputs[plotkey].file = runner.get_output(result['plot_dir'],
                                                                path_filter=os.path.join('diagnostic1', 'script1'),
                                                                name_filter="MultiModel{}*".format(var.capitalize()),
                                                                output_format="png")
 
+            LOGGER.info('Setting response for: {}'.format(datakey))
             response.outputs[datakey].output_format = FORMATS.NETCDF
             response.outputs[datakey].file = runner.get_output(result['data_dir'],
                                                                path_filter=os.path.join('diagnostic1', 'script1'),
@@ -179,6 +182,9 @@ class PreprocessExample(Process):
                 model = 'model{}'.format(i)
                 plotkey = '{}_mean_{}_plot'.format(model, var)
                 datakey = '{}_mean_{}_data'.format(model, var)
+
+                LOGGER.info('Setting response for: {}'.format(plotkey))
+                LOGGER.info('Setting response for: {}'.format(datakey))
                 response.outputs[plotkey].output_format = Format('application/png')
                 response.outputs[plotkey].file = runner.get_output(result['plot_dir'],
                                                                    path_filter=os.path.join('diagnostic1', 'script1'),
@@ -195,6 +201,9 @@ class PreprocessExample(Process):
 
             plotkey = 'reference_model_mean_{}_plot'.format(var)
             datakey = 'reference_model_mean_{}_data'.format(var)
+
+            LOGGER.info('Setting response for: {}'.format(plotkey))
+            LOGGER.info('Setting response for: {}'.format(datakey))
             response.outputs[plotkey].output_format = Format('application/png')
             response.outputs[plotkey].file = runner.get_output(result['plot_dir'],
                                                                path_filter=os.path.join('diagnostic1', 'script1'),
