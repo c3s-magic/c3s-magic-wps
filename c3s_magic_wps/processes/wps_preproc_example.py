@@ -143,6 +143,7 @@ class PreprocessExample(Process):
                 self.get_outputs(result, constraints, response)
             except Exception as e:
                 response.update_status("exception occured: " + str(e), 85)
+                LOGGER.exception('Getting output failed: ' + str(e))
         else:
             LOGGER.exception('esmvaltool failed!')
             response.update_status("exception occured: " + result['exception'], 85)
@@ -213,5 +214,5 @@ class PreprocessExample(Process):
             response.outputs[datakey].output_format = FORMATS.NETCDF
             response.outputs[datakey].file = runner.get_output(result['work_dir'],
                                                                path_filter=os.path.join('diagnostic1', 'script1'),
-                                                               name_filter="OBS*{}*".format(var.capitalize()),
+                                                               name_filter="OBS*{}*".format(var),
                                                                output_format="nc")
