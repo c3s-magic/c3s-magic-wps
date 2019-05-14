@@ -18,7 +18,15 @@ documentation:
     - c3s-magic
 
 datasets:
-  - {dataset: IPSL-CM5A-MR,  type: exp, project: CMIP5,  mip: day,  exp: historical,  ensemble: r1i1p1,  start_year: 1980,  end_year: 2005}
+  - dataset: {{constraints['model']}}
+    type: exp
+    project: CMIP5
+    mip: day
+    exp: {{constraints['experiment']}}
+    ensemble: {{constraints['ensemble']}}
+    start_year: {{start_year}} # 1980
+    end_year: {{end_year}} # 2005
+  #- {dataset: IPSL-CM5A-MR,  type: exp, project: CMIP5,  mip: day,  exp: historical,  ensemble: r1i1p1,  start_year: 1980,  end_year: 2005}
   #- {dataset: MPI-ESM-MR, type: exp, project: CMIP5, mip: day, exp: rcp26, ensemble: r1i1p1, start_year: 2021, end_year: 2025}
   #- {dataset: MPI-ESM-MR, type: exp, project: CMIP5, mip: day, exp: rcp45, ensemble: r1i1p1, start_year: 2031, end_year: 2035}
 
@@ -26,16 +34,16 @@ preprocessors:
   preproc:
     regrid:
       target_grid: IPSL-CM5A-MR
-      scheme: linear
+      scheme: {{options['scheme']}} #linear
     mask_fillvalues:
       threshold_fraction: 0.95
     extract_region:
-      start_longitude: 200
-      end_longitude: 300
-      start_latitude: 27
-      end_latitude: 70
+      start_longitude: {{options['start_longitude']}} #200
+      end_longitude: {{options['end_longitude']}} # 300
+      start_latitude: {{options['start_latitude']}} # 27
+      end_latitude: {{options['end_latitude']}} # 70
     extract_season:
-      season: djf
+      season: {{options['season']}} # djf
 
 diagnostics:
   capacity_factor:

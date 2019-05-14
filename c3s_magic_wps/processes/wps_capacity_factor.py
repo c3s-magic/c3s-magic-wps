@@ -14,7 +14,55 @@ LOGGER = logging.getLogger("PYWPS")
 
 class CapacityFactor(Process):
     def __init__(self):
-        inputs = []
+        inputs = [
+            *model_experiment_ensemble(start_end_year=(1850, 2005), start_end_defaults=(1980, 2005)),
+            LiteralInput(
+                'start_longitude',
+                'Start longitude',
+                abstract='minimum longitude',
+                data_type='integer',
+                default=200,
+            ),
+            LiteralInput(
+                'end_longitude',
+                'End longitude',
+                abstract='maximum longitude',
+                data_type='integer',
+                default=300,
+            ),
+            LiteralInput(
+                'start_latitude',
+                'Start latitude',
+                abstract='minimum latitude',
+                data_type='integer',
+                default=27,
+            ),
+            LiteralInput(
+                'end_latitude',
+                'End latitude',
+                abstract='maximum latitude',
+                data_type='integer',
+                default=70,
+            ),
+            LiteralInput(
+                'scheme',
+                'Scheme',
+                abstract='regridding scheme',
+                data_type='string',
+                allowed_values=['linear', 'nearest', 'area_weighted',
+                                'unstructured_nearest'],
+                default='linear',
+            ),
+            LiteralInput(
+                'season',
+                'Season',
+                abstract='Season',
+                data_type='string',
+                allowed_values=['djf', 'mam', 'jja',
+                                'son'],
+                default='djf',
+            ),
+        ]
         self.plotlist = []
         outputs = [
             ComplexOutput('plot',
@@ -40,7 +88,9 @@ class CapacityFactor(Process):
             identifier="capacity_factor",
             title="Capacity factor of wind power",
             version=runner.VERSION,
-            abstract="""Metric showing the wind capacity factor to estimate energy supply.""",
+            abstract:("The goal of this diagnostic is to compute the wind capacity factor, taking as input the daily "
+                      "instantaneous surface wind speed, which is then extrapolated to obtain the wind speed at a height of "
+                      "100 m as described in Lledó (2017)."),
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
@@ -57,9 +107,20 @@ class CapacityFactor(Process):
         response.update_status("starting ...", 0)
 
         # build esgf search constraints
-        constraints = dict()
+        constraints = dict(
+            model=request.inputs['model'][0].data,
+            experiment=request.inputs['experiment'][0].data,
+            ensemble=request.inputs['ensemble'][0].data,
+        )
 
-        options = dict()
+        options = dict(
+            start_longitude=request.inputs['start_longitude'][0].data,
+            end_longitude=request.inputs['end_longitude'][0].data,
+            start_latitude=request.inputs['start_latitude'][0].data,
+            end_latitude=request.inputs['end_latitude'][0].data,
+            scheme=request.inputs['scheme'][0].data,
+            slope=request.inputs[''][0].data,
+        )
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
@@ -68,8 +129,8 @@ class CapacityFactor(Process):
             diag='capacity_factor_wp7',
             constraints=constraints,
             options=options,
-            start_year=1980,
-            end_year=2005,
+            start_year=request.inputs['start_year'][0].data,
+            end_year=request.inputs['end_year'][0].data,
             output_format='png',
         )
 
