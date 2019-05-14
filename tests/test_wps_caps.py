@@ -32,6 +32,7 @@ def test_wps_caps():
         'weather_regimes',
         'zmnam',
         'toymodel',
+        'rainfarm',
         'quantile_bias',
     ])
     print(sorted(names.split()))
