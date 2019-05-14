@@ -37,7 +37,7 @@ class PreprocessExample(Process):
         ]
         self.plotlist = [
             ('multi_model_mean_ta', [Format('image/png')]),
-            ('mutli_model_median_ta', [Format('image/png')]),
+            ('multi_model_median_ta', [Format('image/png')]),
             ('model1_mean_ta', [Format('image/png')]),
             ('model2_mean_ta', [Format('image/png')]),
             ('model3_mean_ta', [Format('image/png')]),
@@ -50,7 +50,7 @@ class PreprocessExample(Process):
 
         self.datalist = [
             ('multi_model_mean_ta', [FORMATS.NETCDF]),
-            ('mutli_model_median_ta', [FORMATS.NETCDF]),
+            ('multi_model_median_ta', [FORMATS.NETCDF]),
             ('model1_mean_ta', [FORMATS.NETCDF]),
             ('model2_mean_ta', [FORMATS.NETCDF]),
             ('model3_mean_ta', [FORMATS.NETCDF]),
@@ -172,7 +172,7 @@ class PreprocessExample(Process):
 
             LOGGER.info('Setting response for: {}'.format(datakey))
             response.outputs[datakey].output_format = FORMATS.NETCDF
-            response.outputs[datakey].file = runner.get_output(result['data_dir'],
+            response.outputs[datakey].file = runner.get_output(result['work_dir'],
                                                                path_filter=os.path.join('diagnostic1', 'script1'),
                                                                name_filter="MultiModel{}*".format(var.capitalize()),
                                                                output_format="nc")
@@ -193,7 +193,7 @@ class PreprocessExample(Process):
                                                                    output_format="png")
 
                 response.outputs[datakey].output_format = FORMATS.NETCDF
-                response.outputs[datakey].file = runner.get_output(result['data_dir'],
+                response.outputs[datakey].file = runner.get_output(result['work_dir'],
                                                                    path_filter=os.path.join('diagnostic1', 'script1'),
                                                                    name_filter="*{}*{}*".format(
                                                                        constraints[model], var),
@@ -211,7 +211,7 @@ class PreprocessExample(Process):
                                                                output_format="png")
 
             response.outputs[datakey].output_format = FORMATS.NETCDF
-            response.outputs[datakey].file = runner.get_output(result['data_dir'],
+            response.outputs[datakey].file = runner.get_output(result['work_dir'],
                                                                path_filter=os.path.join('diagnostic1', 'script1'),
                                                                name_filter="OBS*{}*".format(var.capitalize()),
                                                                output_format="nc")
