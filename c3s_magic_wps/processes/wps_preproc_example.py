@@ -7,7 +7,7 @@ from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
 from .. import runner, util
-from .utils import default_outputs, model_experiment_ensemble
+from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, outputs_from_data_names
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -35,17 +35,34 @@ class PreprocessExample(Process):
                 # allowed_values=make_allowedvalues([0.0, 110000.0]),
                 default=85000.0),
         ]
+        self.plotlist = [
+            ('multi_model_mean_ta', [Format('image/png')]),
+            ('multi_model_median_ta', [Format('image/png')]),
+            ('model1_mean_ta', [Format('image/png')]),
+            ('model2_mean_ta', [Format('image/png')]),
+            ('model3_mean_ta', [Format('image/png')]),
+            ('reference_model_mean_ta', [Format('image/png')]),
+            ('model1_mean_pr', [Format('image/png')]),
+            ('model2_mean_pr', [Format('image/png')]),
+            ('model3_mean_pr', [Format('image/png')]),
+            ('reference_model_mean_pr', [Format('image/png')]),
+        ]
+
+        self.datalist = [
+            ('multi_model_mean_ta', [FORMATS.NETCDF]),
+            ('multi_model_median_ta', [FORMATS.NETCDF]),
+            ('model1_mean_ta', [FORMATS.NETCDF]),
+            ('model2_mean_ta', [FORMATS.NETCDF]),
+            ('model3_mean_ta', [FORMATS.NETCDF]),
+            ('reference_model_mean_ta', [FORMATS.NETCDF]),
+            ('model1_mean_pr', [FORMATS.NETCDF]),
+            ('model2_mean_pr', [FORMATS.NETCDF]),
+            ('model3_mean_pr', [FORMATS.NETCDF]),
+            ('reference_model_mean_pr', [FORMATS.NETCDF]),
+        ]
         outputs = [
-            ComplexOutput('plot',
-                          'Output plot',
-                          abstract='Generated output plot of ESMValTool processing.',
-                          as_reference=True,
-                          supported_formats=[Format('image/png')]),
-            ComplexOutput('data',
-                          'Data',
-                          abstract='Generated output data of ESMValTool processing.',
-                          as_reference=True,
-                          supported_formats=[FORMATS.NETCDF]),
+            *outputs_from_plot_names(self.plotlist),
+            *outputs_from_data_names(self.datalist),
             ComplexOutput('archive',
                           'Archive',
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
@@ -59,9 +76,12 @@ class PreprocessExample(Process):
             identifier="preproc",
             title="Preprocessing Demo",
             version=runner.VERSION,
-            abstract="Generates a plot for temperature using ESMValTool."
-            " The default run uses the following CMIP5 data:"
-            " project=CMIP5, experiment=historical, ensemble=r1i1p1, variable=ta, model=MPI-ESM-LR, time_frequency=mon",  # noqa
+            abstract="""The ESMValTool climate data pre-processor can be used to
+                        perform all types of climate data pre-processing needed before indices
+                        or diagnostics can be calculated. It is a base component for many other
+                        diagnostics and metrics shown on this portal. It can be applied to
+                        tailor the climate model data to the need of the user for its own
+                        calculations.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation', '', role=util.WPS_ROLE_DOC),
@@ -70,7 +90,8 @@ class PreprocessExample(Process):
             inputs=inputs,
             outputs=outputs,
             status_supported=True,
-            store_supported=True)
+            store_supported=True,
+        )
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)
@@ -119,9 +140,10 @@ class PreprocessExample(Process):
 
         if result['success']:
             try:
-                self.get_outputs(result, response)
+                self.get_outputs(result, constraints, response)
             except Exception as e:
                 response.update_status("exception occured: " + str(e), 85)
+                LOGGER.exception('Getting output failed: ' + str(e))
         else:
             LOGGER.exception('esmvaltool failed!')
             response.update_status("exception occured: " + result['exception'], 85)
@@ -135,17 +157,62 @@ class PreprocessExample(Process):
         response.update_status("done.", 100)
         return response
 
-    def get_outputs(self, result, response):
-        # result plot
+    def get_outputs(self, result, constraints, response):
         response.update_status("collecting output ...", 80)
-        response.outputs['plot'].output_format = Format('application/png')
-        response.outputs['plot'].file = runner.get_output(result['plot_dir'],
-                                                          path_filter=os.path.join('diagnostic1', 'script1'),
-                                                          name_filter="CMIP5*",
-                                                          output_format="png")
 
-        response.outputs['data'].output_format = FORMATS.NETCDF
-        response.outputs['data'].file = runner.get_output(result['plot_dir'],
-                                                          path_filter=os.path.join('diagnostic1', 'script1'),
-                                                          name_filter="CMIP5*",
-                                                          output_format="nc")
+        for var in ['mean', 'median']:
+            plotkey = 'multi_model_{}_ta_plot'.format(var)
+            datakey = 'multi_model_{}_ta_data'.format(var)
+
+            LOGGER.info('Setting response for: {}'.format(plotkey))
+            response.outputs[plotkey].output_format = Format('application/png')
+            response.outputs[plotkey].file = runner.get_output(result['plot_dir'],
+                                                               path_filter=os.path.join('diagnostic1', 'script1'),
+                                                               name_filter="MultiModel{}*".format(var.capitalize()),
+                                                               output_format="png")
+
+            LOGGER.info('Setting response for: {}'.format(datakey))
+            response.outputs[datakey].output_format = FORMATS.NETCDF
+            response.outputs[datakey].file = runner.get_output(result['work_dir'],
+                                                               path_filter=os.path.join('diagnostic1', 'script1'),
+                                                               name_filter="MultiModel{}*".format(var.capitalize()),
+                                                               output_format="nc")
+
+        for var in ['ta', 'pr']:
+            for i in range(1, 4):
+                model = 'model{}'.format(i)
+                plotkey = '{}_mean_{}_plot'.format(model, var)
+                datakey = '{}_mean_{}_data'.format(model, var)
+
+                LOGGER.info('Setting response for: {}'.format(plotkey))
+                LOGGER.info('Setting response for: {}'.format(datakey))
+                response.outputs[plotkey].output_format = Format('application/png')
+                response.outputs[plotkey].file = runner.get_output(result['plot_dir'],
+                                                                   path_filter=os.path.join('diagnostic1', 'script1'),
+                                                                   name_filter="*{}*{}*".format(
+                                                                       constraints[model], var),
+                                                                   output_format="png")
+
+                response.outputs[datakey].output_format = FORMATS.NETCDF
+                response.outputs[datakey].file = runner.get_output(result['work_dir'],
+                                                                   path_filter=os.path.join('diagnostic1', 'script1'),
+                                                                   name_filter="*{}*{}*".format(
+                                                                       constraints[model], var),
+                                                                   output_format="nc")
+
+            plotkey = 'reference_model_mean_{}_plot'.format(var)
+            datakey = 'reference_model_mean_{}_data'.format(var)
+
+            LOGGER.info('Setting response for: {}'.format(plotkey))
+            LOGGER.info('Setting response for: {}'.format(datakey))
+            response.outputs[plotkey].output_format = Format('application/png')
+            response.outputs[plotkey].file = runner.get_output(result['plot_dir'],
+                                                               path_filter=os.path.join('diagnostic1', 'script1'),
+                                                               name_filter="OBS*{}*".format(var),
+                                                               output_format="png")
+
+            response.outputs[datakey].output_format = FORMATS.NETCDF
+            response.outputs[datakey].file = runner.get_output(result['work_dir'],
+                                                               path_filter=os.path.join('diagnostic1', 'script1'),
+                                                               name_filter="OBS*{}*".format(var),
+                                                               output_format="nc")
