@@ -54,6 +54,13 @@ class CapacityFactor(Process):
                 default='linear',
             ),
             LiteralInput(
+                'threshold_fraction',
+                'Threshold Fraction',
+                abstract='Threshold Fraction (between 0 and 1.0) for fillvalues mask',
+                data_type='float',
+                default='linear',
+            ),
+            LiteralInput(
                 'season',
                 'Season',
                 abstract='Season',
@@ -119,7 +126,8 @@ class CapacityFactor(Process):
             start_latitude=request.inputs['start_latitude'][0].data,
             end_latitude=request.inputs['end_latitude'][0].data,
             scheme=request.inputs['scheme'][0].data,
-            slope=request.inputs[''][0].data,
+            threshold_fraction=request.inputs['threshold_fraction'][0].data,
+            season=request.inputs['season'][0].data,
         )
 
         # generate recipe

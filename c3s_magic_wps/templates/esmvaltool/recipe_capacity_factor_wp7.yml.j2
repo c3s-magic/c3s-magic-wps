@@ -33,10 +33,10 @@ datasets:
 preprocessors:
   preproc:
     regrid:
-      target_grid: IPSL-CM5A-MR
+      target_grid: {{constraints['model']}} # IPSL-CM5A-MR
       scheme: {{options['scheme']}} #linear
     mask_fillvalues:
-      threshold_fraction: 0.95
+      threshold_fraction: {{options['treshold_fraction']} # 0.95
     extract_region:
       start_longitude: {{options['start_longitude']}} #200
       end_longitude: {{options['end_longitude']}} # 300
