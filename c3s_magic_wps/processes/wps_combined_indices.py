@@ -53,11 +53,7 @@ class CombinedIndices(Process):
                          default=True),
         ]
         outputs = [
-            ComplexOutput('plot',
-                          'Combined Indices plot',
-                          abstract='Combined Indices plot.',
-                          as_reference=True,
-                          supported_formats=[Format('image/png')]),
+            *outputs_from_plot_names(self.plotlist),
             ComplexOutput('data',
                           'Data',
                           abstract='Generated combined indices data.',
