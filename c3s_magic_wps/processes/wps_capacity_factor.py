@@ -49,8 +49,7 @@ class CapacityFactor(Process):
                 'Scheme',
                 abstract='regridding scheme',
                 data_type='string',
-                allowed_values=['linear', 'nearest', 'area_weighted',
-                                'unstructured_nearest'],
+                allowed_values=['linear', 'nearest', 'area_weighted', 'unstructured_nearest'],
                 default='linear',
             ),
             LiteralInput(
@@ -65,8 +64,7 @@ class CapacityFactor(Process):
                 'Season',
                 abstract='Season',
                 data_type='string',
-                allowed_values=['djf', 'mam', 'jja',
-                                'son'],
+                allowed_values=['djf', 'mam', 'jja', 'son'],
                 default='djf',
             ),
         ]
@@ -96,8 +94,8 @@ class CapacityFactor(Process):
             title="Capacity factor of wind power",
             version=runner.VERSION,
             abstract=("The goal of this diagnostic is to compute the wind capacity factor, taking as input the daily "
-                       "instantaneous surface wind speed, which is then extrapolated to obtain the wind speed at a "
-                       "height of 100 m as described in Lledó (2017)."),
+                      "instantaneous surface wind speed, which is then extrapolated to obtain the wind speed at a "
+                      "height of 100 m as described in Lledó (2017)."),
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
@@ -160,15 +158,14 @@ class CapacityFactor(Process):
         response.outputs['debug_log'].output_format = FORMATS.TEXT
         response.outputs['debug_log'].file = result['debug_logfile']
 
-        if not result['success']:
+        if result['success']:
+            try:
+                self.get_outputs(result, response)
+            except Exception as e:
+                response.update_status("exception occured: " + str(e), 85)
+        else:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'], 100)
-            return response
-
-        try:
-            self.get_outputs(result, response)
-        except Exception as e:
-            response.update_status("exception occured: " + str(e), 85)
+            response.update_status("exception occured: " + result['exception'], 85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
