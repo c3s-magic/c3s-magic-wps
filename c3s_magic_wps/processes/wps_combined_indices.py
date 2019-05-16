@@ -94,7 +94,11 @@ class CombinedIndices(Process):
         response.update_status("starting ...", 0)
 
         # build esgf search constraints
-        constraints = dict()
+        constraints = dict(
+            model=request.inputs['model'][0].data,
+            experiment=request.inputs['experiment'][0].data,
+            ensemble=request.inputs['ensemble'][0].data,
+        )
 
         options = dict(
             standardized=request.inputs['standardized'][0].data,
