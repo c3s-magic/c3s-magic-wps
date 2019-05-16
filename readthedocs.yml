@@ -1,0 +1,4 @@
+#We require python 3.6 because of a known issue with pywps.
+#https://github.com/geopython/pywps/issues/397
+python:
+        version: 3.6
