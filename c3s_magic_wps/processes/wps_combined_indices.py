@@ -4,6 +4,8 @@ import os
 from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
+from pywps.inout.literaltypes import AllowedValue
+from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
 
@@ -15,12 +17,13 @@ LOGGER = logging.getLogger("PYWPS")
 class CombinedIndices(Process):
     def __init__(self):
         inputs = [
-            LiteralInput('weights',
-                         'Weights',
-                         abstract='Either `equal`, for equal weights, `null` for no weights.',
-                         data_type='string',
-                         allowed_values=['equal', 'null'],
-                         default='equal'),
+            *model_experiment_ensemble(start_end_year=(1850, 2100), start_end_defaults=(1950, 2005)),
+            LiteralInput('running_mean',
+                         'Running Mean',
+                         abstract='integer indictating the length of the window for the running mean to be computed.',
+                         data_type='integer',
+                         allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1, maxval=365),
+                         default=5),
             LiteralInput(
                 'moninf',
                 'First month month of the seasonal mean period',
@@ -37,8 +40,20 @@ class CombinedIndices(Process):
                 data_type='string',
                 allowed_values=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
                 default='3'),
+            LiteralInput('region',
+                         'Region',
+                         abstract='Region',
+                         data_type='string',
+                         allowed_values=['NAO', 'Nino3', 'Nino3.4', 'Nino4', 'SOI'],
+                         default='NAO'),
+            LiteralInput('standardized',
+                         'Standardized',
+                         abstract='boolean indictating if standardization should be computed.',
+                         data_type='boolean',
+                         default=True),
         ]
         outputs = [
+            *outputs_from_plot_names(self.plotlist),
             ComplexOutput('data',
                           'Data',
                           abstract='Generated combined indices data.',
@@ -78,9 +93,11 @@ class CombinedIndices(Process):
         constraints = dict()
 
         options = dict(
-            weights=request.inputs['weights'][0].data,
+            standardized=request.inputs['standardized'][0].data,
+            region=request.inputs['region'][0].data,
             moninf=request.inputs['moninf'][0].data,
             monsup=request.inputs['monsup'][0].data,
+            running_mean=request.inputs['running_mean'][0].data,
         )
 
         # generate recipe
@@ -90,8 +107,8 @@ class CombinedIndices(Process):
             diag='combined_indices_wp6',
             constraints=constraints,
             options=options,
-            start_year=1950,
-            end_year=2005,
+            start_year=request.inputs['start_year'][0].data,
+            end_year=request.inputs['end_year'][0].data,
             output_format='png',
         )
 
