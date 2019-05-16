@@ -57,7 +57,7 @@ class CapacityFactor(Process):
                 'Threshold Fraction',
                 abstract='Threshold Fraction (between 0 and 1.0) for fillvalues mask',
                 data_type='float',
-                default='linear',
+                default=0.95,
             ),
             LiteralInput(
                 'season',
