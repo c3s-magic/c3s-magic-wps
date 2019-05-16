@@ -117,7 +117,7 @@ def get_output(output_dir, path_filter, name_filter=None, output_format='pdf'):
     matches = glob.glob(output_filter)
     if len(matches) == 0:
         LOGGER.info("output_dir=%s", output_dir)
-        raise Exception("no output found in output dir")
+        raise Exception("no output found in output dir for filter: {}".format(output_filter))
     elif len(matches) > 1:
         LOGGER.warn("more then one output found %s", matches)
     LOGGER.debug("output found=%s", matches[0])
