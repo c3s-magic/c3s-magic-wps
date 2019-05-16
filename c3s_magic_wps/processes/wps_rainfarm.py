@@ -57,8 +57,7 @@ class RainFARM(Process):
                 'Scheme',
                 abstract='regridding scheme',
                 data_type='string',
-                allowed_values=['linear', 'nearest', 'area_weighted',
-                                'unstructured_nearest'],
+                allowed_values=['linear', 'nearest', 'area_weighted', 'unstructured_nearest'],
                 default='area_weighted',
             ),
             LiteralInput(
@@ -126,16 +125,16 @@ class RainFARM(Process):
             identifier="rainfarm",
             title="RainFARM stochastic downscaling",
             version=runner.VERSION,
-            abstract=("Precipitation extremes and small-scale variability are essential drivers in many climate change"
-                      "impact studies. However, the spatial resolution currently achieved by global and regional "
-                      "climate models is still insufficient to correctly identify the fine structure of precipitation "
-                      "intensity fields. In the absence of a proper physically based representation, this scale gap "
-                      "can be at least temporarily bridged by adopting a stochastic rainfall downscaling technique "
-                      "(Rebora et al, 2006). With this aim, the Rainfall Filtered Autoregressive Model (RainFARM)was "
-                      "developed to apply the stochastic precipitation downscaling method to climate models. The "
-                      "selected region needs to have equal and even number of longitude (in any case it is cut) and "
-                      "latitude grid points (e.g., 2x2, 4x4, ...). Warning: downcaling can reach very high resolution, "
-                      "so select a limited area."),
+            abstract="""Precipitation extremes and small-scale variability are essential drivers in many climate change
+                        impact studies. However, the spatial resolution currently achieved by global and regional
+                        climate models is still insufficient to correctly identify the fine structure of precipitation
+                        intensity fields. In the absence of a proper physically based representation, this scale gap
+                        can be at least temporarily bridged by adopting a stochastic rainfall downscaling technique
+                        (Rebora et al, 2006). With this aim, the Rainfall Filtered Autoregressive Model (RainFARM)was
+                        developed to apply the stochastic precipitation downscaling method to climate models. The
+                        selected region needs to have equal and even number of longitude (in any case it is cut) and
+                        latitude grid points (e.g., 2x2, 4x4, ...). Warning: downcaling can reach very high resolution,
+                        so select a limited area.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
