@@ -11,24 +11,19 @@ from ...util import static_directory
 LOGGER = logging.getLogger("PYWPS")
 
 
-def year_ranges(start_end_year, start_end_defaults, start_name='start_year', end_name='end_year'):
-    start_year, end_year = start_end_year
-    if start_end_defaults is not None:
-        default_start_year, default_end_year = start_end_defaults
-    else:
-        default_start_year = start_year
-        default_end_year = end_year
+def year_ranges(start_end_defaults, start_name='start_year', end_name='end_year'):
+    default_start_year, default_end_year = start_end_defaults
 
     start_long_name = start_name.replace('_', ' ').capitalize()
     end_long_name = end_name.replace('_', ' ').capitalize()
     return [
         LiteralInput(start_name,
-                     "{} ({})".format(start_long_name, start_year),
+                     "{}".format(start_long_name),
                      data_type='integer',
                      abstract='{} of model data.'.format(start_long_name),
                      default=default_start_year),
         LiteralInput(end_name,
-                     "{} (till {})".format(end_long_name, end_year),
+                     "{}".format(end_long_name),
                      data_type='integer',
                      abstract='{} of model data.'.format(end_long_name),
                      default=default_end_year)
@@ -76,12 +71,12 @@ def parse_model_lists():
                                                            key=ensemble_comp)
 
 
-def model_experiment_ensemble(model_name='Model',
-                              experiment_name='Experiment',
-                              ensemble_name='Ensemble',
-                              start_end_year=None,
-                              start_end_defaults=None):
-
+def model_experiment_ensemble(model: str,
+                              experiment: str,
+                              ensemble: str,
+                              model_name: str = 'Model',
+                              experiment_name: str = 'Experiment',
+                              ensemble_name: str = 'Ensemble'):
     if not hasattr(model_experiment_ensemble, 'available_models'):
         parse_model_lists()
 
@@ -89,38 +84,41 @@ def model_experiment_ensemble(model_name='Model',
     experiment_long_name = experiment_name.replace('_', ' ').capitalize()
     ensemble_long_name = ensemble_name.replace('_', ' ').capitalize()
 
-    default_ensemble = 'r1i1p1'
+    default_model = model
+    if default_model not in model_experiment_ensemble.available_models:
+        default_model = model_experiment_ensemble.available_models[0]
+
+    default_ensemble = ensemble
     if default_ensemble not in model_experiment_ensemble.available_ensembles:
         default_ensemble = model_experiment_ensemble.available_ensembles[0]
 
-    default_experiment = 'historical'
+    default_experiment = experiment
     if default_experiment not in model_experiment_ensemble.available_experiments:
         default_experiment = model_experiment_ensemble.available_experiments[0]
 
     inputs = [
         LiteralInput(model_name.lower(),
                      model_long_name,
-                     abstract='Choose a model like {}.'.format(model_experiment_ensemble.available_models[0]),
+                     abstract='Choose a model',
                      data_type='string',
                      allowed_values=model_experiment_ensemble.available_models,
-                     default=model_experiment_ensemble.available_models[0],
-                     min_occurs=1,
-                     max_occurs=1),
+                     default=default_model,
+                     min_occurs=1),
         LiteralInput(experiment_name.lower(),
                      experiment_long_name,
-                     abstract='Choose an experiment like {}.'.format(default_experiment),
+                     abstract='Choose an experiment',
                      data_type='string',
                      allowed_values=model_experiment_ensemble.available_experiments,
-                     default=default_experiment),
+                     default=default_experiment,
+                     min_occurs=1),
         LiteralInput(ensemble_name.lower(),
                      ensemble_long_name,
-                     abstract='Choose an ensemble like {}.'.format(default_ensemble),
+                     abstract='Choose an ensemble',
                      data_type='string',
                      allowed_values=model_experiment_ensemble.available_ensembles,
-                     default=default_ensemble),
+                     default=default_ensemble,
+                     min_occurs=1),
     ]
-    if start_end_year is not None:
-        inputs.extend(year_ranges(start_end_year, start_end_defaults))
 
     return inputs
 

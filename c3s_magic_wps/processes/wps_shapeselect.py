@@ -1,23 +1,20 @@
+import logging
 import os
 
-from pywps import Process
-from pywps import LiteralInput, LiteralOutput
-from pywps import ComplexInput, ComplexOutput
-from pywps import Format, FORMATS
+from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process
 from pywps.app.Common import Metadata
 
 from .. import runner, util
+from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
 
-from .utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
-
-import logging
 LOGGER = logging.getLogger("PYWPS")
 
 
 class ShapeSelect(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(start_end_year=(1979, 2005), start_end_defaults=(1990, 1999)),
+            *model_experiment_ensemble(model='EC-EARTH', experiment='historical', ensemble='r2i1p1'),
+            *year_ranges((1990, 1999)),
             LiteralInput('shape',
                          'Shape',
                          abstract='Shape of the area',

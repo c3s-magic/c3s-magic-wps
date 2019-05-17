@@ -20,27 +20,15 @@ documentation:
     - c3s-magic
 
 datasets:
-  - dataset: {{constraints['model1']}}
-    ensemble: {{constraints['ensemble1']}}
+  {% for model in constraints['models'] %}
+  - dataset: {{constraints['models'][loop.index0].data}}
+    ensemble: {{constraints['ensembles'][loop.index0].data}}
     project: CMIP5
     mip: Amon
-    exp: {{constraints['experiment']}}
+    exp: {{constraints['experiments'][loop.index0].data}}
     start_year: {{start_year}}
     end_year: {{end_year}}
-  - dataset: {{constraints['model2']}}
-    ensemble: {{constraints['ensemble2']}}
-    project: CMIP5
-    mip: Amon
-    exp: {{constraints['experiment']}}
-    start_year: {{start_year}}
-    end_year: {{end_year}}
-  - dataset: {{constraints['model3']}}
-    ensemble: {{constraints['ensemble3']}}
-    project: CMIP5
-    mip: Amon
-    exp: {{constraints['experiment']}}
-    start_year: {{start_year}}
-    end_year: {{end_year}}
+  {% endfor %}
   - dataset: ERA-Interim
     project: OBS
     tier: 3

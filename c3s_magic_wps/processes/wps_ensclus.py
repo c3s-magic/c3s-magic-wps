@@ -15,13 +15,8 @@ LOGGER = logging.getLogger("PYWPS")
 class EnsClus(Process):
     def __init__(self):
         inputs = [
-            # *model_experiment_ensemble(
-            #     models=['Defaults'],
-            #     experiments=['historical'],
-            #     ensembles=['r1i1p1'],
-            #     start_end_year=(1850, 2005),
-            #     start_end_defaults=(1850, 2005)),
-            *year_ranges((1850, 2005), (1990, 2005)),
+            *model_experiment_ensemble(model='ACCESS1-0', experiment='historical', ensemble='r1i1p1'),
+            *year_ranges((1900, 2005)),
             LiteralInput('season',
                          'Season',
                          abstract='Choose a season like DJF.',

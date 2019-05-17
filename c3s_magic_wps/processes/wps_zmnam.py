@@ -5,9 +5,8 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names
-
 from .. import runner, util
+from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -15,7 +14,8 @@ LOGGER = logging.getLogger("PYWPS")
 class ZMNAM(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(start_end_year=(1850, 2005), start_end_defaults=(1979, 2008)),
+            *model_experiment_ensemble(model='	MPI-ESM-MR', experiment='historical', ensemble='r1i1p1'),
+            *year_ranges((1979, 2005)),
         ]
         self.pressure_levels = [5000, 25000, 50000, 100000]
         self.plotlist = [("{}Pa_mo_reg".format(i), [Format('image/png')]) for i in self.pressure_levels]

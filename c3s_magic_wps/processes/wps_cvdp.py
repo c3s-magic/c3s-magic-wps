@@ -14,10 +14,8 @@ LOGGER = logging.getLogger("PYWPS")
 class CVDP(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(
-                start_end_year=(1850, 2005),
-                start_end_defaults=(2000, 2002),
-            ),
+            *model_experiment_ensemble(model='MPI-ESM-LR', experiment='historical', ensemble='r1i1p1'),
+            *year_ranges((2000, 2002)),
         ]
         outputs = [
             # ComplexOutput(

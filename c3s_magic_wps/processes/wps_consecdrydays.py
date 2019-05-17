@@ -1,23 +1,20 @@
+import logging
 import os
 
-from pywps import Process
-from pywps import LiteralInput, LiteralOutput
-from pywps import ComplexInput, ComplexOutput
-from pywps import Format, FORMATS
+from pywps import FORMATS, ComplexOutput, Format, LiteralInput, Process
 from pywps.app.Common import Metadata
 
 from .. import runner, util
+from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
 
-import logging
 LOGGER = logging.getLogger("PYWPS")
-
-from .utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
 
 
 class ConsecDryDays(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(start_end_year=(1850, 2012), start_end_defaults=(2001, 2002)),
+            *model_experiment_ensemble(model='bcc-csm1-1-m', experiment='historical', ensemble='r1i1p1'),
+            *year_ranges((2001, 2002)),
             LiteralInput('frlim',
                          'frlim',
                          abstract='Frlim',
