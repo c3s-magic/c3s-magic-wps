@@ -18,24 +18,36 @@ documentation:
 datasets:
  # - {dataset: IPSL-CM5A-MR, type: exp, project: CMIP5,  mip: day,  exp: historical,  ensemble: r1i1p1,  start_year: 1961,  end_year: 1990}
  # - {dataset: IPSL-CM5A-MR, type: exp,  project: CMIP5,  mip: day,  exp: rcp85,  ensemble: r1i1p1,  start_year: 2020,  end_year: 2040}
- #  - {dataset: bcc-csm1-1, type: exp, project: CMIP5, mip: day, exp: historical, ensemble: r1i1p1, start_year: 1971, end_year: 2000}
+ # - {dataset: bcc-csm1-1, type: exp, project: CMIP5, mip: day, exp: historical, ensemble: r1i1p1, start_year: 1971, end_year: 2000}
  # - {dataset: bcc-csm1-1, type: exp, project: CMIP5, mip: day, exp: rcp45, ensemble: r1i1p1, start_year: 2040, end_year: 2060}
-  - {dataset: MPI-ESM-MR, type: exp, project: CMIP5, mip: day, exp: historical, ensemble: r1i1p1, start_year: 1961, end_year: 1990}
-  - {dataset: MPI-ESM-MR, type: exp, project: CMIP5, mip: day, exp: rcp26, ensemble: r1i1p1, start_year: 2030, end_year: 2080}
+ # - {dataset: MPI-ESM-MR, type: exp, project: CMIP5, mip: day, exp: historical, ensemble: r1i1p1, start_year: 1961, end_year: 1990}
+ # - {dataset: MPI-ESM-MR, type: exp, project: CMIP5, mip: day, exp: rcp26, ensemble: r1i1p1, start_year: 2030, end_year: 2080}
+   - dataset: {{constraints['model']}}
+     project: CMIP5
+     exp: 'historical'
+     ensemble: {{constraints['ensemble']}}
+     start_year: {{start_year}}
+     end_year: {{end_year}}
+   - dataset: {{constraints['model']}}
+     project: CMIP5
+     exp: {{constraints['experiment']}}
+     ensemble: {{constraints['ensemble']}}
+     start_year: {{constraints['start_year_future']}}
+     end_year: {{constraints['end_year_future']}}
 
 
 preprocessors:
   preproc:
     regrid:
-      target_grid: MPI-ESM-MR
+      target_grid: {{constraints['model']}}
       scheme: linear
     mask_fillvalues:
       threshold_fraction: 0.95
     extract_region:
-      start_longitude: -10
-      end_longitude: 40
-      start_latitude: 27
-      end_latitude: 70
+      start_longitude: {{options['start_longitude']}} #  -10
+      end_longitude: {{options['end_longitude']}} #  40
+      start_latitude: {{options['start_latitude']}} #  27
+      end_latitude: {{options['end_latitude']}} #  70
 
 diagnostics:
   diurnal_temperature_indicator:
@@ -44,11 +56,9 @@ diagnostics:
       tasmax:
         preprocessor: preproc
         mip: day
-        field: T2D
       tasmin:
         preprocessor: preproc
         mip: day
-        field: T2D
     scripts:
       main:
         script: magic_bsc/diurnal_temp_index.r

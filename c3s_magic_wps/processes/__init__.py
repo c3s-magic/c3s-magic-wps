@@ -18,6 +18,7 @@ from .wps_extreme_index import ExtremeIndex
 from .wps_drought_indicator import DroughtIndicator
 from .wps_quantilebias import QuantileBias
 from .wps_toymodel import Toymodel
+from .wps_rainfarm import RainFARM
 
 processes = sorted(
     [
@@ -40,6 +41,7 @@ processes = sorted(
         ConsecDryDays(),
         ShapeSelect(),
         QuantileBias(),
+        RainFARM(),
         Toymodel(),
     ],
     key=lambda process: process.title,
