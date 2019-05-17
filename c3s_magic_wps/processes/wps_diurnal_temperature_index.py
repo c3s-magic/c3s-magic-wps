@@ -5,9 +5,8 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from .utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
-
 from .. import runner, util
+from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -15,16 +14,9 @@ LOGGER = logging.getLogger("PYWPS")
 class DiurnalTemperatureIndex(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(
-                model_name='Model', experiment_name='future_experiment', ensemble_name='Ensemble'),
-            *year_ranges(start_end_year=(1850, 2000),
-                         start_end_defaults=(1961, 2000),
-                         start_name='reference_start_year',
-                         end_name='reference_end_year'),
-            *year_ranges(start_end_year=(2015, 2100),
-                         start_end_defaults=(2030, 2080),
-                         start_name='future_start_year',
-                         end_name='future_end_year'),
+            *model_experiment_ensemble(model='MPI-ESM-MR', experiment='historical', ensemble='r1i1p1'),
+            *year_ranges((1961, 2000), start_name='reference_start_year', end_name='reference_end_year'),
+            *year_ranges((2030, 2080), start_name='future_start_year', end_name='future_end_year'),
             LiteralInput(
                 'start_longitude',
                 'Start longitude',
