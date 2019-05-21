@@ -6,9 +6,9 @@
 
    installation
    configuration
-   dev_guide
    processes
    changes
+   tutorial
 
 Indices and tables
 ==================

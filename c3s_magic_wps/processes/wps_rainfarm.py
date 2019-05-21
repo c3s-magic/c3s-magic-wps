@@ -47,7 +47,7 @@ class RainFARM(Process):
             LiteralInput(
                 'target_grid',
                 'Target Grid',
-                abstract=('in degrees (e.g. 1x1) can also be the name of one ',
+                abstract=('in degrees (e.g. 1x1) can also be the name of one '
                           'of the datasets to use the grid from that dataset'),
                 data_type='string',
                 default='1x1',
@@ -72,7 +72,7 @@ class RainFARM(Process):
                 'nens',
                 'n Ensemble',
                 abstract='number of ensemble members to be calculated',
-                data_type='positiveInteger',
+                data_type='integer',
                 default=2,
             ),
             LiteralInput(
@@ -81,7 +81,7 @@ class RainFARM(Process):
                 abstract=('number of subdivisions for downscaling (e.g. 8 will '
                           'produce output fields with linear resolution '
                           'increased by a factor 8)'),
-                data_type='positiveInteger',
+                data_type='integer',
                 default=8,
             ),
             LiteralInput(
