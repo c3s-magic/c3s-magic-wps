@@ -71,8 +71,15 @@ class PreprocessExample(Process):
                         calculations.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata('Documentation', '', role=util.WPS_ROLE_DOC),
-                Metadata('Media', util.diagdata_url() + '/pydemo/pydemo_thumbnail.png', role=util.WPS_ROLE_MEDIA)
+                Metadata(
+                    'Documentation',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/user_guide2/index.html#esmvaltool-preprocessor',
+                    role=util.WPS_ROLE_DOC),
+                Metadata(
+                    'Model Selection',
+                    """This preprocessor example requires at least two models to be chosen. Any combination is valid,
+                    however, only the first two models will return their output inline. The output of any models beyond
+                    the first two are included in the zip file.""")
             ],
             inputs=inputs,
             outputs=outputs,
@@ -173,14 +180,14 @@ class PreprocessExample(Process):
                 response.outputs[plotkey].file = runner.get_output(result['plot_dir'],
                                                                    path_filter=os.path.join('diagnostic1', 'script1'),
                                                                    name_filter="*{}*{}*".format(
-                                                                       constraints['models'][i-1].data, var),
+                                                                       constraints['models'][i - 1].data, var),
                                                                    output_format="png")
 
                 response.outputs[datakey].output_format = FORMATS.NETCDF
                 response.outputs[datakey].file = runner.get_output(result['work_dir'],
                                                                    path_filter=os.path.join('diagnostic1', 'script1'),
                                                                    name_filter="*{}*{}*".format(
-                                                                       constraints['models'][i-1].data, var),
+                                                                       constraints['models'][i - 1].data, var),
                                                                    output_format="nc")
 
             plotkey = 'reference_model_mean_{}_plot'.format(var)
