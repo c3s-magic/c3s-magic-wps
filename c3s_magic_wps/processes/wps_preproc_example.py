@@ -67,7 +67,7 @@ class PreprocessExample(Process):
                 Metadata('Media', util.diagdata_url() + '/pydemo/pydemo_thumbnail.png', role=util.WPS_ROLE_MEDIA)
             ],
             inputs=inputs,
-            outputs=default_outputs,
+            outputs=self.default_outputs,
             status_supported=True,
             store_supported=True,
         )
@@ -155,7 +155,7 @@ class PreprocessExample(Process):
 
         response.update_status("done.", 100)
 
-        self.outputs = self.default_outputs
+        # self.outputs = self.default_outputs
 
         return response
 
