@@ -173,14 +173,14 @@ class PreprocessExample(Process):
                 response.outputs[plotkey].file = runner.get_output(result['plot_dir'],
                                                                    path_filter=os.path.join('diagnostic1', 'script1'),
                                                                    name_filter="*{}*{}*".format(
-                                                                       constraints[model], var),
+                                                                       constraints['models'][i-1].data, var),
                                                                    output_format="png")
 
                 response.outputs[datakey].output_format = FORMATS.NETCDF
                 response.outputs[datakey].file = runner.get_output(result['work_dir'],
                                                                    path_filter=os.path.join('diagnostic1', 'script1'),
                                                                    name_filter="*{}*{}*".format(
-                                                                       constraints[model], var),
+                                                                       constraints['models'][i-1].data, var),
                                                                    output_format="nc")
 
             plotkey = 'reference_model_mean_{}_plot'.format(var)
