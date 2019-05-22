@@ -17,6 +17,12 @@ class Toymodel(Process):
         inputs = [
             *model_experiment_ensemble(model='ACCESS1-0', experiment='historical', ensemble='r1i1p1'),
             *year_ranges((1999, 2001)),
+            LiteralInput('variable',
+                         'Variable',
+                         abstract='Select the variable to simulate.',
+                         data_type='string',
+                         default='psl',
+                         allowed_values=['psl', 'pr']),
             LiteralInput(
                 'start_longitude',
                 'Start longitude',
@@ -93,9 +99,16 @@ class Toymodel(Process):
                         to investigate the effect of observational uncertainty.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata('Documentation',
-                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_toymodel.html',
-                         role=util.WPS_ROLE_DOC)
+                Metadata(
+                    'Documentation',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_toymodel.html',
+                    role=util.WPS_ROLE_DOC,
+                ),
+                Metadata(
+                    'Model Selection',
+                    """The toymodel metric accepts one model as the input. Any models beyond
+                    the first are ignored.""",
+                )
             ],
             inputs=inputs,
             outputs=outputs,
