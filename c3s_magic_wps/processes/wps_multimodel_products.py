@@ -17,6 +17,9 @@ LOGGER = logging.getLogger("PYWPS")
 class MultimodelProducts(Process):
     def __init__(self):
         inputs = [
+            *model_experiment_ensemble(model='MPI-ESM-MR', experiment='historical', ensemble='r1i1p1'),
+            *year_ranges((1961, 1990), start_name='climatology_start_year', end_name='climatology_end_year'),
+            *year_ranges((2006, 2099), start_name='anomaly_start_year', end_name='anomaly_end_year'),
             LiteralInput(
                 'moninf',
                 'First month month of the seasonal mean period',
@@ -92,6 +95,11 @@ class MultimodelProducts(Process):
                 Metadata('Media',
                          util.diagdata_url() + '/multimodel_products/bsc_anomaly_timeseries.png',
                          role=util.WPS_ROLE_MEDIA),
+                Metadata(
+                    'Model Selection',
+                    """The Multimodel Products metric requires at least one model to be chosen, but multiple models is supported.
+                    For each model choose a projection scenario (e.g. rcp26) and the relevant historical experiment will be added
+                    by the WPS process. Also make sure to set the climatology and anomaly start and end years correctly.""")
             ],
             inputs=inputs,
             outputs=outputs,
@@ -102,7 +110,15 @@ class MultimodelProducts(Process):
         response.update_status("starting ...", 0)
 
         # build esgf search constraints
-        constraints = dict()
+        constraints = dict(
+            models=request.inputs['model'],
+            ensembles=request.inputs['ensemble'],
+            experiments=request.inputs['experiment'],
+            climatology_start_year=request.inputs['climatology_start_year'][0].data,
+            climatology_end_year=request.inputs['climatology_end_year'][0].data,
+            anomaly_start_year=request.inputs['anomaly_start_year'][0].data,
+            anomaly_end_year=request.inputs['anomaly_end_year'][0].data,
+        )
 
         options = dict(
             moninf=request.inputs['moninf'][0].data,
@@ -115,11 +131,11 @@ class MultimodelProducts(Process):
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
-            diag='multimodel_products_wp5',
+            diag='multimodel_products',
             constraints=constraints,
             options=options,
-            start_year=1961,
-            end_year=2099,
+            start_year=constraints['climatology_start_year'],
+            end_year=constraints['anomaly_end_year'],
             output_format='png',
         )
 
