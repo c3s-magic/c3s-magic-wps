@@ -19,26 +19,21 @@ documentation:
     - alexander
 
 datasets:
-  - dataset: {{constraints['model_historical']}}
+  - dataset: {{constraints['model']}}
     project: CMIP5
-    mip: day
     exp: historical
-    ensemble: {{constraints['ensemble_historical']}}
+    ensemble: {{constraints['ensemble']}}
     start_year: {{constraints['start_year_historical']}}
     end_year: {{constraints['end_year_historical']}}
-  - dataset: {{constraints['model_projection']}}
+  - dataset: {{constraints['model']}}
     project: CMIP5
-    mip: day
-    exp: {{constraints['experiment_projection']}}
-    ensemble: {{constraints['ensemble_projection']}}
+    exp: {{constraints['experiment']}}
+    ensemble: {{constraints['ensemble']}}
     start_year: {{constraints['start_year_projection']}}
     end_year: {{constraints['end_year_projection']}}
 
 preprocessors:
   preproc:
-    regrid:
-      target_grid: {{constraints['model_historical']}}
-      scheme: linear
     mask_fillvalues:
       threshold_fraction: 0.95
     extract_region:
