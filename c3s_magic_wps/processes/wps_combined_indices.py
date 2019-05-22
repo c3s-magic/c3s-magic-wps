@@ -20,7 +20,7 @@ class CombinedIndices(Process):
             *model_experiment_ensemble(model='MPI-ESM-MR',
                                        experiment='historical',
                                        ensemble='r1i1p1'),
-            *year_ranges((1850, 2100)),
+            *year_ranges((1950, 2005)),
             LiteralInput('running_mean',
                          'Running Mean',
                          abstract='integer indictating the length of the window for the running mean to be computed.',
