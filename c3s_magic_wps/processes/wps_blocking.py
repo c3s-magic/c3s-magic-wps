@@ -73,9 +73,16 @@ class Blocking(Process):
             abstract="Calculate Blocking metrics that shows the mid-latitude 1D and 2D blocking indices.",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata('Documentation',
-                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_miles.html',
-                         role=util.WPS_ROLE_DOC)
+                Metadata(
+                    'Documentation',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_miles.html',
+                    role=util.WPS_ROLE_DOC,
+                ),
+                Metadata(
+                    'Model Selection',
+                    """The blocking metric accepts one model as the input. Any models beyond
+                    the first are ignored.""",
+                )
             ],
             inputs=inputs,
             outputs=outputs,
