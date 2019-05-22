@@ -30,8 +30,8 @@ datasets:
     ensemble: {{constraints['ensembles'][loop.index0].data}}
     project: CMIP5
     exp: {{constraints['experiments'][loop.index0].data}}
-    start_year: {{constraints['climatology_start_year']}}
-    end_year: {{constraints['climatology_end_year']}}
+    start_year: {{constraints['anomaly_start_year']}}
+    end_year: {{constraints['anomaly_end_year']}}
   {% endfor %}
 #  - {dataset: bcc-csm1-1, type: exp, project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: 1961,  end_year: 1990}
 #  - {dataset: MPI-ESM-MR, type: exp, project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: 1961,  end_year: 1990}
