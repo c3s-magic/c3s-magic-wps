@@ -73,7 +73,7 @@ class PreprocessExample(Process):
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
-                    'https://esmvaltool.readthedocs.io/en/version2_development/user_guide2/index.html#esmvaltool-preprocessor',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/user_guide2/index.html#esmvaltool-preprocessor',  # noqa
                     role=util.WPS_ROLE_DOC),
                 Metadata(
                     'Model Selection',
