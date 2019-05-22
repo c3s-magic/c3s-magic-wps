@@ -125,6 +125,7 @@ class MultimodelProducts(Process):
             monsup=request.inputs['monsup'][0].data,
             agreement_threshold=int(request.inputs['agreement_threshold'][0].data),
             running_mean=int(request.inputs['running_mean'][0].data),
+            time_series_plot=request.inputs['time_series_plot'][0].data,
         )
 
         # generate recipe

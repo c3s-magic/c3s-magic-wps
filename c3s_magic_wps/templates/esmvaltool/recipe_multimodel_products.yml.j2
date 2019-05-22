@@ -23,7 +23,7 @@ datasets:
   - dataset: {{constraints['models'][loop.index0].data}}
     ensemble: {{constraints['ensembles'][loop.index0].data}}
     project: CMIP5
-    exp: 'historical'
+    exp: historical
     start_year: {{constraints['climatology_start_year']}}
     end_year: {{constraints['climatology_end_year']}}
   - dataset: {{constraints['models'][loop.index0].data}}
