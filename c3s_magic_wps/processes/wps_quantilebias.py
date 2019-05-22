@@ -53,9 +53,16 @@ class QuantileBias(Process):
             abstract="""Diagnostic showing the quantile bias between models and a reference dataset.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata('Documentation',
-                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_quantilebias.html',
-                         role=util.WPS_ROLE_DOC)
+                Metadata(
+                    'Documentation',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_quantilebias.html',
+                    role=util.WPS_ROLE_DOC,
+                ),
+                Metadata(
+                    'Model Selection',
+                    """The Quantile Bias metric accepts one model as the input. Any models beyond
+                    the first are ignored.""",
+                )
             ],
             inputs=inputs,
             outputs=outputs,
