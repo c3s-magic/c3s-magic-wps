@@ -57,7 +57,7 @@ class CombinedIndices(Process):
                           'Combined Indices plot',
                           abstract='Combined Indices plot.',
                           as_reference=True,
-                          supported_formats=[Format('image/png')]),  
+                          supported_formats=[Format('image/png')]),
             ComplexOutput('data',
                           'Data',
                           abstract='Generated combined indices data.',
