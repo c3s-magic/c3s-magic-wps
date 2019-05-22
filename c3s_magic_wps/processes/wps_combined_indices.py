@@ -17,7 +17,10 @@ LOGGER = logging.getLogger("PYWPS")
 class CombinedIndices(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(start_end_year=(1850, 2100), start_end_defaults=(1950, 2005)),
+            *model_experiment_ensemble(model='MPI-ESM-MR',
+                                       experiment='historical',
+                                       ensemble='r1i1p1'),
+            *year_ranges((1850, 2100)),
             LiteralInput('running_mean',
                          'Running Mean',
                          abstract='integer indictating the length of the window for the running mean to be computed.',
@@ -83,6 +86,10 @@ class CombinedIndices(Process):
                     'Documentation',
                     'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_combined_climate_extreme_index.html',  # noqa
                     role=util.WPS_ROLE_DOC),
+                Metadata(
+                    'Model Selection',
+                    """This recipe requires a maximum of one model to be chosen. Any model selected on top of
+                    that will be ignored.""")
             ],
             inputs=inputs,
             outputs=outputs,
