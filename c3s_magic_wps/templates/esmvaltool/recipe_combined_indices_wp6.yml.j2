@@ -24,9 +24,6 @@ datasets:
 
 preprocessors:
   preproc:
-    regrid:
-      target_grid: {{constraints['model']}}
-      scheme: linear
     mask_fillvalues:
       threshold_fraction: 0.95
     extract_region:
