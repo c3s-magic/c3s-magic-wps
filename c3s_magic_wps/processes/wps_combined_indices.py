@@ -19,7 +19,8 @@ class CombinedIndices(Process):
         inputs = [
             *model_experiment_ensemble(model='MPI-ESM-MR',
                                        experiment='historical',
-                                       ensemble='r1i1p1'),
+                                       ensemble='r1i1p1',
+                                       max_occurs=1),
             *year_ranges((1950, 2005)),
             LiteralInput('running_mean',
                          'Running Mean',
@@ -92,11 +93,7 @@ class CombinedIndices(Process):
                 Metadata(
                     'Documentation',
                     'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_combined_climate_extreme_index.html',  # noqa
-                    role=util.WPS_ROLE_DOC),
-                Metadata(
-                    'Model Selection',
-                    """This recipe requires a maximum of one model to be chosen. Any model selected on top of
-                    that will be ignored.""")
+                    role=util.WPS_ROLE_DOC)
             ],
             inputs=inputs,
             outputs=outputs,
