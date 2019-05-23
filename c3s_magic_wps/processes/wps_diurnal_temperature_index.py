@@ -15,7 +15,7 @@ class DiurnalTemperatureIndex(Process):
     def __init__(self):
         inputs = [
             *model_experiment_ensemble(model='MPI-ESM-MR',
-                                       experiment='historical',
+                                       experiment='rcp85',
                                        ensemble='r1i1p1',
                                        max_occurs=1),
             *year_ranges((1961, 2000),
@@ -102,7 +102,7 @@ class DiurnalTemperatureIndex(Process):
         # build esgf search constraints
         constraints = dict(
             model=request.inputs['model'][0].data,
-            experiment=request.inputs['future_experiment'][0].data,
+            experiment=request.inputs['experiment'][0].data,
             ensemble=request.inputs['ensemble'][0].data,
             start_year_historical=request.inputs['start_historical'][0].data,
             end_year_historical=request.inputs['end_historical'][0].data,
@@ -119,15 +119,13 @@ class DiurnalTemperatureIndex(Process):
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
-        start_year = request.inputs['start_historical'][0].data
-        end_year = request.inputs['end_projection'][0].data
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
             diag='diurnal_temperature_index',
             constraints=constraints,
             options=options,
-            start_year=start_year,
-            end_year=end_year,
+            start_year=request.inputs['start_historical'][0].data,
+            end_year=request.inputs['end_projection'][0].data,
             output_format='png',
         )
 
