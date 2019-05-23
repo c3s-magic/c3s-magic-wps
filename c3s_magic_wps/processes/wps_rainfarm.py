@@ -14,7 +14,10 @@ LOGGER = logging.getLogger("PYWPS")
 class RainFARM(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(model='ACCESS1-0', experiment='historical', ensemble='r1i1p1'),
+            *model_experiment_ensemble(model='ACCESS1-0',
+                                       experiment='historical',
+                                       ensemble='r1i1p1',
+                                       max_occurs=1),
             *year_ranges((1997, 1999)),
             LiteralInput(
                 'start_longitude',
