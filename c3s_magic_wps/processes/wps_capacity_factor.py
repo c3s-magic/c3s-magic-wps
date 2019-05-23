@@ -15,7 +15,7 @@ LOGGER = logging.getLogger("PYWPS")
 class CapacityFactor(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(model='MPI-ESM-MR', experiment='rcp85', ensemble='r1i1p1'),
+            *model_experiment_ensemble(model='MPI-ESM-MR', experiment='rcp85', ensemble='r1i1p1', max_occurs=1),
             *year_ranges((1980, 2005)),
             LiteralInput(
                 'start_longitude',
@@ -44,21 +44,6 @@ class CapacityFactor(Process):
                 abstract='maximum latitude',
                 data_type='integer',
                 default=70,
-            ),
-            LiteralInput(
-                'scheme',
-                'Scheme',
-                abstract='regridding scheme',
-                data_type='string',
-                allowed_values=['linear', 'nearest', 'area_weighted', 'unstructured_nearest'],
-                default='linear',
-            ),
-            LiteralInput(
-                'threshold_fraction',
-                'Threshold Fraction',
-                abstract='Threshold Fraction (between 0 and 1.0) for fillvalues mask',
-                data_type='float',
-                default=0.95,
             ),
             LiteralInput(
                 'season',
@@ -124,8 +109,6 @@ class CapacityFactor(Process):
             end_longitude=request.inputs['end_longitude'][0].data,
             start_latitude=request.inputs['start_latitude'][0].data,
             end_latitude=request.inputs['end_latitude'][0].data,
-            scheme=request.inputs['scheme'][0].data,
-            threshold_fraction=request.inputs['threshold_fraction'][0].data,
             season=request.inputs['season'][0].data,
         )
 
@@ -133,7 +116,7 @@ class CapacityFactor(Process):
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
-            diag='capacity_factor_wp7',
+            diag='capacity_factor',
             constraints=constraints,
             options=options,
             start_year=request.inputs['start_year'][0].data,
