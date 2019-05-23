@@ -14,7 +14,12 @@ LOGGER = logging.getLogger("PYWPS")
 class ZMNAM(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(model='MPI-ESM-MR', experiment='historical', ensemble='r1i1p1'),
+            *model_experiment_ensemble(
+                model='MPI-ESM-MR',
+                experiment='historical',
+                ensemble='r1i1p1',
+                max_occurs=1,
+            ),
             *year_ranges((1979, 2005)),
         ]
         self.pressure_levels = [5000, 25000, 50000, 100000]
@@ -66,8 +71,7 @@ class ZMNAM(Process):
                 ),
                 Metadata(
                     'Model Selection',
-                    """The ZMNAM metric accepts one model as the input. Any models beyond
-                    the first are ignored.""",
+                    """The ZMNAM metric accepts one model as the input.""",
                 )
             ],
             inputs=inputs,
