@@ -14,9 +14,16 @@ LOGGER = logging.getLogger("PYWPS")
 class DiurnalTemperatureIndex(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(model='MPI-ESM-MR', experiment='historical', ensemble='r1i1p1'),
-            *year_ranges((1961, 2000), start_name='reference_start_year', end_name='reference_end_year'),
-            *year_ranges((2030, 2080), start_name='future_start_year', end_name='future_end_year'),
+            *model_experiment_ensemble(model='MPI-ESM-MR',
+                                       experiment='rcp85',
+                                       ensemble='r1i1p1',
+                                       max_occurs=1),
+            *year_ranges((1961, 2000),
+                         start_name='start_historical',
+                         end_name='end_historical'),
+            *year_ranges((2030, 2080),
+                         start_name='start_projection',
+                         end_name='end_projection'),
             LiteralInput(
                 'start_longitude',
                 'Start longitude',
@@ -95,10 +102,12 @@ class DiurnalTemperatureIndex(Process):
         # build esgf search constraints
         constraints = dict(
             model=request.inputs['model'][0].data,
-            experiment=request.inputs['future_experiment'][0].data,
+            experiment=request.inputs['experiment'][0].data,
             ensemble=request.inputs['ensemble'][0].data,
-            start_year_future=request.inputs['future_start_year'][0].data,
-            end_year_future=request.inputs['future_end_year'][0].data,
+            start_year_historical=request.inputs['start_historical'][0].data,
+            end_year_historical=request.inputs['end_historical'][0].data,
+            start_year_projection=request.inputs['start_projection'][0].data,
+            end_year_projection=request.inputs['end_projection'][0].data
         )
 
         options = dict(
@@ -110,15 +119,13 @@ class DiurnalTemperatureIndex(Process):
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
-        start_year = request.inputs['reference_start_year'][0].data
-        end_year = request.inputs['reference_end_year'][0].data
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
-            diag='diurnal_temperature_index_wp7',
+            diag='diurnal_temperature_index',
             constraints=constraints,
             options=options,
-            start_year=start_year,
-            end_year=end_year,
+            start_year=request.inputs['start_historical'][0].data,
+            end_year=request.inputs['end_projection'][0].data,
             output_format='png',
         )
 
@@ -140,21 +147,23 @@ class DiurnalTemperatureIndex(Process):
         response.outputs['debug_log'].output_format = FORMATS.TEXT
         response.outputs['debug_log'].file = result['debug_logfile']
 
-        if not result['success']:
+        if result['success']:
+            try:
+                self.get_outputs(result, response)
+            except Exception as e:
+                response.update_status("exception occured: " + str(e), 85)
+                LOGGER.exception('Getting output failed: ' + str(e))
+        else:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'], 100)
-            return response
-
-        try:
-            self.get_outputs(result, response)
-        except Exception as e:
-            response.update_status("exception occured: " + str(e), 85)
+            response.update_status(
+                "exception occured: " + result['exception'], 85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
-                                                                  'diurnal_temperature_result.zip')
+        response.outputs['archive'].file = runner.compress_output(
+            os.path.join(self.workdir, 'output'),
+            'diurnal_temperature_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -163,15 +172,15 @@ class DiurnalTemperatureIndex(Process):
         # result plot
         response.update_status("collecting output ...", 80)
         response.outputs['plot'].output_format = Format('application/png')
-        response.outputs['plot'].file = runner.get_output(result['plot_dir'],
-                                                          path_filter=os.path.join('diurnal_temperature_indicator',
-                                                                                   'main'),
-                                                          name_filter="*",
-                                                          output_format="png")
+        response.outputs['plot'].file = runner.get_output(
+            result['plot_dir'],
+            path_filter=os.path.join('diurnal_temperature_indicator', 'main'),
+            name_filter="*",
+            output_format="png")
 
         response.outputs['data'].output_format = FORMATS.NETCDF
-        response.outputs['data'].file = runner.get_output(result['work_dir'],
-                                                          path_filter=os.path.join('diurnal_temperature_indicator',
-                                                                                   'main'),
-                                                          name_filter="Seasonal_DTRindicator*",
-                                                          output_format="nc")
+        response.outputs['data'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('diurnal_temperature_indicator', 'main'),
+            name_filter="Seasonal_DTRindicator*",
+            output_format="nc")
