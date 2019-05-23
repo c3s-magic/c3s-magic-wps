@@ -14,7 +14,7 @@ LOGGER = logging.getLogger("PYWPS")
 class Blocking(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(model='EC-EARTH', experiment='historical', ensemble='r2i1p1'),
+            *model_experiment_ensemble(model='EC-EARTH', experiment='historical', ensemble='r2i1p1', max_occurs=1),
             *year_ranges((1980, 1989)),
             LiteralInput('ref_dataset',
                          'Reference Dataset',
