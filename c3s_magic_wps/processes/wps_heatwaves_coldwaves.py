@@ -22,7 +22,7 @@ class HeatwavesColdwaves(Process):
             *year_ranges((1971, 2000),
                          start_name='start_historical',
                          end_name='end_historical'),
-            *year_ranges((2020, 2050),
+            *year_ranges((2060, 2080),
                          start_name='start_projection',
                          end_name='end_projection'),
             LiteralInput('quantile',
@@ -101,7 +101,8 @@ class HeatwavesColdwaves(Process):
             start_year_historical=request.inputs['start_historical'][0].data,
             end_year_historical=request.inputs['end_historical'][0].data,
             start_year_projection=request.inputs['start_projection'][0].data,
-            end_year_projection=request.inputs['end_projection'][0].data)
+            end_year_projection=request.inputs['end_projection'][0].data
+        )
 
         op = request.inputs['operator'][0].data
         if op == 'exceedances':
