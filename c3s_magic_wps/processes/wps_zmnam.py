@@ -14,7 +14,12 @@ LOGGER = logging.getLogger("PYWPS")
 class ZMNAM(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(model='	MPI-ESM-MR', experiment='historical', ensemble='r1i1p1'),
+            *model_experiment_ensemble(
+                model='MPI-ESM-MR',
+                experiment='historical',
+                ensemble='r1i1p1',
+                max_occurs=1,
+            ),
             *year_ranges((1979, 2005)),
         ]
         self.pressure_levels = [5000, 25000, 50000, 100000]
@@ -59,9 +64,11 @@ class ZMNAM(Process):
             abstract="Stratosphere-troposphere coupling and annular modes indices (ZMNAM)",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata('Documentation',
-                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_zmnam.html',
-                         role=util.WPS_ROLE_DOC)
+                Metadata(
+                    'Documentation',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_zmnam.html',
+                    role=util.WPS_ROLE_DOC,
+                ),
             ],
             inputs=inputs,
             outputs=outputs,
