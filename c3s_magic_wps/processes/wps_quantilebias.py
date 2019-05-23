@@ -14,7 +14,12 @@ LOGGER = logging.getLogger("PYWPS")
 class QuantileBias(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(model='MPI-ESM-P', experiment='historical', ensemble='r1i1p1'),
+            *model_experiment_ensemble(
+                model='MPI-ESM-P',
+                experiment='historical',
+                ensemble='r1i1p1',
+                max_occurs=1,
+            ),
             *year_ranges((1997, 1997)),
             LiteralInput('ref_dataset',
                          'Reference Dataset',
@@ -53,9 +58,11 @@ class QuantileBias(Process):
             abstract="""Diagnostic showing the quantile bias between models and a reference dataset.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata('Documentation',
-                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_quantilebias.html',
-                         role=util.WPS_ROLE_DOC)
+                Metadata(
+                    'Documentation',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_quantilebias.html',
+                    role=util.WPS_ROLE_DOC,
+                ),
             ],
             inputs=inputs,
             outputs=outputs,
