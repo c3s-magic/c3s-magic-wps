@@ -139,15 +139,15 @@ class CombinedIndices(Process):
         response.outputs['debug_log'].output_format = FORMATS.TEXT
         response.outputs['debug_log'].file = result['debug_logfile']
 
-        if not result['success']:
+        if result['success']:
+            try:
+                self.get_outputs(result, response)
+            except Exception as e:
+                response.update_status("exception occured: " + str(e), 85)
+                LOGGER.exception('Getting output failed: ' + str(e))
+        else:
             LOGGER.exception('esmvaltool failed!')
             response.update_status("exception occured: " + result['exception'], 100)
-            return response
-
-        try:
-            self.get_outputs(result, response)
-        except Exception as e:
-            response.update_status("exception occured: " + str(e), 85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
