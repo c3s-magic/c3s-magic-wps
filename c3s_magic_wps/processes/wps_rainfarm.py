@@ -5,9 +5,8 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names
-
 from .. import runner, util
+from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -15,7 +14,8 @@ LOGGER = logging.getLogger("PYWPS")
 class RainFARM(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(start_end_year=(1850, 2005), start_end_defaults=(1997, 1997)),
+            *model_experiment_ensemble(model='ACCESS1-0', experiment='historical', ensemble='r1i1p1'),
+            *year_ranges((1997, 1999)),
             LiteralInput(
                 'start_longitude',
                 'Start longitude',
@@ -47,7 +47,7 @@ class RainFARM(Process):
             LiteralInput(
                 'target_grid',
                 'Target Grid',
-                abstract=('in degrees (e.g. 1x1) can also be the name of one ',
+                abstract=('in degrees (e.g. 1x1) can also be the name of one '
                           'of the datasets to use the grid from that dataset'),
                 data_type='string',
                 default='1x1',
@@ -57,8 +57,7 @@ class RainFARM(Process):
                 'Scheme',
                 abstract='regridding scheme',
                 data_type='string',
-                allowed_values=['linear', 'nearest', 'area_weighted',
-                                'unstructured_nearest'],
+                allowed_values=['linear', 'nearest', 'area_weighted', 'unstructured_nearest'],
                 default='area_weighted',
             ),
             LiteralInput(
@@ -73,7 +72,7 @@ class RainFARM(Process):
                 'nens',
                 'n Ensemble',
                 abstract='number of ensemble members to be calculated',
-                data_type='positiveInteger',
+                data_type='integer',
                 default=2,
             ),
             LiteralInput(
@@ -82,7 +81,7 @@ class RainFARM(Process):
                 abstract=('number of subdivisions for downscaling (e.g. 8 will '
                           'produce output fields with linear resolution '
                           'increased by a factor 8)'),
-                data_type='positiveInteger',
+                data_type='integer',
                 default=8,
             ),
             LiteralInput(
@@ -126,16 +125,16 @@ class RainFARM(Process):
             identifier="rainfarm",
             title="RainFARM stochastic downscaling",
             version=runner.VERSION,
-            abstract=("Precipitation extremes and small-scale variability are essential drivers in many climate change"
-                      "impact studies. However, the spatial resolution currently achieved by global and regional "
-                      "climate models is still insufficient to correctly identify the fine structure of precipitation "
-                      "intensity fields. In the absence of a proper physically based representation, this scale gap "
-                      "can be at least temporarily bridged by adopting a stochastic rainfall downscaling technique "
-                      "(Rebora et al, 2006). With this aim, the Rainfall Filtered Autoregressive Model (RainFARM)was "
-                      "developed to apply the stochastic precipitation downscaling method to climate models. The "
-                      "selected region needs to have equal and even number of longitude (in any case it is cut) and "
-                      "latitude grid points (e.g., 2x2, 4x4, ...). Warning: downcaling can reach very high resolution, "
-                      "so select a limited area."),
+            abstract="""Precipitation extremes and small-scale variability are essential drivers in many climate change
+                        impact studies. However, the spatial resolution currently achieved by global and regional
+                        climate models is still insufficient to correctly identify the fine structure of precipitation
+                        intensity fields. In the absence of a proper physically based representation, this scale gap
+                        can be at least temporarily bridged by adopting a stochastic rainfall downscaling technique
+                        (Rebora et al, 2006). With this aim, the Rainfall Filtered Autoregressive Model (RainFARM)was
+                        developed to apply the stochastic precipitation downscaling method to climate models. The
+                        selected region needs to have equal and even number of longitude (in any case it is cut) and
+                        latitude grid points (e.g., 2x2, 4x4, ...). Warning: downcaling can reach very high resolution,
+                        so select a limited area.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',

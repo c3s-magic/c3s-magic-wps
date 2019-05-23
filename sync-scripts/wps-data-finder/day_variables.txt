@@ -1,0 +1,7 @@
+pr
+psl
+sfcWind
+tas
+tasmax
+tasmin
+zg

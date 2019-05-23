@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 """The setup script."""
 
 import os
@@ -33,20 +32,22 @@ classifiers = [
     'License :: OSI Approved :: Apache Software License',
 ]
 
-setup(name='c3s_magic_wps',
-      version=about['__version__'],
-      description="The Web Processing Service for Climate Data Analysis in the MAGIC project.",
-      long_description=README + '\n\n' + CHANGES,
-      author=about['__author__'],
-      author_email=about['__email__'],
-      url='https://github.com/c3s-magic/c3s-magic-wps',
-      classifiers=classifiers,
-      license="Apache Software License 2.0",
-      keywords='wps pywps birdhouse c3s_magic_wps',
-      packages=find_packages(),
-      include_package_data=True,
-      install_requires=reqs,
-      entry_points={
-          'console_scripts': [
-              'c3s_magic_wps=c3s_magic_wps.cli:cli',
-          ]},)
+setup(
+    name='c3s_magic_wps',
+    version=about['__version__'],
+    description="The Web Processing Service for Climate Data Analysis in the MAGIC project.",
+    long_description=README + '\n\n' + CHANGES,
+    author=about['__author__'],
+    author_email=about['__email__'],
+    url='https://github.com/c3s-magic/c3s-magic-wps',
+    classifiers=classifiers,
+    license="Apache Software License 2.0",
+    keywords='wps pywps birdhouse c3s_magic_wps',
+    packages=find_packages(),
+    include_package_data=True,
+    install_requires=reqs,
+    entry_points={'console_scripts': [
+        'c3s_magic_wps=c3s_magic_wps.cli:cli',
+        'canary=c3s_magic_wps.execute:canary',
+    ]},
+)

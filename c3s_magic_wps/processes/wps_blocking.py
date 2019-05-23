@@ -5,9 +5,8 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names
-
 from .. import runner, util
+from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -15,7 +14,8 @@ LOGGER = logging.getLogger("PYWPS")
 class Blocking(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(start_end_year=(1850, 2005), start_end_defaults=(1980, 1989)),
+            *model_experiment_ensemble(model='EC-EARTH', experiment='historical', ensemble='r2i1p1', max_occurs=1),
+            *year_ranges((1980, 1989)),
             LiteralInput('ref_dataset',
                          'Reference Dataset',
                          abstract='Choose a reference dataset like ERA-Interim.',
@@ -73,9 +73,11 @@ class Blocking(Process):
             abstract="Calculate Blocking metrics that shows the mid-latitude 1D and 2D blocking indices.",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata('Documentation',
-                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_miles.html',
-                         role=util.WPS_ROLE_DOC)
+                Metadata(
+                    'Documentation',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_miles.html',
+                    role=util.WPS_ROLE_DOC,
+                ),
             ],
             inputs=inputs,
             outputs=outputs,

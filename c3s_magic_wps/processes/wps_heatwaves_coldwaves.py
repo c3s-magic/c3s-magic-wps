@@ -15,6 +15,9 @@ LOGGER = logging.getLogger("PYWPS")
 class HeatwavesColdwaves(Process):
     def __init__(self):
         inputs = [
+            *model_experiment_ensemble(model='bcc-csm1-1', experiment='rcp85', ensemble='r1i1p1', max_occurs=1),
+            *year_ranges((1971, 2000), start_name='start_historical', end_name='end_historical'),
+            *year_ranges((2060, 2080), start_name='start_projection', end_name='end_projection'),
             LiteralInput('quantile',
                          'Quantile',
                          abstract='quantile defining the exceedance/non-exceedance threshold',
@@ -84,7 +87,13 @@ class HeatwavesColdwaves(Process):
         response.update_status("starting ...", 0)
 
         # build esgf search constraints
-        constraints = dict()
+        constraints = dict(model=request.inputs['model'][0].data,
+                           ensemble=request.inputs['ensemble'][0].data,
+                           experiment=request.inputs['experiment'][0].data,
+                           start_year_historical=request.inputs['start_historical'][0].data,
+                           end_year_historical=request.inputs['end_historical'][0].data,
+                           start_year_projection=request.inputs['start_projection'][0].data,
+                           end_year_projection=request.inputs['end_projection'][0].data)
 
         op = request.inputs['operator'][0].data
         if op == 'exceedances':
@@ -99,17 +108,21 @@ class HeatwavesColdwaves(Process):
             min_duration=request.inputs['min_duration'][0].data,
             operator=operator,
             season=request.inputs['season'][0].data,
+            start_historical='{}-01-01'.format(request.inputs['start_historical'][0].data),
+            end_historical='{}-12-31'.format(request.inputs['end_historical'][0].data),
+            start_projection='{}-01-01'.format(request.inputs['start_projection'][0].data),
+            end_projection='{}-12-31'.format(request.inputs['end_projection'][0].data),
         )
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
-            diag='heatwaves_coldwaves_wp7',
+            diag='heatwaves_coldwaves',
             constraints=constraints,
             options=options,
-            start_year=1971,
-            end_year=2080,
+            start_year=request.inputs['start_historical'][0].data,
+            end_year=request.inputs['end_projection'][0].data,
             output_format='png',
         )
 
@@ -131,15 +144,15 @@ class HeatwavesColdwaves(Process):
         response.outputs['debug_log'].output_format = FORMATS.TEXT
         response.outputs['debug_log'].file = result['debug_logfile']
 
-        if not result['success']:
+        if result['success']:
+            try:
+                self.get_outputs(result, constraints, response)
+            except Exception as e:
+                response.update_status("exception occured: " + str(e), 85)
+                LOGGER.exception('Getting output failed: ' + str(e))
+        else:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'], 100)
-            return response
-
-        try:
-            self.get_outputs(result, response)
-        except Exception as e:
-            response.update_status("exception occured: " + str(e), 85)
+            response.update_status("exception occured: " + result['exception'], 85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
@@ -150,7 +163,7 @@ class HeatwavesColdwaves(Process):
         response.update_status("done.", 100)
         return response
 
-    def get_outputs(self, result, response):
+    def get_outputs(self, result, constraints, response):
         # result plot
         response.update_status("collecting output ...", 80)
         response.outputs['plot'].output_format = Format('application/png')
