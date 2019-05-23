@@ -18,8 +18,8 @@ class MultimodelProducts(Process):
     def __init__(self):
         inputs = [
             *model_experiment_ensemble(model='MPI-ESM-MR', experiment='historical', ensemble='r1i1p1'),
-            *year_ranges((1961, 1990), start_name='climatology_start_year', end_name='climatology_end_year'),
-            *year_ranges((2006, 2099), start_name='anomaly_start_year', end_name='anomaly_end_year'),
+            *year_ranges((1961, 1990), start_name='start_historical', end_name='end_historical'),
+            *year_ranges((2006, 2099), start_name='start_projection', end_name='end_projection'),
             LiteralInput(
                 'moninf',
                 'First month month of the seasonal mean period',
@@ -114,10 +114,10 @@ class MultimodelProducts(Process):
             models=request.inputs['model'],
             ensembles=request.inputs['ensemble'],
             experiments=request.inputs['experiment'],
-            climatology_start_year=request.inputs['climatology_start_year'][0].data,
-            climatology_end_year=request.inputs['climatology_end_year'][0].data,
-            anomaly_start_year=request.inputs['anomaly_start_year'][0].data,
-            anomaly_end_year=request.inputs['anomaly_end_year'][0].data,
+            start_historical=request.inputs['start_historical'][0].data,
+            end_historical=request.inputs['end_historical'][0].data,
+            start_projection=request.inputs['start_projection'][0].data,
+            end_projection=request.inputs['end_projection'][0].data,
         )
 
         options = dict(
