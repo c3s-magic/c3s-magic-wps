@@ -151,17 +151,17 @@ class ExtremeIndex(Process):
         response.update_status("done.", 100)
         return response
 
-    def get_outputs(self, result, constraints, options, response):
+    def get_outputs(self, result, constraints, response):
         # result plot
         response.update_status("collecting output ...", 80)
         # output of individual indices
         for idx in ['t10p', 't90p', 'Wx', 'rx5day', 'cdd']:
-            plotkey = '{}_plot'.format(idx)
-            datakey = '{}_data'.format(idx)
+            plotkey = '{}_plot'.format(idx.lower())
+            datakey = '{}_data'.format(idx.lower())
             response.outputs[plotkey].output_format = Format('application/png')
             response.outputs[plotkey].file = runner.get_output(result['plot_dir'],
                                                                path_filter=os.path.join('extreme_index', 'metric'),
-                                                               name_filter="*{}_risk_insurance_index*".format(idx),
+                                                               name_filter="*{}_*".format(idx),
                                                                output_format="png")
             response.outputs[datakey].output_format = FORMATS.NETCDF
             response.outputs[datakey].file = runner.get_output(result['work_dir'],
