@@ -14,7 +14,46 @@ LOGGER = logging.getLogger("PYWPS")
 
 class CapacityFactor(Process):
     def __init__(self):
-        inputs = []
+        inputs = [
+            *model_experiment_ensemble(model='MPI-ESM-MR', experiment='rcp85', ensemble='r1i1p1', max_occurs=1),
+            *year_ranges((1980, 2005)),
+            LiteralInput(
+                'start_longitude',
+                'Start longitude',
+                abstract='minimum longitude',
+                data_type='integer',
+                default=200,
+            ),
+            LiteralInput(
+                'end_longitude',
+                'End longitude',
+                abstract='maximum longitude',
+                data_type='integer',
+                default=300,
+            ),
+            LiteralInput(
+                'start_latitude',
+                'Start latitude',
+                abstract='minimum latitude',
+                data_type='integer',
+                default=27,
+            ),
+            LiteralInput(
+                'end_latitude',
+                'End latitude',
+                abstract='maximum latitude',
+                data_type='integer',
+                default=70,
+            ),
+            LiteralInput(
+                'season',
+                'Season',
+                abstract='Season',
+                data_type='string',
+                allowed_values=['djf', 'mam', 'jja', 'son'],
+                default='djf',
+            ),
+        ]
         self.plotlist = []
         outputs = [
             ComplexOutput('plot',
@@ -40,7 +79,9 @@ class CapacityFactor(Process):
             identifier="capacity_factor",
             title="Capacity factor of wind power",
             version=runner.VERSION,
-            abstract="""Metric showing the wind capacity factor to estimate energy supply.""",
+            abstract=("The goal of this diagnostic is to compute the wind capacity factor, taking as input the daily "
+                      "instantaneous surface wind speed, which is then extrapolated to obtain the wind speed at a "
+                      "height of 100 m as described in Lledó (2017)."),
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
@@ -57,19 +98,29 @@ class CapacityFactor(Process):
         response.update_status("starting ...", 0)
 
         # build esgf search constraints
-        constraints = dict()
+        constraints = dict(
+            model=request.inputs['model'][0].data,
+            experiment=request.inputs['experiment'][0].data,
+            ensemble=request.inputs['ensemble'][0].data,
+        )
 
-        options = dict()
+        options = dict(
+            start_longitude=request.inputs['start_longitude'][0].data,
+            end_longitude=request.inputs['end_longitude'][0].data,
+            start_latitude=request.inputs['start_latitude'][0].data,
+            end_latitude=request.inputs['end_latitude'][0].data,
+            season=request.inputs['season'][0].data,
+        )
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
-            diag='capacity_factor_wp7',
+            diag='capacity_factor',
             constraints=constraints,
             options=options,
-            start_year=1980,
-            end_year=2005,
+            start_year=request.inputs['start_year'][0].data,
+            end_year=request.inputs['end_year'][0].data,
             output_format='png',
         )
 
@@ -91,15 +142,14 @@ class CapacityFactor(Process):
         response.outputs['debug_log'].output_format = FORMATS.TEXT
         response.outputs['debug_log'].file = result['debug_logfile']
 
-        if not result['success']:
+        if result['success']:
+            try:
+                self.get_outputs(result, response)
+            except Exception as e:
+                response.update_status("exception occured: " + str(e), 85)
+        else:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'], 100)
-            return response
-
-        try:
-            self.get_outputs(result, response)
-        except Exception as e:
-            response.update_status("exception occured: " + str(e), 85)
+            response.update_status("exception occured: " + result['exception'], 85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
