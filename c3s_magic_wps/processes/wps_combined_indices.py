@@ -17,17 +17,13 @@ LOGGER = logging.getLogger("PYWPS")
 class CombinedIndices(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(model='MPI-ESM-MR',
-                                       experiment='historical',
-                                       ensemble='r1i1p1',
-                                       max_occurs=1),
+            *model_experiment_ensemble(model='MPI-ESM-MR', experiment='historical', ensemble='r1i1p1', max_occurs=1),
             *year_ranges((1950, 2005)),
             LiteralInput('running_mean',
                          'Running Mean',
                          abstract='integer indictating the length of the window for the running mean to be computed.',
                          data_type='integer',
-                         allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE,
-                                                     minval=1, maxval=365),
+                         allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1, maxval=365),
                          default=5),
             LiteralInput(
                 'moninf',
@@ -35,8 +31,7 @@ class CombinedIndices(Process):
                 abstract="""The first month of the seasonal mean period to be computed, if none the monthly anomalies
                             will be computed.""",
                 data_type='string',
-                allowed_values=['1', '2', '3', '4', '5', '6',
-                                '7', '8', '9', '10', '11', '12', 'null'],
+                allowed_values=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', 'null'],
                 default='1'),
             LiteralInput(
                 'monsup',
@@ -44,18 +39,13 @@ class CombinedIndices(Process):
                 abstract="""the last month of the seasonal mean period to be computed, if none the monthly anomalies
                             will be computed.""",
                 data_type='string',
-                allowed_values=['1', '2', '3', '4', '5', '6',
-                                '7', '8', '9', '10', '11', '12'],
+                allowed_values=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
                 default='3'),
             LiteralInput('region',
                          'Region',
                          abstract='Region',
                          data_type='string',
-                         allowed_values=['NAO',
-                                         'Nino3',
-                                         'Nino3.4',
-                                         'Nino4',
-                                         'SOI'],
+                         allowed_values=['NAO', 'Nino3', 'Nino3.4', 'Nino4', 'SOI'],
                          default='NAO'),
             LiteralInput('standardized',
                          'Standardized',
@@ -123,7 +113,7 @@ class CombinedIndices(Process):
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
-            diag='combined_indices_wp6',
+            diag='combined_indices',
             constraints=constraints,
             options=options,
             start_year=request.inputs['start_year'][0].data,
@@ -151,8 +141,7 @@ class CombinedIndices(Process):
 
         if not result['success']:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'],
-                                   100)
+            response.update_status("exception occured: " + result['exception'], 100)
             return response
 
         try:
@@ -163,9 +152,8 @@ class CombinedIndices(Process):
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(
-            os.path.join(self.workdir, 'output'),
-            'combined_indices_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
+                                                                  'combined_indices_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -174,14 +162,12 @@ class CombinedIndices(Process):
         # result plot
         response.update_status("collecting output ...", 80)
         response.outputs['plot'].output_format = Format('image/png')
-        response.outputs['plot'].file = runner.get_output(
-            result['plot_dir'],
-            path_filter=os.path.join('combine_indices', 'main'),
-            name_filter="*",
-            output_format="png")
+        response.outputs['plot'].file = runner.get_output(result['plot_dir'],
+                                                          path_filter=os.path.join('combine_indices', 'main'),
+                                                          name_filter="*",
+                                                          output_format="png")
         response.outputs['data'].output_format = FORMATS.NETCDF
-        response.outputs['data'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('combine_indices', 'main'),
-            name_filter="*",
-            output_format="nc")
+        response.outputs['data'].file = runner.get_output(result['work_dir'],
+                                                          path_filter=os.path.join('combine_indices', 'main'),
+                                                          name_filter="*",
+                                                          output_format="nc")
