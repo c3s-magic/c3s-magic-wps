@@ -15,7 +15,8 @@ LOGGER = logging.getLogger("PYWPS")
 class CapacityFactor(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(start_end_year=(1850, 2005), start_end_defaults=(1980, 2005)),
+            *model_experiment_ensemble(model='MPI-ESM-MR', experiment='rcp85', ensemble='r1i1p1'),
+            *year_ranges((1980, 2005)),
             LiteralInput(
                 'start_longitude',
                 'Start longitude',
