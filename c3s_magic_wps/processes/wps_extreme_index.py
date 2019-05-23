@@ -18,7 +18,7 @@ LOGGER = logging.getLogger("PYWPS")
 class ExtremeIndex(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(model='MPI-ESM-MR', experiment='historical', ensemble='r1i1p1'),
+            *model_experiment_ensemble(model='MPI-ESM-MR', experiment='rcp85', ensemble='r1i1p1', max_occurs=1),
             *year_ranges((1971, 2000), start_name='start_historical', end_name='end_historical'),
             *year_ranges((2020, 2040), start_name='start_projection', end_name='end_projection'),
             LiteralInput('running_mean',
@@ -70,12 +70,7 @@ class ExtremeIndex(Process):
                     role=util.WPS_ROLE_DOC),
                 Metadata('Media',
                          util.diagdata_url() + '/risk_index/insurance_risk_indices.png',
-                         role=util.WPS_ROLE_MEDIA),
-                Metadata(
-                    'Model Selection',
-                    """This recipe requires a maximum of one model to be chosen. Any model selected on top of
-                         that will be ignored. The chosen model will be compared to the same model and member in the
-                         historical period.""")
+                         role=util.WPS_ROLE_MEDIA)
             ],
             inputs=inputs,
             outputs=outputs,
