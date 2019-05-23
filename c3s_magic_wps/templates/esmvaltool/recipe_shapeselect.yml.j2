@@ -8,7 +8,6 @@ documentation:
 datasets:
 - dataset: {{constraints['model']}}
   project: CMIP5
-  mip: {{constraints['cmor_table']}}
   exp: {{constraints['experiment']}}
   ensemble: {{constraints['ensemble']}}
   start_year: {{start_year}}
@@ -19,7 +18,9 @@ diagnostics:
     description: Extracting data for user defined shapefile.
     variables:
       tas:
+        mip: {{constraints['cmor_table']}}
       pr:
+        mip: {{constraints['cmor_table']}}
     scripts:
       script1:
         script: shapeselect/diag_shapeselect.py
