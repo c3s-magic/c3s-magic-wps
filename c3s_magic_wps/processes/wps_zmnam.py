@@ -69,10 +69,6 @@ class ZMNAM(Process):
                     'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_zmnam.html',
                     role=util.WPS_ROLE_DOC,
                 ),
-                Metadata(
-                    'Model Selection',
-                    """The ZMNAM metric accepts one model as the input.""",
-                )
             ],
             inputs=inputs,
             outputs=outputs,
