@@ -15,14 +15,19 @@ LOGGER = logging.getLogger("PYWPS")
 class Toymodel(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(model='ACCESS1-0', experiment='historical', ensemble='r1i1p1'),
+            *model_experiment_ensemble(
+                model='ACCESS1-0',
+                experiment='historical',
+                ensemble='r1i1p1',
+                max_occurs=1,
+            ),
             *year_ranges((1999, 2001)),
             LiteralInput('variable',
                          'Variable',
                          abstract='Select the variable to simulate.',
                          data_type='string',
                          default='psl',
-                         allowed_values=['psl', 'pr']),
+                         allowed_values=['psl', 'tas']),
             LiteralInput(
                 'start_longitude',
                 'Start longitude',
@@ -106,8 +111,7 @@ class Toymodel(Process):
                 ),
                 Metadata(
                     'Model Selection',
-                    """The toymodel metric accepts one model as the input. Any models beyond
-                    the first are ignored.""",
+                    """The toymodel metric accepts one model as the input.""",
                 )
             ],
             inputs=inputs,
