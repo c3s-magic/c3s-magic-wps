@@ -14,7 +14,12 @@ LOGGER = logging.getLogger("PYWPS")
 class QuantileBias(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(model='MPI-ESM-P', experiment='historical', ensemble='r1i1p1'),
+            *model_experiment_ensemble(
+                model='MPI-ESM-P',
+                experiment='historical',
+                ensemble='r1i1p1',
+                max_occurs=1,
+            ),
             *year_ranges((1997, 1997)),
             LiteralInput('ref_dataset',
                          'Reference Dataset',
@@ -60,8 +65,7 @@ class QuantileBias(Process):
                 ),
                 Metadata(
                     'Model Selection',
-                    """The Quantile Bias metric accepts one model as the input. Any models beyond
-                    the first are ignored.""",
+                    """The Quantile Bias metric accepts one model as the input.""",
                 )
             ],
             inputs=inputs,
