@@ -14,13 +14,13 @@ LOGGER = logging.getLogger("PYWPS")
 class DroughtIndicator(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(model='ACCESS1-0', experiment='historical', ensemble='r1i1p1'),
+            *model_experiment_ensemble(model='ACCESS1-0', experiment='historical', ensemble='r1i1p1', max_occurs=1),
             *year_ranges((1990, 1999)),
             LiteralInput('ref_dataset',
                          'Reference Dataset',
                          abstract='Choose a reference dataset like ERA-Interim.',
                          data_type='string',
-                         allowed_values=['ERA-Interim', 'CRU'],
+                         allowed_values=['ERA-Interim'],
                          default='ERA-Interim',
                          min_occurs=1,
                          max_occurs=1),
@@ -127,15 +127,15 @@ class DroughtIndicator(Process):
         response.outputs['debug_log'].output_format = FORMATS.TEXT
         response.outputs['debug_log'].file = result['debug_logfile']
 
-        if not result['success']:
+        if result['success']:
+            try:
+                self.get_outputs(result, response)
+            except Exception as e:
+                response.update_status("exception occured: " + str(e), 85)
+                LOGGER.exception('Getting output failed: ' + str(e))
+        else:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'], 100)
-            return response
-
-        try:
-            self.get_outputs(result, response)
-        except Exception as e:
-            response.update_status("exception occured: " + str(e), 85)
+            response.update_status("exception occured: " + result['exception'], 85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
