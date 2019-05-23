@@ -109,10 +109,6 @@ class Toymodel(Process):
                     'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_toymodel.html',
                     role=util.WPS_ROLE_DOC,
                 ),
-                Metadata(
-                    'Model Selection',
-                    """The toymodel metric accepts one model as the input.""",
-                )
             ],
             inputs=inputs,
             outputs=outputs,
