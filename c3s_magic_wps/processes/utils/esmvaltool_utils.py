@@ -77,7 +77,8 @@ def model_experiment_ensemble(model: str,
                               model_name: str = 'Model',
                               experiment_name: str = 'Experiment',
                               ensemble_name: str = 'Ensemble',
-                              min_occurs=1):
+                              min_occurs=1,
+                              max_occurs=150):
     if not hasattr(model_experiment_ensemble, 'available_models'):
         parse_model_lists()
 
@@ -105,7 +106,7 @@ def model_experiment_ensemble(model: str,
                      allowed_values=model_experiment_ensemble.available_models,
                      default=default_model,
                      min_occurs=min_occurs,
-                     max_occurs=50),
+                     max_occurs=max_occurs),
         LiteralInput(experiment_name.lower(),
                      experiment_long_name,
                      abstract='Choose an experiment',
@@ -113,7 +114,7 @@ def model_experiment_ensemble(model: str,
                      allowed_values=model_experiment_ensemble.available_experiments,
                      default=default_experiment,
                      min_occurs=min_occurs,
-                     max_occurs=50),
+                     max_occurs=max_occurs),
         LiteralInput(ensemble_name.lower(),
                      ensemble_long_name,
                      abstract='Choose an ensemble',
@@ -121,7 +122,7 @@ def model_experiment_ensemble(model: str,
                      allowed_values=model_experiment_ensemble.available_ensembles,
                      default=default_ensemble,
                      min_occurs=min_occurs,
-                     max_occurs=50),
+                     max_occurs=max_occurs),
     ]
 
     return inputs
