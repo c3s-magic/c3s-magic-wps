@@ -101,7 +101,7 @@ class ExtremeIndex(Process):
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
-            diag='extreme_index_wp7',
+            diag='extreme_index',
             constraints=constraints,
             options=options,
             start_year=request.inputs['start_historical'][0].data,
@@ -167,10 +167,10 @@ class ExtremeIndex(Process):
         response.outputs['combined_plot'].output_format = Format('application/png')
         response.outputs['combined_plot'].file = runner.get_output(result['plot_dir'],
                                                                    path_filter=os.path.join('extreme_index', 'metric'),
-                                                                   name_filter="CombinedIndices*".format(idx),
+                                                                   name_filter="CombinedIndices*",
                                                                    output_format="png")
         response.outputs['combined_data'].output_format = FORMATS.NETCDF
         response.outputs['combined_data'].file = runner.get_output(result['work_dir'],
                                                                    path_filter=os.path.join('extreme_index', 'metric'),
-                                                                   name_filter="_*".format(idx),
+                                                                   name_filter="_*",
                                                                    output_format="nc")
