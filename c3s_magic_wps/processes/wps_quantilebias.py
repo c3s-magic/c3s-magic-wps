@@ -63,10 +63,6 @@ class QuantileBias(Process):
                     'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_quantilebias.html',
                     role=util.WPS_ROLE_DOC,
                 ),
-                Metadata(
-                    'Model Selection',
-                    """The Quantile Bias metric accepts one model as the input.""",
-                )
             ],
             inputs=inputs,
             outputs=outputs,
