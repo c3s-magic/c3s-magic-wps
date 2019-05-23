@@ -97,9 +97,10 @@ class MultimodelProducts(Process):
                          role=util.WPS_ROLE_MEDIA),
                 Metadata(
                     'Model Selection',
-                    """The Multimodel Products metric requires at least one model to be chosen, but multiple models is supported.
-                    For each model choose a projection scenario (e.g. rcp26) and the relevant historical experiment will be added
-                    by the WPS process. Also make sure to set the climatology and anomaly start and end years correctly.""")
+                    """The Multimodel Products metric requires at least one model to be chosen, but multiple models
+                    is supported. For each model choose a projection scenario (e.g. rcp26) and the relevant historical
+                    experiment will be added by the WPS process. Also make sure to set the climatology and anomaly
+                    start and end years correctly.""")
             ],
             inputs=inputs,
             outputs=outputs,
@@ -135,8 +136,8 @@ class MultimodelProducts(Process):
             diag='multimodel_products',
             constraints=constraints,
             options=options,
-            start_year=constraints['climatology_start_year'],
-            end_year=constraints['anomaly_end_year'],
+            start_year=constraints['start_historical'],
+            end_year=constraints['end_projection'],
             output_format='png',
         )
 
