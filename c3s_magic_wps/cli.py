@@ -130,7 +130,7 @@ def stop():
 @click.option('--parallelprocesses', metavar='INT', default='2', help='parallelprocesses in PyWPS configuration.')
 @click.option('--log-level', metavar='LEVEL', default='INFO', help='log level in PyWPS configuration.')
 @click.option('--log-file', metavar='PATH', default='pywps.log', help='log file in PyWPS configuration.')
-@click.option('--database', default='sqlite:///pywps-logs.sqlite', help='database in PyWPS configuration')
+@click.option('--database', default='sqlite:///pywps-processes.sqlite', help='database in PyWPS configuration')
 @click.option('--rootpath', default='/tmp', help='Root path for computation')
 def start(config, bind_host, daemon, hostname, port, maxsingleinputsize, maxprocesses, parallelprocesses, log_level,
           log_file, database, rootpath):

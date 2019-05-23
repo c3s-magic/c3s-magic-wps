@@ -8,7 +8,6 @@ documentation:
 datasets:
   - dataset: {{constraints['model']}}
     project: CMIP5
-    mip: {{constraints['cmor_table']}}
     exp: {{constraints['experiment']}}
     ensemble: {{constraints['ensemble']}}
     start_year: {{start_year}}
@@ -20,6 +19,7 @@ diagnostics:
     description: Calculating number of dry days.
     variables:
       pr:
+        mip: {{constraints['cmor_table']}}
     scripts:
       consecutive_dry_days:
         script: droughtindex/diag_cdd.py

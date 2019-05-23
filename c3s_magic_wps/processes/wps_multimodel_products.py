@@ -17,6 +17,9 @@ LOGGER = logging.getLogger("PYWPS")
 class MultimodelProducts(Process):
     def __init__(self):
         inputs = [
+            *model_experiment_ensemble(model='MPI-ESM-MR', experiment='rcp85', ensemble='r1i1p1', min_occurs=2),
+            *year_ranges((1961, 1990), start_name='start_historical', end_name='end_historical'),
+            *year_ranges((2006, 2099), start_name='start_projection', end_name='end_projection'),
             LiteralInput(
                 'moninf',
                 'First month month of the seasonal mean period',
@@ -92,6 +95,12 @@ class MultimodelProducts(Process):
                 Metadata('Media',
                          util.diagdata_url() + '/multimodel_products/bsc_anomaly_timeseries.png',
                          role=util.WPS_ROLE_MEDIA),
+                Metadata(
+                    'Model Selection',
+                    """The Multimodel Products metric requires at least one model to be chosen, but multiple models
+                    is supported. For each model choose a projection scenario (e.g. rcp26) and the relevant historical
+                    experiment will be added by the WPS process. Also make sure to set the climatology and anomaly
+                    start and end years correctly.""")
             ],
             inputs=inputs,
             outputs=outputs,
@@ -102,24 +111,33 @@ class MultimodelProducts(Process):
         response.update_status("starting ...", 0)
 
         # build esgf search constraints
-        constraints = dict()
+        constraints = dict(
+            models=request.inputs['model'],
+            ensembles=request.inputs['ensemble'],
+            experiments=request.inputs['experiment'],
+            start_historical=request.inputs['start_historical'][0].data,
+            end_historical=request.inputs['end_historical'][0].data,
+            start_projection=request.inputs['start_projection'][0].data,
+            end_projection=request.inputs['end_projection'][0].data,
+        )
 
         options = dict(
             moninf=request.inputs['moninf'][0].data,
             monsup=request.inputs['monsup'][0].data,
             agreement_threshold=int(request.inputs['agreement_threshold'][0].data),
             running_mean=int(request.inputs['running_mean'][0].data),
+            time_series_plot=request.inputs['time_series_plot'][0].data,
         )
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
-            diag='multimodel_products_wp5',
+            diag='multimodel_products',
             constraints=constraints,
             options=options,
-            start_year=1961,
-            end_year=2099,
+            start_year=constraints['start_historical'],
+            end_year=constraints['end_projection'],
             output_format='png',
         )
 
@@ -141,15 +159,15 @@ class MultimodelProducts(Process):
         response.outputs['debug_log'].output_format = FORMATS.TEXT
         response.outputs['debug_log'].file = result['debug_logfile']
 
-        if not result['success']:
+        if result['success']:
+            try:
+                self.get_outputs(result, response)
+            except Exception as e:
+                response.update_status("exception occured: " + str(e), 85)
+                LOGGER.exception('Getting output failed: ' + str(e))
+        else:
             LOGGER.exception('esmvaltool failed!')
             response.update_status("exception occured: " + result['exception'], 100)
-            return response
-
-        try:
-            self.get_outputs(result, response)
-        except Exception as e:
-            response.update_status("exception occured: " + str(e), 85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 

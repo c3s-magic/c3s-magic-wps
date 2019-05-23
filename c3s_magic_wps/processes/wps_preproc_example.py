@@ -2,12 +2,13 @@ import logging
 import os
 
 from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process
-from pywps.inout.literaltypes import make_allowedvalues
 from pywps.app.Common import Metadata
+from pywps.inout.literaltypes import make_allowedvalues
 from pywps.response.status import WPS_STATUS
 
 from .. import runner, util
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, outputs_from_data_names
+from .utils import (default_outputs, model_experiment_ensemble, outputs_from_data_names, outputs_from_plot_names,
+                    year_ranges)
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -15,18 +16,8 @@ LOGGER = logging.getLogger("PYWPS")
 class PreprocessExample(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(model_name='model1',
-                                       ensemble_name='ensemble1',
-                                       start_end_year=(1850, 2005),
-                                       start_end_defaults=(2000, 2005)),
-            *model_experiment_ensemble(model_name='model2',
-                                       ensemble_name='ensemble2',
-                                       start_end_year=(1850, 2005),
-                                       start_end_defaults=(2000, 2005)),
-            *model_experiment_ensemble(model_name='model3',
-                                       ensemble_name='ensemble3',
-                                       start_end_year=(1850, 2005),
-                                       start_end_defaults=(2000, 2005)),
+            *model_experiment_ensemble(model='bcc-csm1-1', experiment='historical', ensemble='r1i1p1', min_occurs=2),
+            *year_ranges((2000, 2005)),
             LiteralInput(
                 'extract_levels',
                 'Extraction levels',
@@ -40,11 +31,9 @@ class PreprocessExample(Process):
             ('multi_model_median_ta', [Format('image/png')]),
             ('model1_mean_ta', [Format('image/png')]),
             ('model2_mean_ta', [Format('image/png')]),
-            ('model3_mean_ta', [Format('image/png')]),
             ('reference_model_mean_ta', [Format('image/png')]),
             ('model1_mean_pr', [Format('image/png')]),
             ('model2_mean_pr', [Format('image/png')]),
-            ('model3_mean_pr', [Format('image/png')]),
             ('reference_model_mean_pr', [Format('image/png')]),
         ]
 
@@ -53,11 +42,9 @@ class PreprocessExample(Process):
             ('multi_model_median_ta', [FORMATS.NETCDF]),
             ('model1_mean_ta', [FORMATS.NETCDF]),
             ('model2_mean_ta', [FORMATS.NETCDF]),
-            ('model3_mean_ta', [FORMATS.NETCDF]),
             ('reference_model_mean_ta', [FORMATS.NETCDF]),
             ('model1_mean_pr', [FORMATS.NETCDF]),
             ('model2_mean_pr', [FORMATS.NETCDF]),
-            ('model3_mean_pr', [FORMATS.NETCDF]),
             ('reference_model_mean_pr', [FORMATS.NETCDF]),
         ]
         outputs = [
@@ -84,8 +71,15 @@ class PreprocessExample(Process):
                         calculations.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata('Documentation', '', role=util.WPS_ROLE_DOC),
-                Metadata('Media', util.diagdata_url() + '/pydemo/pydemo_thumbnail.png', role=util.WPS_ROLE_MEDIA)
+                Metadata(
+                    'Documentation',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/user_guide2/index.html#esmvaltool-preprocessor',  # noqa
+                    role=util.WPS_ROLE_DOC),
+                Metadata(
+                    'Model Selection',
+                    """This preprocessor example requires at least two models to be chosen. Any combination is valid,
+                    however, only the first two models will return their output inline. The output of any models beyond
+                    the first two are included in the zip file.""")
             ],
             inputs=inputs,
             outputs=outputs,
@@ -99,13 +93,9 @@ class PreprocessExample(Process):
 
         # build esgf search constraints
         constraints = dict(
-            model1=request.inputs['model1'][0].data,
-            ensemble1=request.inputs['ensemble1'][0].data,
-            model2=request.inputs['model2'][0].data,
-            ensemble2=request.inputs['ensemble2'][0].data,
-            model3=request.inputs['model3'][0].data,
-            ensemble3=request.inputs['ensemble3'][0].data,
-            experiment=request.inputs['experiment'][0].data,
+            models=request.inputs['model'],
+            ensembles=request.inputs['ensemble'],
+            experiments=request.inputs['experiment'],
         )
 
         options = dict(extract_levels=request.inputs['extract_levels'][0].data)
@@ -179,7 +169,7 @@ class PreprocessExample(Process):
                                                                output_format="nc")
 
         for var in ['ta', 'pr']:
-            for i in range(1, 4):
+            for i in range(1, 3):
                 model = 'model{}'.format(i)
                 plotkey = '{}_mean_{}_plot'.format(model, var)
                 datakey = '{}_mean_{}_data'.format(model, var)
@@ -190,14 +180,14 @@ class PreprocessExample(Process):
                 response.outputs[plotkey].file = runner.get_output(result['plot_dir'],
                                                                    path_filter=os.path.join('diagnostic1', 'script1'),
                                                                    name_filter="*{}*{}*".format(
-                                                                       constraints[model], var),
+                                                                       constraints['models'][i - 1].data, var),
                                                                    output_format="png")
 
                 response.outputs[datakey].output_format = FORMATS.NETCDF
                 response.outputs[datakey].file = runner.get_output(result['work_dir'],
                                                                    path_filter=os.path.join('diagnostic1', 'script1'),
                                                                    name_filter="*{}*{}*".format(
-                                                                       constraints[model], var),
+                                                                       constraints['models'][i - 1].data, var),
                                                                    output_format="nc")
 
             plotkey = 'reference_model_mean_{}_plot'.format(var)

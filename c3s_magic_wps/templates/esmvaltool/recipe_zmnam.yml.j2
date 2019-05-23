@@ -25,7 +25,6 @@ documentation:
 datasets:
   - dataset: {{constraints['model']}}
     project: CMIP5
-    mip: day
     exp: {{constraints['experiment']}}
     ensemble: {{constraints['ensemble']}}
     start_year: {{start_year}}
@@ -52,6 +51,7 @@ diagnostics:
     variables:
       zg:
         preprocessor: preproc
+        mip: day
     scripts:
       main:
         script: zmnam/zmnam.py

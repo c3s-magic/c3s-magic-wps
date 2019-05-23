@@ -5,7 +5,7 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names
+from .utils import default_outputs, year_ranges, model_experiment_ensemble, outputs_from_plot_names
 
 from .. import runner, util
 
@@ -15,7 +15,19 @@ LOGGER = logging.getLogger("PYWPS")
 class Toymodel(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(start_end_year=(1850, 2100), start_end_defaults=(1999, 2001)),
+            *model_experiment_ensemble(
+                model='ACCESS1-0',
+                experiment='historical',
+                ensemble='r1i1p1',
+                max_occurs=1,
+            ),
+            *year_ranges((1999, 2001)),
+            LiteralInput('variable',
+                         'Variable',
+                         abstract='Select the variable to simulate.',
+                         data_type='string',
+                         default='psl',
+                         allowed_values=['psl', 'tas']),
             LiteralInput(
                 'start_longitude',
                 'Start longitude',
@@ -92,9 +104,11 @@ class Toymodel(Process):
                         to investigate the effect of observational uncertainty.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata('Documentation',
-                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_toymodel.html',
-                         role=util.WPS_ROLE_DOC)
+                Metadata(
+                    'Documentation',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_toymodel.html',
+                    role=util.WPS_ROLE_DOC,
+                ),
             ],
             inputs=inputs,
             outputs=outputs,

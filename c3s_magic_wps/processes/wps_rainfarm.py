@@ -5,9 +5,8 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names
-
 from .. import runner, util
+from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -15,7 +14,11 @@ LOGGER = logging.getLogger("PYWPS")
 class RainFARM(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(start_end_year=(1850, 2005), start_end_defaults=(1997, 1997)),
+            *model_experiment_ensemble(model='ACCESS1-0',
+                                       experiment='historical',
+                                       ensemble='r1i1p1',
+                                       max_occurs=1),
+            *year_ranges((1997, 1999)),
             LiteralInput(
                 'start_longitude',
                 'Start longitude',

@@ -15,51 +15,57 @@ LOGGER = logging.getLogger("PYWPS")
 class EnsClus(Process):
     def __init__(self):
         inputs = [
-            # *model_experiment_ensemble(
-            #     models=['Defaults'],
-            #     experiments=['historical'],
-            #     ensembles=['r1i1p1'],
-            #     start_end_year=(1850, 2005),
-            #     start_end_defaults=(1850, 2005)),
-            *year_ranges((1850, 2005), (1990, 2005)),
-            LiteralInput('season',
-                         'Season',
-                         abstract='Choose a season like DJF.',
-                         data_type='string',
-                         allowed_values=['DJF', 'DJFM', 'NDJFM', 'JJA'],
-                         default='JJA'),
-            LiteralInput('area',
-                         'Area',
-                         abstract='Area',
-                         data_type='string',
-                         allowed_values=['EU', 'EAT', 'PNA', 'NH'],
-                         default='EU'),
-            LiteralInput('extreme',
-                         'Extreme',
-                         abstract='Extreme',
-                         data_type='string',
-                         allowed_values=[
-                             '60th_percentile', '75th_percentile', '90th_percentile', 'mean', 'maximum', 'std', 'trend'
-                         ],
-                         default='75th_percentile'),
-            LiteralInput('numclus',
-                         'Number of Clusters',
-                         abstract='Numclus',
-                         data_type='string',
-                         allowed_values=['2', '3', '4'],
-                         default='3'),
-            LiteralInput('perc',
-                         'Percentage',
-                         abstract='Percentage of total Variance',
-                         data_type='string',
-                         allowed_values=['70', '80', '90'],
-                         default='80'),
-            LiteralInput('numpcs',
-                         'Number of PCs',
-                         abstract='Number of PCs to retain. Has priority over Percentage unless set to 0',
-                         data_type='string',
-                         allowed_values=['0', '5', '10', '20', '30', '40'],
-                         default='0'),
+            *model_experiment_ensemble(model='ACCESS1-0', experiment='historical', ensemble='r1i1p1', min_occurs=2),
+            *year_ranges((1900, 2005)),
+            LiteralInput(
+                'season',
+                'Season',
+                abstract='Choose a season like DJF.',
+                data_type='string',
+                allowed_values=['DJF', 'DJFM', 'NDJFM', 'JJA'],
+                default='JJA',
+            ),
+            LiteralInput(
+                'area',
+                'Area',
+                abstract='Area',
+                data_type='string',
+                allowed_values=['EU', 'EAT', 'PNA', 'NH'],
+                default='EU',
+            ),
+            LiteralInput(
+                'extreme',
+                'Extreme',
+                abstract='Extreme',
+                data_type='string',
+                allowed_values=[
+                    '60th_percentile', '75th_percentile', '90th_percentile', 'mean', 'maximum', 'std', 'trend'
+                ],
+                default='75th_percentile',
+            ),
+            LiteralInput(
+                'numclus',
+                'Number of Clusters',
+                abstract='Numclus',
+                data_type='integer',
+                default=2,
+            ),
+            LiteralInput(
+                'perc',
+                'Percentage',
+                abstract='Percentage of total Variance',
+                data_type='string',
+                allowed_values=['70', '80', '90'],
+                default='80',
+            ),
+            LiteralInput(
+                'numpcs',
+                'Number of PCs',
+                abstract='Number of PCs to retain. Has priority over Percentage unless set to 0',
+                data_type='string',
+                allowed_values=['0', '5', '10', '20', '30', '40'],
+                default='0',
+            ),
         ]
         outputs = [
             ComplexOutput('plot',
@@ -103,15 +109,18 @@ class EnsClus(Process):
             abstract="""Cluster analysis tool based on the k-means algorithm
                 for ensembles of climate model simulations. EnsClus group
                 ensemble members according to similar characteristics and
-                select the most representative member for each cluster.
-                Currently included are the models: ACCESS1-0, ACCESS1-3,
-                CanESM2, CCSM4, CESM1-BGC""",
+                select the most representative member for each cluster.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
                          'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_ensclus.html',
                          role=util.WPS_ROLE_DOC),
                 Metadata('Media', util.diagdata_url() + '/ensclus/ensclus_thumbnail.png', role=util.WPS_ROLE_MEDIA),
+                Metadata(
+                    'Model Selection',
+                    """The Ensemble Clustering metric requires at least two models to be chosen,
+                       choosing more models is supported.""",
+                )
             ],
             inputs=inputs,
             outputs=outputs,
@@ -124,10 +133,9 @@ class EnsClus(Process):
 
         # build esgf search constraints
         constraints = dict(
-            # model=request.inputs['model'][0].data, # currently not used in recipy
-            experiment='historical',  # request.inputs['experiment'][0].data,
-            mip='Amon',
-            ensemble='r1i1p1'  # request.inputs['ensemble'][0].data,
+            models=request.inputs['model'],
+            ensembles=request.inputs['ensemble'],
+            experiments=request.inputs['experiment'],
         )
 
         options = dict(

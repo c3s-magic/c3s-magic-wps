@@ -47,7 +47,7 @@ diagnostics:
   toymodel:
     description: Generate synthetic observations.
     variables:
-      psl:
+      {{options['variable']}}:
         preprocessor: preproc
         mip: Amon
         reference_dataset: {{constraints['model']}}
