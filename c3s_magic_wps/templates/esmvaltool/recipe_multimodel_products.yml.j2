@@ -19,17 +19,25 @@ documentation:
     - manubens
 
 datasets:
-  - {dataset: bcc-csm1-1, type: exp, project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: 1961,  end_year: 1990}
-  - {dataset: MPI-ESM-MR, type: exp, project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: 1961,  end_year: 1990}
-  - {dataset: EC-EARTH, type: exp, project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r12i1p1,  start_year: 1961,  end_year: 1990}
-  - {dataset: MPI-ESM-MR, type: exp, project: CMIP5,  mip: Amon,  exp: rcp26,  ensemble: r1i1p1,  start_year: 2006,  end_year: 2099}
-  - {dataset: bcc-csm1-1, type: exp, project: CMIP5,  mip: Amon,  exp: rcp26,  ensemble: r1i1p1,  start_year: 2006,  end_year: 2099}
-  - {dataset: EC-EARTH, type: exp, project: CMIP5,  mip: Amon,  exp: rcp26,  ensemble: r12i1p1,  start_year: 2006,  end_year: 2099}
+  {% for model in constraints['models'] %}
+  - dataset: {{constraints['models'][loop.index0].data}}
+    ensemble: {{constraints['ensembles'][loop.index0].data}}
+    project: CMIP5
+    exp: historical
+    start_year: {{constraints['start_historical']}}
+    end_year: {{constraints['end_historical']}}
+  - dataset: {{constraints['models'][loop.index0].data}}
+    ensemble: {{constraints['ensembles'][loop.index0].data}}
+    project: CMIP5
+    exp: {{constraints['experiments'][loop.index0].data}}
+    start_year: {{constraints['start_projection']}}
+    end_year: {{constraints['end_projection']}}
+  {% endfor %}
 
 preprocessors:
   preproc:
     regrid:
-      target_grid: bcc-csm1-1
+      target_grid: {{constraints['models'][0].data}}
       scheme: linear
     mask_fillvalues:
       threshold_fraction: 0.95
@@ -50,15 +58,6 @@ diagnostics:
       main:
         script: magic_bsc/multimodel_products.r
 
-        #Specify datasets to be used for computing climatology and anomaly
-        climatology_class: historical
-        anomaly_class: rcp26
-
-        climatology_start_year: 1961
-        climatology_end_year: 1990
-
-        anomaly_start_year: 2006
-        anomaly_end_year: 2099
         #Parameters for Season() function
         moninf: {{options['moninf']}} # 6  #If this is null, then the monthly anomalies will be computed
         monsup: {{options['monsup']}} # 6
