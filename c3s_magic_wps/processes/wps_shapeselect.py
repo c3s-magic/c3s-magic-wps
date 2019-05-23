@@ -15,7 +15,7 @@ class ShapeSelect(Process):
         inputs = [
             *model_experiment_ensemble(model='EC-EARTH',
                                        experiment='historical',
-                                       ensemble='r2i1p1',
+                                       ensemble='r1i1p1',
                                        max_occurs=1),
             *year_ranges((1990, 1999)),
             LiteralInput('shape',
