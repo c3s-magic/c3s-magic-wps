@@ -14,7 +14,7 @@ LOGGER = logging.getLogger("PYWPS")
 class Blocking(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(model='EC-EARTH', experiment='historical', ensemble='r2i1p1'),
+            *model_experiment_ensemble(model='EC-EARTH', experiment='historical', ensemble='r2i1p1', max_occurs=1),
             *year_ranges((1980, 1989)),
             LiteralInput('ref_dataset',
                          'Reference Dataset',
@@ -73,9 +73,11 @@ class Blocking(Process):
             abstract="Calculate Blocking metrics that shows the mid-latitude 1D and 2D blocking indices.",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
-                Metadata('Documentation',
-                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_miles.html',
-                         role=util.WPS_ROLE_DOC)
+                Metadata(
+                    'Documentation',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_miles.html',
+                    role=util.WPS_ROLE_DOC,
+                ),
             ],
             inputs=inputs,
             outputs=outputs,
