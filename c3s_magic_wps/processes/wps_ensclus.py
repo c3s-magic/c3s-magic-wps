@@ -15,7 +15,7 @@ LOGGER = logging.getLogger("PYWPS")
 class EnsClus(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(model='ACCESS1-0', experiment='historical', ensemble='r1i1p1'),
+            *model_experiment_ensemble(model='ACCESS1-0', experiment='historical', ensemble='r1i1p1', min_occurs=2),
             *year_ranges((1900, 2005)),
             LiteralInput('season',
                          'Season',
@@ -98,15 +98,18 @@ class EnsClus(Process):
             abstract="""Cluster analysis tool based on the k-means algorithm
                 for ensembles of climate model simulations. EnsClus group
                 ensemble members according to similar characteristics and
-                select the most representative member for each cluster.
-                Currently included are the models: ACCESS1-0, ACCESS1-3,
-                CanESM2, CCSM4, CESM1-BGC""",
+                select the most representative member for each cluster.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
                          'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_ensclus.html',
                          role=util.WPS_ROLE_DOC),
                 Metadata('Media', util.diagdata_url() + '/ensclus/ensclus_thumbnail.png', role=util.WPS_ROLE_MEDIA),
+                Metadata(
+                    'Model Selection',
+                    """The Ensemble Clustering metric requires at least two models to be chosen,
+                       choosing more models is supported.""",
+                )
             ],
             inputs=inputs,
             outputs=outputs,
@@ -119,10 +122,9 @@ class EnsClus(Process):
 
         # build esgf search constraints
         constraints = dict(
-            # model=request.inputs['model'][0].data, # currently not used in recipy
-            experiment='historical',  # request.inputs['experiment'][0].data,
-            mip='Amon',
-            ensemble='r1i1p1'  # request.inputs['ensemble'][0].data,
+            models=request.inputs['model'],
+            ensembles=request.inputs['ensemble'],
+            experiments=request.inputs['experiment'],
         )
 
         options = dict(
