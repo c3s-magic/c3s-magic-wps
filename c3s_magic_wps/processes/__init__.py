@@ -19,6 +19,7 @@ from .wps_drought_indicator import DroughtIndicator
 from .wps_quantilebias import QuantileBias
 from .wps_toymodel import Toymodel
 from .wps_rainfarm import RainFARM
+from .wps_hyint import HyInt
 
 processes = sorted(
     [
@@ -43,6 +44,7 @@ processes = sorted(
         QuantileBias(),
         RainFARM(),
         Toymodel(),
+        HyInt(),
     ],
     key=lambda process: process.title,
 )
