@@ -22,25 +22,6 @@ class SMPI(Process):
             ),
             *year_ranges((1980, 2005)),
             LiteralInput(
-                'plot_type',
-                'Plot type',
-                abstract="""
-                    Plot type: cycle (time), zonal (plev, lat), latlon (lat, lon),
-                    cycle_latlon (time, lat, lon), cycle_zonal (time, plev, lat)
-                """,
-                data_type='string',
-                allowed_values=['cycle', 'zonal', 'latlon', 'cycle_latlon', 'cycle_zonal'],
-                default='cycle_zonal',
-            ),
-            LiteralInput(
-                'time_avg',
-                'Type of time average',
-                abstract="""Type of time average""",
-                data_type='string',
-                allowed_values=['yearly', 'monthly', 'seasonal'],
-                default='yearly',
-            ),
-            LiteralInput(
                 'region',
                 'Region',
                 abstract="""Selected region""",
@@ -101,14 +82,12 @@ class SMPI(Process):
 
         # build esgf search constraints
         constraints = dict(
-            model=request.inputs['model'][0].data,
-            experiment=request.inputs['experiment'][0].data,
-            ensemble=request.inputs['ensemble'][0].data,
+            models=request.inputs['model'],
+            experiments=request.inputs['experiment'],
+            ensembles=request.inputs['ensemble'],
         )
 
         options = dict(
-            plot_type=request.inputs['plot_type'][0].data,
-            time_avg=request.inputs['time_avg'][0].data,
             region=request.inputs['region'][0].data,
             smpi_n_bootstrap=request.inputs['smpi_n_bootstrap'][0].data,
         )

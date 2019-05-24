@@ -1,5 +1,6 @@
 ###############################################################################
-# recipe_smpi.xml
+# Based on:
+# recipe_smpi_cp4.xml
 ---
 documentation:
   description: |
@@ -24,12 +25,14 @@ documentation:
     - c3s-magic
 
 datasets:
-  - dataset: {{constraints['model']}}
+{% for model in constraints['models'] %}
+  - dataset: {{constraints['models'][loop.index0].data}}
+    ensemble: {{constraints['ensembles'][loop.index0].data}}
     project: CMIP5
-    exp: {{constraints['experiment']}}
-    ensemble: {{constraints['ensemble']}}
+    exp: {{constraints['experiments'][loop.index0].data}}
     start_year: {{start_year}}
     end_year: {{end_year}}
+  {% endfor %}
 
 
 preprocessors:
@@ -49,7 +52,6 @@ preprocessors:
       exclude: [reference_dataset]
 
   ppNOLEV:
-   # extract_levels: false
     regrid:
       target_grid: reference_dataset
       scheme: linear
@@ -61,7 +63,6 @@ preprocessors:
       exclude: [reference_dataset]
 
   ppNOLEVirreg:
-    #extract_levels: false
     regrid:
       target_grid: 1x1
       scheme: linear
@@ -81,17 +82,19 @@ diagnostics:
     realms:
       - atmos
     variables:
-      ta:
+      ta: &variable_settings
         preprocessor: ppALL
         reference_dataset: ERA-Interim
         mip: Amon
+        start_year: {{start_year}}
+        end_year: {{end_year}}
     additional_datasets:
-      - {dataset: ERA-Interim, project: OBS, type: reanaly, version: 1, start_year: {{start_year}}, end_year: {{end_year}}, tier: 3}
+      - {dataset: ERA-Interim, project: OBS, type: reanaly, version: 1, tier: 3}
     scripts:
       grading: &grading_settings
         script: perfmetrics/main.ncl
-        plot_type: {{options['plot_type']}}
-        time_avg: {{options['time_avg']}}
+        plot_type: cycle_zonal
+        time_avg: yearly
         region: {{options['region']}}
         calc_grading: true
         metric: [SMPI]
@@ -106,16 +109,14 @@ diagnostics:
       - atmos
     variables:
       va:
-        preprocessor: ppALL
-        reference_dataset: ERA-Interim
-        mip: Amon
+        <<: *variable_settings
     additional_datasets:
-      - {dataset: ERA-Interim, project: OBS, type: reanaly, version: 1, start_year: {{start_year}}, end_year: {{end_year}}, tier: 3}
+      - {dataset: ERA-Interim, project: OBS, type: reanaly, version: 1, tier: 3}
     scripts:
       grading:
         script: perfmetrics/main.ncl
-        plot_type: {{options['plot_type']}}
-        time_avg: {{options['time_avg']}}
+        plot_type: cycle_zonal
+        time_avg: yearly
         region: {{options['region']}}
         calc_grading: true
         metric: [SMPI]
@@ -130,16 +131,14 @@ diagnostics:
       - atmos
     variables:
       ua:
-        preprocessor: ppALL
-        reference_dataset: ERA-Interim
-        mip: Amon
+        <<: *variable_settings
     additional_datasets:
-      - {dataset: ERA-Interim, project: OBS, type: reanaly, version: 1, start_year: {{start_year}}, end_year: {{end_year}}, tier: 3}
+      - {dataset: ERA-Interim, project: OBS, type: reanaly, version: 1, tier: 3}
     scripts:
       grading:
         script: perfmetrics/main.ncl
-        plot_type: {{options['plot_type']}}
-        time_avg: {{options['time_avg']}}
+        plot_type: cycle_zonal
+        time_avg: yearly
         region: {{options['region']}}
         calc_grading: true
         metric: [SMPI]
@@ -154,16 +153,14 @@ diagnostics:
       - atmos
     variables:
       hus:
-        preprocessor: ppALL
-        reference_dataset: ERA-Interim
-        mip: Amon
+        <<: *variable_settings
     additional_datasets:
-      - {dataset: ERA-Interim, project: OBS, type: reanaly, version: 1, start_year: {{start_year}}, end_year: {{end_year}}, tier: 3}
+      - {dataset: ERA-Interim, project: OBS, type: reanaly, version: 1, tier: 3}
     scripts:
       grading:
         script: perfmetrics/main.ncl
-        plot_type: {{options['plot_type']}}
-        time_avg: {{options['time_avg']}}
+        plot_type: cycle_zonal
+        time_avg: yearly
         region: {{options['region']}}
         calc_grading: true
         metric: [SMPI]
@@ -178,16 +175,15 @@ diagnostics:
       - atmos
     variables:
       tas:
+        <<: *variable_settings
         preprocessor: ppNOLEV
-        reference_dataset: ERA-Interim
-        mip: Amon
     additional_datasets:
-      - {dataset: ERA-Interim, project: OBS, type: reanaly, version: 1, start_year: {{start_year}}, end_year: {{end_year}}, tier: 3}
+      - {dataset: ERA-Interim, project: OBS, type: reanaly, version: 1, tier: 3}
     scripts:
       grading:
         script: perfmetrics/main.ncl
-        plot_type: {{options['plot_type']}}
-        time_avg: {{options['time_avg']}}
+        plot_type: cycle_latlon
+        time_avg: yearly
         region: {{options['region']}}
         calc_grading: true
         metric: [SMPI]
@@ -202,16 +198,15 @@ diagnostics:
       - atmos
     variables:
       psl:
+        <<: *variable_settings
         preprocessor: ppNOLEV
-        reference_dataset: ERA-Interim
-        mip: Amon
     additional_datasets:
-      - {dataset: ERA-Interim, project: OBS, type: reanaly, version: 1, start_year: {{start_year}}, end_year: {{end_year}}, tier: 3}
+      - {dataset: ERA-Interim, project: OBS, type: reanaly, version: 1, tier: 3}
     scripts:
       grading:
         script: perfmetrics/main.ncl
-        plot_type: {{options['plot_type']}}
-        time_avg: {{options['time_avg']}}
+        plot_type: cycle_latlon
+        time_avg: yearly
         region: {{options['region']}}
         calc_grading: true
         metric: [SMPI]
@@ -226,16 +221,16 @@ diagnostics:
       - atmos
     variables:
       pr:
+        <<: *variable_settings
         preprocessor: ppNOLEV
         reference_dataset: GPCP-SG
-        mip: Amon
     additional_datasets:
-      - {dataset: GPCP-SG, project: obs4mips, level: L3, version: v2.2, start_year: {{start_year}}, end_year: {{end_year}}, tier: 1}
+      - {dataset: GPCP-SG, project: obs4mips, level: L3, version: v2.2, tier: 1}
     scripts:
       grading:
         script: perfmetrics/main.ncl
-        plot_type: {{options['plot_type']}}
-        time_avg: {{options['time_avg']}}
+        plot_type: cycle_latlon
+        time_avg: yearly
         region: {{options['region']}}
         calc_grading: true
         metric: [SMPI]
@@ -250,16 +245,17 @@ diagnostics:
       - ocean
     variables:
       tos:
+        <<: *variable_settings
         preprocessor: ppNOLEVirreg
         reference_dataset: HadISST
         mip: Omon
     additional_datasets:
-      - {dataset: HadISST, project: OBS, type: reanaly, version: 1, start_year: {{start_year}}, end_year: {{end_year}}, tier: 2}
+      - {dataset: HadISST, project: OBS, type: reanaly, version: 1, tier: 2}
     scripts:
       grading:
         script: perfmetrics/main.ncl
-        plot_type: {{options['plot_type']}}
-        time_avg: {{options['time_avg']}}
+        plot_type: cycle_latlon
+        time_avg: yearly
         region: {{options['region']}}
         calc_grading: true
         metric: [SMPI]
@@ -274,6 +270,7 @@ diagnostics:
       - seaIce
     variables:
       sic:
+        <<: *variable_settings
         preprocessor: ppNOLEVirreg
         reference_dataset: HadISST
         mip: OImon
@@ -282,37 +279,38 @@ diagnostics:
     scripts:
       grading:
         script: perfmetrics/main.ncl
-        plot_type: {{options['plot_type']}}
-        time_avg: {{options['time_avg']}}
+        plot_type: cycle_latlon
+        time_avg: yearly
         region: {{options['region']}}
         calc_grading: true
         metric: [SMPI]
         normalization: CMIP5
         smpi_n_bootstrap: {{options['smpi_n_bootstrap']}}
 
-  hfds:
-    description: Net Surface Heat Flux
-    themes:
-      - phys
-    realms:
-      - ocean
-    variables:
-      hfds:
-        preprocessor: ppNOLEVirreg
-        reference_dataset: ERA-Interim
-        mip: Omon
-    additional_datasets:
-      - {dataset: ERA-Interim, project: OBS, type: reanaly, version: 1, start_year: {{start_year}}, end_year: {{end_year}}, tier: 3}
-    scripts:
-      grading:
-        script: perfmetrics/main.ncl
-        plot_type: {{options['plot_type']}}
-        time_avg: {{options['time_avg']}}
-        region: {{options['region']}}
-        calc_grading: true
-        metric: [SMPI]
-        normalization: CMIP5
-        smpi_n_bootstrap: {{options['smpi_n_bootstrap']}}
+#  hfds:
+#    description: Net Surface Heat Flux
+#    themes:
+#      - phys
+#    realms:
+#      - ocean
+#    variables:
+#      hfds:
+#        <<: *variable_settings
+#        preprocessor: ppNOLEVirreg
+#        reference_dataset: ERA-Interim
+#        mip: Omon
+#    additional_datasets:
+#      - {dataset: ERA-Interim, project: OBS, type: reanaly, version: 1, tier: 3}
+#    scripts:
+#      grading:
+#        script: perfmetrics/main.ncl
+#        plot_type: cycle_latlon
+#        time_avg: yearly
+#        region: {{options['region']}}
+#        calc_grading: true
+#        metric: [SMPI]
+#        normalization: CMIP5
+#        smpi_n_bootstrap: {{options['smpi_n_bootstrap']}}
 
   tauu:
     description: Zonal Wind Stress
@@ -322,16 +320,15 @@ diagnostics:
       - atmos
     variables:
       tauu:
+        <<: *variable_settings
         preprocessor: ppNOLEV
-        reference_dataset: ERA-Interim
-        mip: Amon
     additional_datasets:
-      - {dataset: ERA-Interim, project: OBS, type: reanaly, version: 1, start_year: {{start_year}}, end_year: {{end_year}}, tier: 3}
+      - {dataset: ERA-Interim, project: OBS, type: reanaly, version: 1, tier: 3}
     scripts:
       grading:
         script: perfmetrics/main.ncl
-        plot_type: {{options['plot_type']}}
-        time_avg: {{options['time_avg']}}
+        plot_type: cycle_latlon
+        time_avg: yearly
         region: {{options['region']}}
         calc_grading: true
         metric: [SMPI]
@@ -346,23 +343,22 @@ diagnostics:
       - atmos
     variables:
       tauv:
+        <<: *variable_settings
         preprocessor: ppNOLEV
-        reference_dataset: ERA-Interim
-        mip: Amon
     additional_datasets:
-      - {dataset: ERA-Interim, project: OBS, type: reanaly, version: 1, start_year: {{start_year}}, end_year: {{end_year}}, tier: 3}
+      - {dataset: ERA-Interim, project: OBS, type: reanaly, version: 1, tier: 3}
     scripts:
       grading:
         script: perfmetrics/main.ncl
-        plot_type: {{options['plot_type']}}
-        time_avg: {{options['time_avg']}}
+        plot_type: cycle_latlon
+        time_avg: yearly
         region: {{options['region']}}
         calc_grading: true
         metric: [SMPI]
         normalization: CMIP5
         smpi_n_bootstrap: {{options['smpi_n_bootstrap']}}
 
-### COLLECT METRICS ###################
+  ### COLLECT METRICS ###################
   collect:
     description: Wrapper to collect and plot previously calculated metrics
     scripts:
