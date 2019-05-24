@@ -18,7 +18,6 @@ class SMPI(Process):
                 model='MPI-ESM-MR',
                 experiment='historical',
                 ensemble='r1i1p1',
-                max_occurs=1,
             ),
             *year_ranges((1980, 2005)),
             LiteralInput(
