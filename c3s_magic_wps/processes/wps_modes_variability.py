@@ -15,9 +15,16 @@ LOGGER = logging.getLogger("PYWPS")
 class ModesVariability(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(model='bcc-csm1-1', experiment='rcp85', ensemble='r1i1p1'),
-            *year_ranges((1971, 2000), start_name='start_historical', end_name='end_historical'),
-            *year_ranges((2020, 2050), start_name='start_projection', end_name='end_projection'),
+            *model_experiment_ensemble(model='bcc-csm1-1',
+                                       experiment='rcp85',
+                                       ensemble='r1i1p1',
+                                       max_occurs=1),
+            *year_ranges((1971, 2000),
+                         start_name='start_historical',
+                         end_name='end_historical'),
+            *year_ranges((2020, 2050),
+                         start_name='start_projection',
+                         end_name='end_projection'),
             LiteralInput('region',
                          'Region',
                          abstract='Choose a region like Polar',
@@ -128,16 +135,15 @@ class ModesVariability(Process):
         response.update_status("starting ...", 0)
 
         # build esgf search constraints
-        constraints = dict(model_historical=request.inputs['model_historical'][0].data,
-                           experiment_historical=request.inputs['experiment_historical'][0].data,
-                           ensemble_historical=request.inputs['ensemble_historical'][0].data,
-                           start_year_historical=request.inputs['start_historical'][0].data,
-                           end_year_historical=request.inputs['end_historical'][0].data,
-                           model_projection=request.inputs['model_projection'][0].data,
-                           experiment_projection=request.inputs['experiment_projection'][0].data,
-                           ensemble_projection=request.inputs['ensemble_projection'][0].data,
-                           start_year_projection=request.inputs['start_projection'][0].data,
-                           end_year_projection=request.inputs['end_projection'][0].data)
+        constraints = dict(
+            model=request.inputs['model'][0].data,
+            experiment=request.inputs['experiment'][0].data,
+            ensemble=request.inputs['ensemble'][0].data,
+            start_year_historical=request.inputs['start_historical'][0].data,
+            end_year_historical=request.inputs['end_historical'][0].data,
+            start_year_projection=request.inputs['start_projection'][0].data,
+            end_year_projection=request.inputs['end_projection'][0].data
+        )
 
         options = dict(
             region=request.inputs['region'][0].data,
@@ -156,7 +162,7 @@ class ModesVariability(Process):
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
             workdir=self.workdir,
-            diag='modes_of_variability_wp4',
+            diag='modes_of_variability',
             constraints=constraints,
             options=options,
             start_year=constraints['start_year_historical'],
@@ -182,21 +188,23 @@ class ModesVariability(Process):
         response.outputs['debug_log'].output_format = FORMATS.TEXT
         response.outputs['debug_log'].file = result['debug_logfile']
 
-        if not result['success']:
+        if result['success']:
+            try:
+                self.get_outputs(result, response)
+            except Exception as e:
+                response.update_status("exception occured: " + str(e), 85)
+                LOGGER.exception('Getting output failed: ' + str(e))
+        else:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'], 100)
-            return response
-
-        try:
-            self.get_outputs(result, response)
-        except Exception as e:
-            response.update_status("exception occured: " + str(e), 85)
+            response.update_status("exception occured: " + result['exception'],
+                                   85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
-                                                                  'modes_of_variability_result.zip')
+        response.outputs['archive'].file = runner.compress_output(
+            os.path.join(self.workdir, 'output'),
+            'modes_of_variability_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -207,25 +215,29 @@ class ModesVariability(Process):
         for plot, _ in self.plotlist:
             key = '{}_plot'.format(plot.lower())
             response.outputs[key].output_format = Format('application/png')
-            response.outputs[key].file = runner.get_output(result['plot_dir'],
-                                                           path_filter=os.path.join('weather_regime', 'main'),
-                                                           name_filter="*{}*".format(plot),
-                                                           output_format="png")
+            response.outputs[key].file = runner.get_output(
+                result['plot_dir'],
+                path_filter=os.path.join('weather_regime', 'main'),
+                name_filter="*{}*".format(plot),
+                output_format="png")
 
         response.outputs['rmse'].output_format = FORMATS.NETCDF
-        response.outputs['rmse'].file = runner.get_output(result['work_dir'],
-                                                          path_filter=os.path.join('weather_regime', 'main'),
-                                                          name_filter="*rmse*",
-                                                          output_format="nc")
+        response.outputs['rmse'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('weather_regime', 'main'),
+            name_filter="*rmse*",
+            output_format="nc")
 
         response.outputs['exp'].output_format = FORMATS.NETCDF
-        response.outputs['exp'].file = runner.get_output(result['work_dir'],
-                                                         path_filter=os.path.join('weather_regime', 'main'),
-                                                         name_filter="*exp*",
-                                                         output_format="nc")
+        response.outputs['exp'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('weather_regime', 'main'),
+            name_filter="*exp*",
+            output_format="nc")
 
         response.outputs['obs'].output_format = FORMATS.NETCDF
-        response.outputs['obs'].file = runner.get_output(result['work_dir'],
-                                                         path_filter=os.path.join('weather_regime', 'main'),
-                                                         name_filter="*obs*",
-                                                         output_format="nc")
+        response.outputs['obs'].file = runner.get_output(
+            result['work_dir'],
+            path_filter=os.path.join('weather_regime', 'main'),
+            name_filter="*obs*",
+            output_format="nc")
