@@ -14,8 +14,10 @@ LOGGER = logging.getLogger("PYWPS")
 class CVDP(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(model='MPI-ESM-LR', experiment='historical', ensemble='r1i1p1'),
-            *year_ranges((2000, 2002)),
+            *model_experiment_ensemble(model='ACCESS1-0',
+                                       experiment='historical',
+                                       ensemble='r1i1p1'),
+            *year_ranges((1850, 2005)),
         ]
         outputs = [
             # ComplexOutput(
@@ -57,9 +59,9 @@ class CVDP(Process):
         constraints = dict(
             model=request.inputs['model'][0].data,
             experiment=request.inputs['experiment'][0].data,
-            time_frequency='mon',
-            cmor_table='Amon',
             ensemble=request.inputs['ensemble'][0].data,
+            start_year=request.inputs['start_year'][0].data,
+            end_year=request.inputs['end_year'][0].data,
         )
 
         # generate recipe
@@ -98,12 +100,14 @@ class CVDP(Process):
                 response.update_status("exception occured: " + str(e), 85)
         else:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'], 85)
+            response.update_status("exception occured: " + result['exception'],
+                                   85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'), 'cvdp_result.zip')
+        response.outputs['archive'].file = runner.compress_output(
+            os.path.join(workdir, 'output'), 'cvdp_result.zip')
 
         response.update_status("done.", 100)
         return response
