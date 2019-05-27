@@ -53,7 +53,7 @@ class Perfmetrics(Process):
         # generate recipe
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(workdir=workdir,
-                                                          diag='perfmetrics_CMIP5.',
+                                                          diag='perfmetrics_CMIP5',
                                                           output_format='png')
 
         # recipe output
@@ -88,7 +88,7 @@ class Perfmetrics(Process):
 
         response.outputs['archive'].output_format = Format('application/zip')
         response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'),
-                                                                  'preproc_result.zip')
+                                                                  'perfmetrics_result.zip')
 
         response.update_status("done.", 100)
         return response
