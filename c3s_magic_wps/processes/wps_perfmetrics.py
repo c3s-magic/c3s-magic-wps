@@ -62,7 +62,7 @@ class Perfmetrics(Process):
 
         # run diag
         response.update_status("running diagnostic ...", 20)
-        result = runner.run(recipe_file, config_file)
+        result = runner.run(recipe_file, config_file, skip_nonexistent=True)
 
         response.outputs['success'].data = result['success']
 
