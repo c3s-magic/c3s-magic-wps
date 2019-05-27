@@ -43,6 +43,7 @@ processes = sorted(
         QuantileBias(),
         RainFARM(),
         Toymodel(),
+        Perfmetrics(),
     ],
     key=lambda process: process.title,
 )
