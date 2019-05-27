@@ -13,10 +13,29 @@ def test_wps_caps():
     # 'shape_select',
     # 'perfmetrics',
     expected_caps = sorted([
-        'blocking', 'capacity_factor', 'combined_indices', 'consecdrydays', 'cvdp', 'diurnal_temperature_index',
-        'drought_indicator', 'ensclus', 'extreme_index', 'heatwaves_coldwaves', 'modes_of_variability',
-        'multimodel_products', 'preproc', 'shapefile_selection', 'sleep', 'teleconnections', 'weather_regimes',
-        'zmnam', 'toymodel', 'rainfarm', 'quantile_bias', 'perfmetrics'
+        'blocking',
+        'capacity_factor',
+        'combined_indices',
+        'consecdrydays',
+        'cvdp',
+        'diurnal_temperature_index',
+        'drought_indicator',
+        'ensclus',
+        'extreme_index',
+        'heatwaves_coldwaves',
+        'modes_of_variability',
+        'multimodel_products',
+        'preproc',
+        'shapefile_selection',
+        'sleep',
+        'teleconnections',
+        'weather_regimes',
+        'zmnam',
+        'toymodel',
+        'rainfarm',
+        'quantile_bias',
+        'smpi',
+        'perfmetrics',
     ])
     print(sorted(names.split()))
     print(expected_caps)
