@@ -1,5 +1,5 @@
 # ESMValTool
-# recipe_modes_of_variability_wp4.yml
+# recipe_modes_of_variability.yml
 ---
 documentation:
   description: |
@@ -58,7 +58,7 @@ diagnostics:
     scripts:
       main:
         script: magic_bsc/weather_regime.r
-        region: {{options['region']}} #North-Atlantic # North-Atlantic or Polar
+        plot_type: {{options['region']}} #North-Atlantic # North-Atlantic or Polar
 
         start_historical: {{options['start_historical']}} #"1971-01-01"
         end_historical: {{options['end_historical']}} #"2000-12-31"
