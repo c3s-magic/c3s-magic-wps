@@ -43,6 +43,11 @@ class SMPI(Process):
             ),
         ]
         outputs = [
+            ComplexOutput('smpi',
+                          'SMPI plot',
+                          abstract='Generated output plot of ESMValTool processing.',
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
             ComplexOutput('archive',
                           'Archive',
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
@@ -141,3 +146,10 @@ class SMPI(Process):
     def get_outputs(self, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
+        response.outputs['smpi'].output_format = Format('application/png')
+        response.outputs['smpi'].file = runner.get_output(
+            result['plot_dir'],
+            path_filter=os.path.join('collect', 'SMPI'),
+            name_filter="SMPI",
+            output_format="png",
+        )
