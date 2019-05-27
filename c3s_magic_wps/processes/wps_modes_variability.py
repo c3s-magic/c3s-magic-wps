@@ -25,12 +25,12 @@ class ModesVariability(Process):
             *year_ranges((2020, 2050),
                          start_name='start_projection',
                          end_name='end_projection'),
-            LiteralInput('region',
-                         'Region',
-                         abstract='Choose a region like Polar',
+            LiteralInput('plot_type',
+                         'Plot Type',
+                         abstract='Plot type.',
                          data_type='string',
-                         allowed_values=['Polar', 'North-Atlantic'],
-                         default='North-Atlantic'),
+                         allowed_values=['polar', 'rectangular'],
+                         default='polar'),
             LiteralInput('ncenters',
                          'Cluster Centers',
                          abstract='Choose a number of cluster centers.',
@@ -146,7 +146,7 @@ class ModesVariability(Process):
         )
 
         options = dict(
-            region=request.inputs['region'][0].data,
+            plot_type=request.inputs['plot_type'][0].data,
             start_historical='{}-01-01'.format(request.inputs['start_historical'][0].data),
             end_historical='{}-12-31'.format(request.inputs['end_historical'][0].data),
             start_projection='{}-01-01'.format(request.inputs['start_projection'][0].data),
