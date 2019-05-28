@@ -20,12 +20,30 @@ class CVDP(Process):
             *year_ranges((1850, 2005)),
         ]
         outputs = [
-            # ComplexOutput(
-            #     'plot',
-            #     'Output plot',
-            #     abstract='Generated output plot of ESMValTool processing.',
-            #     as_reference=True,
-            #     supported_formats=[Format('image/png')]),
+            ComplexOutput(
+                'tas_trend_ann_plot',
+                'Annual TAS trend',
+                abstract='Annual trend in surface air temperature.',
+                as_reference=True,
+                supported_formats=[Format('image/png')]),
+            ComplexOutput(
+                'sst_trend_ann_plot',
+                'Annual SST trend',
+                abstract='Annual trend in sea surface temperature.',
+                as_reference=True,
+                supported_formats=[Format('image/png')]),
+            ComplexOutput(
+                'psl_trend_ann_plot',
+                'Annual PSL trend',
+                abstract='Annual trend in sea level pressure.',
+                as_reference=True,
+                supported_formats=[Format('image/png')]),
+            ComplexOutput(
+                'pr_trend_ann_plot',
+                'Annual precipitation trend',
+                abstract='Annual trend in precipitation.',
+                as_reference=True,
+                supported_formats=[Format('image/png')]),
             ComplexOutput('archive',
                           'Archive',
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
@@ -115,9 +133,12 @@ class CVDP(Process):
     def get_outputs(self, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
-        # response.outputs['plot'].output_format = Format('application/png')
-        # response.outputs['plot'].file = runner.get_output(
-        #     result['work_dir'], # Yes, it's in the work dir
-        #     path_filter=os.path.join('diagnostic1', 'cvdp'),
-        #     name_filter="pr.mean.ann",
-        #     output_format="png")
+        varlist = ['tas', 'psl', 'pr', 'sst']
+        for var in varlist:
+            key = "{}_trend_ann_plot".format(var.lower())
+            response.outputs[key].output_format = Format('application/png')
+            response.outputs[key].file = runner.get_output(
+                result['work_dir'],  # Yes, it's in the work dir
+                path_filter=os.path.join('diagnostic1', 'cvdp'),
+                name_filter="{}.trends.ann.format(var.lower())",
+                output_format="png")
