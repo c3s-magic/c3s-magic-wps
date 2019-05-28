@@ -193,39 +193,31 @@ class HyInt(Process):
         response.outputs['plot1'].output_format = Format('image/png')
         response.outputs['plot1'].file = runner.get_output(result['plot_dir'],
                                                            path_filter=os.path.join('hyint', 'main'),
-                                                           name_filter="*_??_map.png",
-        )
+                                                           name_filter="*_??_map.png")
         response.outputs['plot2'].output_format = Format('image/png')
         response.outputs['plot2'].file = runner.get_output(result['plot_dir'],
                                                            path_filter=os.path.join('hyint', 'main'),
-                                                           name_filter="*comp_map.png",
-        )
+                                                           name_filter="*comp_map.png")
         response.outputs['plot3'].output_format = Format('image/png')
         response.outputs['plot3'].file = runner.get_output(result['plot_dir'],
                                                            path_filter=os.path.join('hyint', 'main'),
-                                                           name_filter="multiindex*_map.png",
-        )
+                                                           name_filter="multiindex*_map.png")
         response.outputs['plot12'].output_format = Format('image/png')
         response.outputs['plot12'].file = runner.get_output(result['plot_dir'],
                                                            path_filter=os.path.join('hyint', 'main'),
-                                                           name_filter="multiindex*multiregion_timeseries*.png",
-        )
+                                                           name_filter="multiindex*multiregion_timeseries*.png")
         response.outputs['plot13'].output_format = Format('image/png')
         response.outputs['plot13'].file = runner.get_output(result['plot_dir'],
                                                            path_filter=os.path.join('hyint', 'main'),
-                                                           name_filter="multiindex_multimodel*_timeseries*.png",
-        )
+                                                           name_filter="multiindex_multimodel*_timeseries*.png")
         response.outputs['plot14'].output_format = Format('image/png')
         response.outputs['plot14'].file = runner.get_output(result['plot_dir'],
                                                            path_filter=os.path.join('hyint', 'main'),
-                                                           name_filter="multiindex*multiregion_trend_summary*.png",
-        )
+                                                           name_filter="multiindex*multiregion_trend_summary*.png")
         response.outputs['plot15'].output_format = Format('image/png')
         response.outputs['plot15'].file = runner.get_output(result['plot_dir'],
                                                            path_filter=os.path.join('hyint', 'main'),
-                                                           name_filter="multiindex_multimodel*_trend_summary*.png",
-        )
-
+                                                           name_filter="multiindex_multimodel*_trend_summary*.png")
         response.outputs['model'].output_format = FORMATS.NETCDF
         response.outputs['model'].file = runner.get_output(result['work_dir'],
                                                            path_filter=os.path.join('hyint', 'main'),
