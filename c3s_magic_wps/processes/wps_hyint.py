@@ -126,8 +126,8 @@ class HyInt(Process):
         )
 
         options = dict(
-            perc_lev=request.inputs['indices'][0].data
-            perc_lev=request.inputs['regions'][0].data
+            indices=request.inputs['indices'][0].data
+            regions=request.inputs['regions'][0].data
         )
 
         # generate recipe
@@ -173,7 +173,7 @@ class HyInt(Process):
 
         response.outputs['archive'].output_format = Format('application/zip')
         response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'),
-                                                                  'quantilebias_result.zip')
+                                                                  'hyint_result.zip')
         response.update_status("done.", 100)
         return response
 
@@ -218,6 +218,6 @@ class HyInt(Process):
 
         response.outputs['model'].output_format = FORMATS.NETCDF
         response.outputs['model'].file = runner.get_output(result['work_dir'],
-                                                           path_filter=os.path.join('quantilebias', 'main'),
+                                                           path_filter=os.path.join('hyint', 'main'),
                                                            name_filter="{}*".format(model),
                                                            output_format="nc")
