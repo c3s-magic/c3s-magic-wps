@@ -1,2 +1,9 @@
-Tier3/ERA-Interim/
+Tier1/AIRS
+Tier1/CERES-EBAF
+Tier1/GPCP-SG
+Tier2/ESACCI-CLOUD
+Tier2/ESACCI-SST
+Tier2/HadISST
 Tier2/NCEP
+Tier2/PATMOS-x
+Tier3/ERA-Interim
