@@ -14,16 +14,36 @@ LOGGER = logging.getLogger("PYWPS")
 class CVDP(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(model='MPI-ESM-LR', experiment='historical', ensemble='r1i1p1'),
-            *year_ranges((2000, 2002)),
+            *model_experiment_ensemble(model='ACCESS1-0',
+                                       experiment='historical',
+                                       ensemble='r1i1p1'),
+            *year_ranges((1850, 2005)),
         ]
         outputs = [
-            # ComplexOutput(
-            #     'plot',
-            #     'Output plot',
-            #     abstract='Generated output plot of ESMValTool processing.',
-            #     as_reference=True,
-            #     supported_formats=[Format('image/png')]),
+            ComplexOutput(
+                'tas_trend_ann_plot',
+                'Annual TAS trend',
+                abstract='Annual trend in surface air temperature.',
+                as_reference=True,
+                supported_formats=[Format('image/png')]),
+            ComplexOutput(
+                'sst_trend_ann_plot',
+                'Annual SST trend',
+                abstract='Annual trend in sea surface temperature.',
+                as_reference=True,
+                supported_formats=[Format('image/png')]),
+            ComplexOutput(
+                'psl_trend_ann_plot',
+                'Annual PSL trend',
+                abstract='Annual trend in sea level pressure.',
+                as_reference=True,
+                supported_formats=[Format('image/png')]),
+            ComplexOutput(
+                'pr_trend_ann_plot',
+                'Annual precipitation trend',
+                abstract='Annual trend in precipitation.',
+                as_reference=True,
+                supported_formats=[Format('image/png')]),
             ComplexOutput('archive',
                           'Archive',
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
@@ -57,9 +77,9 @@ class CVDP(Process):
         constraints = dict(
             model=request.inputs['model'][0].data,
             experiment=request.inputs['experiment'][0].data,
-            time_frequency='mon',
-            cmor_table='Amon',
             ensemble=request.inputs['ensemble'][0].data,
+            start_year=request.inputs['start_year'][0].data,
+            end_year=request.inputs['end_year'][0].data,
         )
 
         # generate recipe
@@ -98,12 +118,14 @@ class CVDP(Process):
                 response.update_status("exception occured: " + str(e), 85)
         else:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'], 85)
+            response.update_status("exception occured: " + result['exception'],
+                                   85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'), 'cvdp_result.zip')
+        response.outputs['archive'].file = runner.compress_output(
+            os.path.join(workdir, 'output'), 'cvdp_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -111,9 +133,12 @@ class CVDP(Process):
     def get_outputs(self, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
-        # response.outputs['plot'].output_format = Format('application/png')
-        # response.outputs['plot'].file = runner.get_output(
-        #     result['work_dir'], # Yes, it's in the work dir
-        #     path_filter=os.path.join('diagnostic1', 'cvdp'),
-        #     name_filter="pr.mean.ann",
-        #     output_format="png")
+        varlist = ['tas', 'psl', 'pr', 'sst']
+        for var in varlist:
+            key = "{}_trend_ann_plot".format(var.lower())
+            response.outputs[key].output_format = Format('application/png')
+            response.outputs[key].file = runner.get_output(
+                result['work_dir'],  # Yes, it's in the work dir
+                path_filter=os.path.join('diagnostic1', 'cvdp'),
+                name_filter="{}.trends.ann.format(var.lower())",
+                output_format="png")
