@@ -18,20 +18,30 @@ class HyInt(Process):
             *model_experiment_ensemble(model='ACCESS1-0', experiment='historical', ensemble='r1i1p1', max_occurs=100),
             *year_ranges((1980, 2020)),
             LiteralInput(
+                'ref_dataset',
+                'Reference Dataset',
+                abstract='Choose a reference dataset like ERA-Interim.',
+                data_type='string',
+                allowed_values=['ERA-Interim'],
+                default='ERA-Interim',
+                min_occurs=1,
+                max_occurs=1,
+            ),
+            LiteralInput(
                 'indices',
                 'Indices',
                 abstract='Enter one or more of these options in a list: ["pa_norm", "hyint",  "int_norm", \
                 "r95_norm", "wsl_norm", "dsl_norm", "int", "dsl", "wsl"]',
                 data_type='string',
-                default='["pa_norm", "hyint", "int_norm", "r95_norm", "wsl_norm", "dsl_norm"]'
+                default='["pa_norm", "hyint", "int_norm", "r95_norm", "wsl_norm", "dsl_norm"]',
             ),
-        LiteralInput(
-            'regions',
-            'Regions',
-            abstract='Enter one or more of these options in a list: ["GL", "SA", "AF", "EU", "EA"]',
-            data_type='string',
-            default='["pa_norm", "hyint", "int_norm", "r95_norm", "wsl_norm", "dsl_norm"]'
-        ),
+            LiteralInput(
+                'regions',
+                'Regions',
+                abstract='Enter one or more of these options in a list: ["GL", "SA", "AF", "EU", "EA"]',
+                data_type='string',
+                default='["pa_norm", "hyint", "int_norm", "r95_norm", "wsl_norm", "dsl_norm"]',
+            ),
         ]
 
         outputs = [
