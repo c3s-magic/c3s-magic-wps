@@ -126,7 +126,7 @@ class HyInt(Process):
         )
 
         options = dict(
-            indices=request.inputs['indices'][0].data
+            indices=request.inputs['indices'][0].data,
             regions=request.inputs['regions'][0].data
         )
 
