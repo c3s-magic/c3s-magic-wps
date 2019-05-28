@@ -21,7 +21,8 @@ def _dir_entry(path, name):
             if (os.path.isdir(subdir)):
                 contents.append(_dir_entry(subdir, dir))
 
-        result['contents'] = contents
+        if len(contents) > 0:
+            result['contents'] = contents
 
         return result
 
@@ -33,9 +34,9 @@ class DataFinder():
 
         print(self.data)
 
-        print(json.dumps(self.data, indent=4), file=sys.stderr)
+        print(json.dumps(self.data, indent=2), file=sys.stderr)
 
 
 if __name__ == "__main__":
-    DataFinder('/home/niels/Data/synda/cmip5/output1')
+    DataFinder(sys.argv[1])
     
