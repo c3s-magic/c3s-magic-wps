@@ -22,7 +22,6 @@ class Perfmetrics(Process):
                           abstract='RMSD metric.',
                           as_reference=True,
                           supported_formats=[Format('image/png')]),
-
             ComplexOutput('archive',
                           'Archive',
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
