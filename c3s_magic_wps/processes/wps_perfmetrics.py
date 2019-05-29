@@ -17,6 +17,12 @@ class Perfmetrics(Process):
     def __init__(self):
         inputs = []
         outputs = [
+            ComplexOutput('rmsd',
+                          'RMSD metric',
+                          abstract='RMSD metric.',
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
+
             ComplexOutput('archive',
                           'Archive',
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
@@ -95,3 +101,10 @@ class Perfmetrics(Process):
 
     def get_outputs(self, result, response):
         response.update_status("collecting output ...", 80)
+
+        response.outputs['rmsd'].output_format = Format('application/png')
+        response.outputs['rmsd'].file = runner.get_output(
+            result['plot_dir'],
+            path_filter=os.path.join('collect', 'RMSD'),
+            name_filter="*",
+            output_format="png")
