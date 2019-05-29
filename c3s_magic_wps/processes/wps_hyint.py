@@ -42,6 +42,21 @@ class HyInt(Process):
                 data_type='string',
                 default='["pa_norm", "hyint", "int_norm", "r95_norm", "wsl_norm", "dsl_norm"]',
             ),
+            LiteralInput(
+                'norm_year_start',
+                'Norm year start',
+                abstract='',
+                data_type='integer',
+                default=1980,
+            ),
+            LiteralInput(
+                'norm_year_end',
+                'Norm year end',
+                abstract='',
+                data_type='integer',
+                default=1999,
+            ),
+
         ]
 
         outputs = [
@@ -137,7 +152,9 @@ class HyInt(Process):
 
         options = dict(
             indices=request.inputs['indices'][0].data,
-            regions=request.inputs['regions'][0].data
+            regions=request.inputs['regions'][0].data,
+            norm_year_start=request.inputs['norm_year_start'][0].data,
+            norm_year_end=request.inputs['norm_year_end'][0].data,
         )
 
         # generate recipe
