@@ -18,7 +18,7 @@ template_env = Environment(loader=PackageLoader('c3s_magic_wps', '/templates/esm
 VERSION = "2.0.0"
 
 
-def run(recipe_file, config_file):
+def run(recipe_file, config_file, skip_nonexistent=False):
     """Run esmvaltool"""
     from esmvaltool._main import configure_logging, read_config_user_file, process_recipe
     recipe_name = os.path.splitext(os.path.basename(recipe_file))[0]
@@ -40,6 +40,7 @@ def run(recipe_file, config_file):
     # ncl_version_check()
 
     cfg['synda_download'] = False
+    cfg['skip-nonexistent'] = skip_nonexistent
 
     exception = None
     try:

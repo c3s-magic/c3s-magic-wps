@@ -20,23 +20,11 @@ documentation:
 datasets:
   - dataset: {{constraints['model']}}
     project: CMIP5
-    mip: {{constraints['cmor_table']}}
     exp: {{constraints['experiment']}}
     ensemble: {{constraints['ensemble']}}
-    start_year: {{start_year}}
-    end_year: {{end_year}}
+    start_year: {{constraints['start_year']}}
+    end_year: {{constraints['end_year']}}
 
-
-#preprocessors:
-#
-#  pp_regrid:
-#    extract_levels:
-#      false
-#    regrid:
-#      target_grid: reference_dataset
-#      scheme: linear
-#    multi_model_statistics:
-#      false
 
 diagnostics:
 
@@ -44,13 +32,13 @@ diagnostics:
     description: Run the NCAR CVDPackage.
     variables:
       tas:
-        field: T2Ms
-        #reference_dataset: bcc-csm1-1
+        mip: Amon
       pr:
-        field: T2Ms
-        #reference_dataset: MPI-ESM-LR
+        mip: Amon
       psl:
-        field: T2Ms
+        mip: Amon
+      ts:
+        mip: Amon
     scripts:
       cvdp:
         script: cvdp/cvdp_wrapper.py

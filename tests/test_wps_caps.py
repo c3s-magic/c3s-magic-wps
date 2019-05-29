@@ -35,6 +35,8 @@ def test_wps_caps():
         'rainfarm',
         'quantile_bias',
         'hyint'
+        'smpi',
+        'perfmetrics',
     ])
     print(sorted(names.split()))
     print(expected_caps)

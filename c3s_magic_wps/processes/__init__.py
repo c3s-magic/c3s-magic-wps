@@ -20,6 +20,8 @@ from .wps_quantilebias import QuantileBias
 from .wps_toymodel import Toymodel
 from .wps_rainfarm import RainFARM
 from .wps_hyint import HyInt
+from .wps_perfmetrics import Perfmetrics
+from .wps_smpi import SMPI
 
 processes = sorted(
     [
@@ -45,6 +47,8 @@ processes = sorted(
         RainFARM(),
         Toymodel(),
         HyInt(),
+        Perfmetrics(),
+        SMPI(),
     ],
     key=lambda process: process.title,
 )
