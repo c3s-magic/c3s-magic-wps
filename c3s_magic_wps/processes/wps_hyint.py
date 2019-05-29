@@ -21,10 +21,10 @@ class HyInt(Process):
             LiteralInput(
                 'ref_dataset',
                 'Reference Dataset',
-                abstract='Choose a reference dataset like ACCESS1-0.',
+                abstract='Choose a reference dataset like ERA-Interim.',
                 data_type='string',
-                allowed_values=['ACCESS1-0'],
-                default='ACCESS1-0',
+                allowed_values=['ERA-Interim'],
+                default='ERA-Interim',
                 min_occurs=1,
                 max_occurs=1,
             ),
