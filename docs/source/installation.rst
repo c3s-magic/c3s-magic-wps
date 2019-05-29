@@ -91,11 +91,36 @@ You can also use the ``Makefile`` to start and stop the service:
 Run c3s magic wps as Docker container
 -------------------------------------
 
-You can also run c3s magic wps as a Docker container.
+You can also choose to run c3s magic wps as a Docker container.
+
 
 .. warning::
 
   TODO: Describe Docker container support.
+
+Get docker images using docker-compose::
+
+    $ docker-compose pull
+
+Start the demo with docker-compose::
+
+    $ docker-compose up -d  # runs with -d in the background
+    $ docker-compose logs -f  # check the logs if running in background
+
+By default the WPS service should be available on port 5000::
+
+    $ firefox "http://localhost:5000/wps?service=wps&request=GetCapabilities"
+
+Run docker exec to watch logs::
+
+    $ docker ps     # find container name
+    copernicus-wps-demo_copernicus_1
+    $ docker exec copernicus-wps-demo_copernicus_1 tail -f /opt/wps/pywps.log
+
+Use docker-compose to stop the containers::
+
+    $ docker-compose down
+
 
 Use Ansible to deploy c3s magic wps on your System
 --------------------------------------------------
