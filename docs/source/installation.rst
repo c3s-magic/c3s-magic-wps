@@ -97,6 +97,17 @@ You can also choose to run c3s magic wps as a Docker container.
 .. warning::
 
   TODO: Describe Docker container support.
+  
+.. warning::
+  TODO: can we simply do: 
+Run the docker container:  
+  $ docker build -t c3s-magic/c3s-magic-wps .
+  $ docker run -p 5000:5000 c3s-magic/c3s-magic-wps
+
+WPS service should be available on port 5000::
+
+  $ http://localhost:5000/wps?request=GetCapabilities&service=WPS
+  
 
 Get docker images using docker-compose::
 
