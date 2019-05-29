@@ -1,5 +1,9 @@
+import json
+
 from pywps import Process, LiteralInput, LiteralOutput, ComplexOutput, Format
 from pywps.app.Common import Metadata
+
+from .utils import DataFinder
 
 
 class Meta(Process):
@@ -30,6 +34,8 @@ class Meta(Process):
 
         print('Getting process inputs', request.inputs['process'][0].data)
         
-        response.outputs['drs'].data = '{ "name":"John", "age":30, "car":null }'
+        finder = DataFinder()
+
+        response.outputs['drs'].data = json.dumps(finder.get_pruned_tree(required_variables=['pr'], required_frequency='mon'))
 
         return response
