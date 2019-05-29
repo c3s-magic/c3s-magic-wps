@@ -15,7 +15,7 @@ LOGGER = logging.getLogger("PYWPS")
 class HyInt(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(model='ACCESS1-0', experiment='historical', ensemble='r1i1p1', max_occurs=100),
+            *model_experiment_ensemble(model='ACCESS1-0', experiment='[historical,rcp85]', ensemble='r1i1p1', min_occurs=2, max_occurs=100),
             *year_ranges((1980, 2020)),
             LiteralInput(
                 'ref_dataset',
@@ -45,14 +45,14 @@ class HyInt(Process):
             LiteralInput(
                 'norm_year_start',
                 'Norm year start',
-                abstract='',
+                abstract='first year of reference normalization period to be used for normalized indices',
                 data_type='integer',
                 default=1980,
             ),
             LiteralInput(
                 'norm_year_end',
                 'Norm year end',
-                abstract='',
+                abstract='last year of reference normalization period to be used for normalized indices',
                 data_type='integer',
                 default=1999,
             ),
@@ -144,9 +144,9 @@ class HyInt(Process):
 
         # build esgf search constraints
         constraints = dict(
-            model=request.inputs['model'][0].data,
-            experiment=request.inputs['experiment'][0].data,
-            ensemble=request.inputs['ensemble'][0].data,
+            models=request.inputs['model'],
+            experiments=request.inputs['experiment'],
+            ensembles=request.inputs['ensemble'],
             reference=request.inputs['ref_dataset'][0].data,
         )
 

@@ -21,13 +21,11 @@ documentation:
     - c3s-magic
 
 datasets:
-  - dataset: {{constraints['model']}}
-    project: CMIP5
-    exp: {{constraints['experiment']}} # [historical, rcp85]
-    ensemble: {{constraints['ensemble']}} # r1i1p1
-    start_year: {{start_year}} # 1980
-    end_year: {{end_year}} # 2020
-    reference_dataset: {{constraints['reference']}} # "ACCESS1-0"
+  {% for model in constraints['models'] %}
+  - dataset: {{constraints['models'][loop.index0].data}}
+    exp: [historical, {{constraints['experiments'][loop.index0].data}}] # [historical, rcp85]
+    ensemble: {{constraints['ensembles'][loop.index0].data}} # r1i1p1
+  {% endfor %}
 
 preprocessors:
   preproc:
@@ -41,6 +39,10 @@ diagnostics:
       pr:
         preprocessor: preproc
         mip: day
+        reference_dataset: {{constraints['reference']}} # "ACCESS1-0"
+        start_year: {{start_year}} # 1980
+        end_year: {{end_year}} # 2020
+        project: CMIP5
 
     scripts:
       main:
