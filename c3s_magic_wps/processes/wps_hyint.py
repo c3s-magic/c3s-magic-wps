@@ -198,7 +198,7 @@ class HyInt(Process):
 
         if result['success']:
             try:
-                self.get_outputs(constraints['model'], result, response)
+                self.get_outputs(constraints['models'], result, response)
             except Exception as e:
                 response.update_status("exception occured: " + str(e), 85)
         else:
@@ -213,7 +213,7 @@ class HyInt(Process):
         response.update_status("done.", 100)
         return response
 
-    def get_outputs(self, model, result, response):
+    def get_outputs(self, models, result, response):
         # result plot
         response.update_status("collecting output ...", 80)
         response.outputs['plot1'].output_format = Format('image/png')
@@ -247,5 +247,5 @@ class HyInt(Process):
         response.outputs['model'].output_format = FORMATS.NETCDF
         response.outputs['model'].file = runner.get_output(result['work_dir'],
                                                            path_filter=os.path.join('hyint', 'main'),
-                                                           name_filter="{}*".format(model),
+                                                           name_filter="{}*".format(models[0]),
                                                            output_format="nc")
