@@ -30,16 +30,7 @@ datasets:
       ensemble: {{constraints['ensembles'][loop.index0].data}}
       project: CMIP5
       exp: {{constraints['experiments'][loop.index0].data}}
-      start_year: {{start_year}}
-      end_year: {{end_year}}
   {% endfor %}
-   -  dataset: {{constraints['reference']}}
-      project: OBS
-      type: reanaly
-      version: 1
-      tier: 3
-      start_year: {{start_year}}
-      end_year: {{end_year}}
 
 diagnostics:
   extreme_events:
@@ -47,17 +38,25 @@ diagnostics:
     variables:
       pr:
         mip: day
+        start_year: {{start_year}}
+        end_year: {{end_year}}
       tas:
         mip: day
+        start_year: {{start_year}}
+        end_year: {{end_year}}
       tasmax:
         mip: day
+        start_year: {{start_year}}
+        end_year: {{end_year}}
       tasmin:
         mip: day
+        start_year: {{start_year}}
+        end_year: {{end_year}}
     
     scripts:
       main:
         script: extreme_events/extreme_events.R
-        reference_datasets: {{constraints['reference']}}
+        reference_dataset: {{constraints['reference']}}
         regrid_dataset: {{constraints['reference']}}
         mip_name: CMIP
         timeseries_idx: ["sdiiETCCDI_yr", "r95pETCCDI_yr", "rx5dayETCCDI_yr", "rx1dayETCCDI_yr", "cddETCCDI_yr", "fdETCCDI_yr", "trETCCDI_yr", "txnETCCDI_yr", "txxETCCDI_yr", "tnnETCCDI_yr", "tnxETCCDI_yr"]
