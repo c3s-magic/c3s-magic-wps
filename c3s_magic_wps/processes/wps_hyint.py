@@ -37,7 +37,7 @@ class HyInt(Process):
                                 "r95_norm", "wsl_norm", "dsl_norm", "int", "dsl", "wsl"],
                 default="hyint",
                 min_occurs=1,
-                max_occurs=10,
+                max_occurs=9,
             ),
             LiteralInput(
                 'regions',
@@ -47,7 +47,7 @@ class HyInt(Process):
                 allowed_values=["GL", "SA", "AF", "EU", "EA"],
                 default="GL",
                 min_occurs=1,
-                max_occurs=10,
+                max_occurs=5,
             ),
             LiteralInput(
                 'norm_year_start',
