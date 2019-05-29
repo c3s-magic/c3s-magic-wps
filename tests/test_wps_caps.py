@@ -37,6 +37,7 @@ def test_wps_caps():
         'hyint'
         'smpi',
         'perfmetrics',
+        'extreme_events',
     ])
     print(sorted(names.split()))
     print(expected_caps)
