@@ -26,11 +26,16 @@ documentation:
 
 datasets:
   {% for model in constraints['models'] %}
-    - dataset: {{constraints['models'][loop.index0].data}}
-      ensemble: {{constraints['ensembles'][loop.index0].data}}
-      project: CMIP5
-      exp: {{constraints['experiments'][loop.index0].data}}
+  - dataset: {{constraints['models'][loop.index0].data}}
+    ensemble: {{constraints['ensembles'][loop.index0].data}}
+    project: CMIP5
+    exp: {{constraints['experiments'][loop.index0].data}}
   {% endfor %}
+  - dataset: ERA-Interim
+    project: OBS
+    type: reanaly
+    version: 1
+    tier: 3
 
 diagnostics:
   extreme_events:
@@ -56,7 +61,7 @@ diagnostics:
     scripts:
       main:
         script: extreme_events/extreme_events.R
-        reference_dataset: {{constraints['reference']}}
+        reference_datasets: {{constraints['reference']}}
         regrid_dataset: {{constraints['reference']}}
         mip_name: CMIP
         timeseries_idx: ["sdiiETCCDI_yr", "r95pETCCDI_yr", "rx5dayETCCDI_yr", "rx1dayETCCDI_yr", "cddETCCDI_yr", "fdETCCDI_yr", "trETCCDI_yr", "txnETCCDI_yr", "txxETCCDI_yr", "tnnETCCDI_yr", "tnxETCCDI_yr"]

@@ -30,7 +30,22 @@ class ExtremeEvents(Process):
                          min_occurs=1,
                          max_occurs=1),
         ]
+        self.plotlist = [
+            ('Glecker', [Format('image/png')]),
+            ('r95', [Format('image/png')]),
+            ('rx5day', [Format('image/png')]),
+            ('rx1day', [Format('image/png')]),
+            ('cdd', [Format('image/png')]),
+            ('fd', [Format('image/png')]),
+            ('tr', [Format('image/png')]),
+            ('txn', [Format('image/png')]),
+            ('txx', [Format('image/png')]),
+            ('tnn', [Format('image/png')]),
+            ('tnx', [Format('image/png')]),
+        ]
+
         outputs = [
+            *outputs_from_plot_names(self.plotlist),
             ComplexOutput('archive',
                           'Archive',
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
@@ -127,3 +142,11 @@ class ExtremeEvents(Process):
 
     def get_outputs(self, result, response):
         response.update_status("collecting output ...", 80)
+        for plot, _ in self.plotlist:
+            key = '{}_plot'.format(plot.lower())
+            response.outputs[key].output_format = Format('application/png')
+            response.outputs[key].file = runner.get_output(
+                result['plot_dir'],
+                path_filter=os.path.join('extreme_events', 'main'),
+                name_filter="{}*".format(plot),
+                output_format="png")
