@@ -22,9 +22,9 @@ Check out code from the c3s magic wps GitHub repo and start the installation:
 .. code-block:: sh
 
    $ git clone https://github.com/c3s-magic/c3s-magic-wps.git
-   $ cd c3s_magic_wps
+   $ cd c3s-magic-wps
    $ conda env create -f environment.yml
-   $ source activate c3s_magic_wps
+   $ source activate c3s-magic-wps
    $ python setup.py develop
 
 ... or do it the lazy way
@@ -36,7 +36,7 @@ We provide also a ``Makefile`` to run this installation without additional steps
 .. code-block:: sh
 
    $ git clone https://github.com/c3s-magic/c3s-magic-wps.git
-   $ cd c3s_magic_wps
+   $ cd c3s-magic-wps
    $ make clean    # cleans up a previous Conda environment
    $ make install  # installs Conda if necessary and runs the above installation steps
 
@@ -47,12 +47,12 @@ After successful installation you can start the service using the ``c3s_magic_wp
 
 .. code-block:: sh
 
-   $ c3s_magic_wps --help # show help
-   $ c3s_magic_wps start  # start service with default configuration
+   $ c3s-magic-wps --help # show help
+   $ c3s-magic-wps start  # start service with default configuration
 
    OR
 
-   $ c3s_magic_wps start --daemon # start service as daemon
+   $ c3s-magic-wps start --daemon # start service as daemon
    loading configuration
    forked process id: 42
 
