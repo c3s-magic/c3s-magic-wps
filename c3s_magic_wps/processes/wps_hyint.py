@@ -15,7 +15,8 @@ LOGGER = logging.getLogger("PYWPS")
 class HyInt(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(model='ACCESS1-0', experiment='rcp85', ensemble='r1i1p1', min_occurs=2, max_occurs=100),
+            *model_experiment_ensemble(model='ACCESS1-0', experiment='rcp85',
+                                       ensemble='r1i1p1', min_occurs=2, max_occurs=100),
             *year_ranges((1980, 2020)),
             LiteralInput(
                 'ref_dataset',
