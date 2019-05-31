@@ -8,6 +8,8 @@ from pywps.app.Common import Metadata
 
 from ...util import static_directory
 
+from .data_finder import DataFinder
+
 LOGGER = logging.getLogger("PYWPS")
 
 
@@ -78,32 +80,42 @@ def model_experiment_ensemble(model: str,
                               experiment_name: str = 'Experiment',
                               ensemble_name: str = 'Ensemble',
                               min_occurs=1,
-                              max_occurs=150):
-    if not hasattr(model_experiment_ensemble, 'available_models'):
-        parse_model_lists()
+                              max_occurs=150,
+                              required_variables = ['pr'],
+                              required_frequency = 'mon'):
+    # if not hasattr(model_experiment_ensemble, 'available_models'):
+    #     parse_model_lists()
+
+    finder = DataFinder.getInstance()
+    available_models, available_experiments, available_ensembles = finder.get_model_experiment_ensemble(required_variables=required_variables, required_frequency=required_frequency)
+
+    available_models = sorted(available_models, key=str.lower)
+    available_experiments = sorted(available_experiments)
+    available_ensembles = sorted(available_ensembles,key=ensemble_comp)
 
     model_long_name = model_name.replace('_', ' ').capitalize()
     experiment_long_name = experiment_name.replace('_', ' ').capitalize()
     ensemble_long_name = ensemble_name.replace('_', ' ').capitalize()
 
     default_model = model
-    if default_model not in model_experiment_ensemble.available_models:
-        default_model = model_experiment_ensemble.available_models[0]
+    if default_model not in available_models:
+        default_model = available_models[0]
 
     default_ensemble = ensemble
-    if default_ensemble not in model_experiment_ensemble.available_ensembles:
-        default_ensemble = model_experiment_ensemble.available_ensembles[0]
+    if default_ensemble not in available_ensembles:
+        default_ensemble = available_ensembles[0]
 
     default_experiment = experiment
-    if default_experiment not in model_experiment_ensemble.available_experiments:
-        default_experiment = model_experiment_ensemble.available_experiments[0]
+    if default_experiment not in available_experiments:
+        default_experiment = available_experiments[0]
 
+    
     inputs = [
         LiteralInput(model_name.lower(),
                      model_long_name,
                      abstract='Choose a model',
                      data_type='string',
-                     allowed_values=model_experiment_ensemble.available_models,
+                     allowed_values=available_models,
                      default=default_model,
                      min_occurs=min_occurs,
                      max_occurs=max_occurs),
@@ -111,7 +123,7 @@ def model_experiment_ensemble(model: str,
                      experiment_long_name,
                      abstract='Choose an experiment',
                      data_type='string',
-                     allowed_values=model_experiment_ensemble.available_experiments,
+                     allowed_values=available_experiments,
                      default=default_experiment,
                      min_occurs=min_occurs,
                      max_occurs=max_occurs),
@@ -119,7 +131,7 @@ def model_experiment_ensemble(model: str,
                      ensemble_long_name,
                      abstract='Choose an ensemble',
                      data_type='string',
-                     allowed_values=model_experiment_ensemble.available_ensembles,
+                     allowed_values=available_ensembles,
                      default=default_ensemble,
                      min_occurs=min_occurs,
                      max_occurs=max_occurs),

@@ -42,12 +42,18 @@ def _has_chilren(a_dict):
     return False
                                                      
 class DataFinder():
-    def __init__(self, archive_base = None):
-        if not archive_base:
-            self.archive_base = configuration.get_config_value("data", "archive_root")
-        else:
-            self.archive_base = archive_base
- 
+    __instance = None
+
+    @staticmethod
+    def getInstance():
+        if DataFinder.__instance == None:
+            DataFinder.__instance = DataFinder()
+
+        return DataFinder.__instance
+
+    def __init__(self):
+        self.archive_base = os.environ['CMIP_DATA_ROOT']
+
         LOGGER.debug("searching for model data in the following folder: `%s`", self.archive_base)
 
         if not os.path.isdir(self.archive_base):
@@ -106,16 +112,16 @@ class DataFinder():
         experiments = set()
         ensembles = set()
 
-        for organization in self.data['contents']:
-            for model in organization['contents']:
-                for experiment in model['contents']:
-                    for frequency in experiment['contents']:
+        for organization in _get_children_of(self.data):
+            for model in _get_children_of(organization):
+                for experiment in _get_children_of(model):
+                    for frequency in _get_children_of(experiment):
                         if frequency['name'] == required_frequency:
-                            for mip in frequency['contents']:
-                                for realm in mip['contents']:
-                                    for ensemble in realm['contents']:
+                            for mip in _get_children_of(frequency):
+                                for realm in _get_children_of(mip):
+                                    for ensemble in _get_children_of(realm):
                                         available_variables = []
-                                        for variable in ensemble['contents']:
+                                        for variable in _get_children_of(ensemble):
                                             available_variables.append(variable['name'])
 
                                         LOGGER.debug('required_variables ' + str(required_variables))
@@ -133,7 +139,7 @@ class DataFinder():
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
 
-    finder = DataFinder(sys.argv[1])
+    finder = DataFinder.getInstance()
 
     print(finder.data)
 

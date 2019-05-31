@@ -37,8 +37,7 @@ class Meta(Process):
 
     @staticmethod
     def _handler(request, response):
-        #TODO: this should move to init to make this process faster.
-        finder = DataFinder()
+        finder = DataFinder.getInstance()
 
         process_identifier = request.inputs['process'][0].data
 
