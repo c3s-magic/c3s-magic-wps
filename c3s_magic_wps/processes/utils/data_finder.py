@@ -38,7 +38,7 @@ def _get_children_of(a_dict):
 def _has_chilren(a_dict):
     if 'contents' in a_dict:
         #make sure we return a boolean
-        return len(a_dict['contents']) == 0
+        return len(a_dict['contents']) != 0
     return False
                                                      
 class DataFinder():
@@ -81,22 +81,23 @@ class DataFinder():
                                             #LOGGER.debug('removing %s from %s' %(ensemble, model))
                                             realm['contents'].remove(ensemble)
                                         else:
+                                            #remove unneeded information for the tree to reduce size
                                             del ensemble['contents']
                                             
-            #                         if not _has_chilren(realm):
-            #                             mip['contents'].remove(realm)
-            #                     if not _has_chilren(mip):
-            #                         frequency['contents'].remove(mip)
-            #                 if not _has_chilren(frequency):
-            #                     experiment['contents'].remove(frequency)
+                                    if not _has_chilren(realm):
+                                        mip['contents'].remove(realm)
+                                if not _has_chilren(mip):
+                                    frequency['contents'].remove(mip)
+                            if not _has_chilren(frequency):
+                                experiment['contents'].remove(frequency)
                         else:
                             experiment['contents'].remove(frequency)
-            #         if not _has_chilren(experiment):
-            #             model['contents'].remove(experiment)
-            #     if not _has_chilren(model):
-            #         organization['contents'].remove(model)
-            # if not _has_chilren(organization):
-            #     result['contents'].remove(organization)
+                    if not _has_chilren(experiment):
+                        model['contents'].remove(experiment)
+                if not _has_chilren(model):
+                    organization['contents'].remove(model)
+            if not _has_chilren(organization):
+                result['contents'].remove(organization)
         return result
 
     # Obtain a list of all valid models, experiments, and esemble members for the wps.
