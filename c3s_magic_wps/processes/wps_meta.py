@@ -1,3 +1,4 @@
+import logging
 import json
 
 from pywps import Process, LiteralInput, LiteralOutput, ComplexOutput, Format
@@ -5,6 +6,9 @@ from pywps.app.Common import Metadata
 
 from .utils import DataFinder
 
+from .. import processes
+
+LOGGER = logging.getLogger("PYWPS")
 
 class Meta(Process):
     def __init__(self):
@@ -19,7 +23,7 @@ class Meta(Process):
                                     identifier='meta',
                                     version='1.0',
                                     title='Meta process',
-                                    abstract='This process returns the available model data for the metric processes in this WPS service.',
+                                    abstract='This is not a Metric. This process returns the available model data for the metric processes in this WPS service.',
                                     profile='',
                                     metadata=[
                                         Metadata('MAGIC WPS Metadata process', 'https://c3s-magic-wps.readthedocs.io/en/latest/'),
@@ -27,15 +31,36 @@ class Meta(Process):
                                     inputs=inputs,
                                     outputs=outputs,
                                     store_supported=False,
-                                    status_supported=True)
+                                    status_supported=False)
+                                
+        
 
     @staticmethod
     def _handler(request, response):
-
-        print('Getting process inputs', request.inputs['process'][0].data)
-        
+        #TODO: this should move to init to make this process faster.
         finder = DataFinder()
 
-        response.outputs['drs'].data = json.dumps(finder.get_pruned_tree(required_variables=['pr'], required_frequency='mon'))
+        process_identifier = request.inputs['process'][0].data
+
+        if not process_identifier:
+            LOGGER.info("Process identifier not specified, returning entire tree")
+            response.outputs['drs'].data = json.dumps(finder.data)
+
+            return response
+
+        LOGGER.info('Getting process inputs for: %s' % process_identifier)
+
+        process = next((process for process in processes.processes if process.identifier == process_identifier), None)
+
+        if not process:
+            raise Exception("Cannot find process with identifier %s" % process_identifier)
+
+        LOGGER.debug('Process object: %s' % process)
+
+        #default to any model with monthly values for some variable
+        required_variables = process.variables or []
+        required_frequency = process.frequency or 'mon'
+
+        response.outputs['drs'].data = json.dumps(finder.get_pruned_tree(required_variables=required_variables, required_frequency=required_frequency))
 
         return response
