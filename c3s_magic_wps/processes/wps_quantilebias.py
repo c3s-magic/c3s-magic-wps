@@ -13,6 +13,9 @@ LOGGER = logging.getLogger("PYWPS")
 
 class QuantileBias(Process):
     def __init__(self):
+        self.variables = ['pr']
+        self.frequency = 'mon'
+
         inputs = [
             *model_experiment_ensemble(
                 model='MPI-ESM-P',

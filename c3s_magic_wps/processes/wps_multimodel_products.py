@@ -16,6 +16,9 @@ LOGGER = logging.getLogger("PYWPS")
 
 class MultimodelProducts(Process):
     def __init__(self):
+        self.variables = ['tas']
+        self.frequency = 'mon'
+
         inputs = [
             *model_experiment_ensemble(model='MPI-ESM-MR', experiment='rcp85', ensemble='r1i1p1', min_occurs=2),
             *year_ranges((1961, 1990), start_name='start_historical', end_name='end_historical'),

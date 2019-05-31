@@ -15,6 +15,8 @@ LOGGER = logging.getLogger("PYWPS")
 
 class PreprocessExample(Process):
     def __init__(self):
+        self.variables = ['pr', 'ta']
+        self.frequency = 'mon'
         inputs = [
             *model_experiment_ensemble(model='bcc-csm1-1', experiment='historical', ensemble='r1i1p1', min_occurs=2),
             *year_ranges((2000, 2005)),

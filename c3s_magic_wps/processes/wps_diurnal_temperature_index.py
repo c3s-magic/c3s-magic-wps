@@ -13,6 +13,9 @@ LOGGER = logging.getLogger("PYWPS")
 
 class DiurnalTemperatureIndex(Process):
     def __init__(self):
+        self.variables = ['tasmax', 'tasmin']
+        self.frequency = 'day'
+
         inputs = [
             *model_experiment_ensemble(model='MPI-ESM-MR',
                                        experiment='rcp85',

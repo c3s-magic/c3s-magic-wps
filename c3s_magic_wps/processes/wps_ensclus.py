@@ -14,6 +14,9 @@ LOGGER = logging.getLogger("PYWPS")
 
 class EnsClus(Process):
     def __init__(self):
+        self.variables = ['pr']
+        self.frequency = 'mon'
+
         inputs = [
             *model_experiment_ensemble(model='ACCESS1-0', experiment='historical', ensemble='r1i1p1', min_occurs=2),
             *year_ranges((1900, 2005)),

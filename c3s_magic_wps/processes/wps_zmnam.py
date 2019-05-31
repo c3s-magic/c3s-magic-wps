@@ -13,6 +13,8 @@ LOGGER = logging.getLogger("PYWPS")
 
 class ZMNAM(Process):
     def __init__(self):
+        self.variables = ['zg']
+        self.frequency = 'day'
         inputs = [
             *model_experiment_ensemble(
                 model='MPI-ESM-MR',

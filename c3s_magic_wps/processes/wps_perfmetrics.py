@@ -15,6 +15,9 @@ LOGGER = logging.getLogger("PYWPS")
 
 class Perfmetrics(Process):
     def __init__(self):
+        self.variables = ['ta', 'ua', 'va', 'zg', 'hus', 'tas', 'ts', 'pr', 'clt', 'rlut', 'rsut']
+        self.frequency = 'mon'
+
         inputs = []
         outputs = [
             ComplexOutput('rmsd',

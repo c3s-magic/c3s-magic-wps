@@ -14,6 +14,9 @@ LOGGER = logging.getLogger("PYWPS")
 
 class Toymodel(Process):
     def __init__(self):
+        #more correctly the variable depends on the settings
+        self.variables = ['psl', 'tas']
+        self.frequency = 'mon'
         inputs = [
             *model_experiment_ensemble(
                 model='ACCESS1-0',

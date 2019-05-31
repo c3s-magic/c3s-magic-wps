@@ -14,6 +14,9 @@ LOGGER = logging.getLogger("PYWPS")
 
 class ModesVariability(Process):
     def __init__(self):
+        self.variables = ['psl']
+        self.frequency = 'mon'
+
         inputs = [
             *model_experiment_ensemble(model='bcc-csm1-1',
                                        experiment='rcp85',

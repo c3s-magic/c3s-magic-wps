@@ -13,6 +13,8 @@ LOGGER = logging.getLogger("PYWPS")
 
 class CVDP(Process):
     def __init__(self):
+        self.variables = ['tas', 'pr', 'psl', 'ts']
+        self.frequency = 'mon'
         inputs = [
             *model_experiment_ensemble(model='ACCESS1-0',
                                        experiment='historical',

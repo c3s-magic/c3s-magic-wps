@@ -13,6 +13,9 @@ LOGGER = logging.getLogger("PYWPS")
 
 class RainFARM(Process):
     def __init__(self):
+        self.variables = ['pr']
+        self.frequency = 'day'
+
         inputs = [
             *model_experiment_ensemble(model='ACCESS1-0',
                                        experiment='historical',

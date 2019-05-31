@@ -14,6 +14,9 @@ LOGGER = logging.getLogger("PYWPS")
 
 class HeatwavesColdwaves(Process):
     def __init__(self):
+        self.variables = ['tasmin']
+        self.frequency = 'day'
+
         inputs = [
             *model_experiment_ensemble(model='bcc-csm1-1', experiment='rcp85', ensemble='r1i1p1', max_occurs=1),
             *year_ranges((1971, 2000), start_name='start_historical', end_name='end_historical'),

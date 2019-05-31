@@ -12,6 +12,8 @@ LOGGER = logging.getLogger("PYWPS")
 
 class ConsecDryDays(Process):
     def __init__(self):
+        self.variables = ['pr']
+        self.frequency = 'day'
         inputs = [
             *model_experiment_ensemble(model='bcc-csm1-1-m',
                                        experiment='historical',

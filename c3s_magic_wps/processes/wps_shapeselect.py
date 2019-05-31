@@ -12,6 +12,8 @@ LOGGER = logging.getLogger("PYWPS")
 
 class ShapeSelect(Process):
     def __init__(self):
+        self.variables = ['tas', 'pr']
+        self.frequency = 'mon'
         inputs = [
             *model_experiment_ensemble(model='EC-EARTH',
                                        experiment='historical',

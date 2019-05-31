@@ -17,6 +17,9 @@ LOGGER = logging.getLogger("PYWPS")
 
 class ExtremeIndex(Process):
     def __init__(self):
+        self.variables = ['taxmax', 'tasmin', 'sfcWind', 'pr']
+        self.frequency = 'day'
+
         inputs = [
             *model_experiment_ensemble(model='MPI-ESM-MR', experiment='rcp85', ensemble='r1i1p1', max_occurs=1),
             *year_ranges((1971, 2000), start_name='start_historical', end_name='end_historical'),

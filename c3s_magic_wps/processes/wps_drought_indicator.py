@@ -13,6 +13,9 @@ LOGGER = logging.getLogger("PYWPS")
 
 class DroughtIndicator(Process):
     def __init__(self):
+        self.variables = ['pr', 'tas']
+        self.frequency = 'mon'
+
         inputs = [
             *model_experiment_ensemble(model='ACCESS1-0', experiment='historical', ensemble='r1i1p1', max_occurs=1),
             *year_ranges((1990, 1999)),

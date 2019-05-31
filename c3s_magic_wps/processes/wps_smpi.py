@@ -13,6 +13,9 @@ LOGGER = logging.getLogger("PYWPS")
 
 class SMPI(Process):
     def __init__(self):
+        self.variables = ['ta', 'va', 'ua', 'hus', 'tas', 'psl', 'pr', 'tos', 'sic', 'tauu', 'tauv']
+        self.frequency = 'mon'
+
         inputs = [
             *model_experiment_ensemble(
                 model='MPI-ESM-MR',

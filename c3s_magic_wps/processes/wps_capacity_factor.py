@@ -14,6 +14,9 @@ LOGGER = logging.getLogger("PYWPS")
 
 class CapacityFactor(Process):
     def __init__(self):
+        self.variables = ['sfcWind']
+        self.frequency = 'day'
+
         inputs = [
             *model_experiment_ensemble(model='MPI-ESM-MR', experiment='rcp85', ensemble='r1i1p1', max_occurs=1),
             *year_ranges((1980, 2005)),
