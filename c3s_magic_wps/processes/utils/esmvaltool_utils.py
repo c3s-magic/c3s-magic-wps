@@ -81,8 +81,8 @@ def model_experiment_ensemble(model: str,
                               ensemble_name: str = 'Ensemble',
                               min_occurs=1,
                               max_occurs=150,
-                              required_variables,
-                              required_frequency):
+                              required_variables=[],
+                              required_frequency='mon'):
     # if not hasattr(model_experiment_ensemble, 'available_models'):
     #     parse_model_lists()
 
