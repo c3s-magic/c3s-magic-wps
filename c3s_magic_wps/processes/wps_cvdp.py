@@ -18,7 +18,9 @@ class CVDP(Process):
         inputs = [
             *model_experiment_ensemble(model='ACCESS1-0',
                                        experiment='historical',
-                                       ensemble='r1i1p1'),
+                                       ensemble='r1i1p1',
+                                       required_variables=self.variables,
+                                       required_frequency=self.frequency),
             *year_ranges((1850, 2005)),
         ]
         outputs = [

@@ -21,6 +21,8 @@ class ZMNAM(Process):
                 experiment='historical',
                 ensemble='r1i1p1',
                 max_occurs=1,
+                required_variables=self.variables,
+                required_frequency=self.frequency
             ),
             *year_ranges((1979, 2005)),
         ]

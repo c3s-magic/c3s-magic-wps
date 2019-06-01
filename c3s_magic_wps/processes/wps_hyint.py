@@ -19,7 +19,7 @@ class HyInt(Process):
 
         inputs = [
             *model_experiment_ensemble(model='ACCESS1-0', experiment='rcp85',
-                                       ensemble='r1i1p1', min_occurs=2, max_occurs=100),
+                                       ensemble='r1i1p1', min_occurs=2, max_occurs=100, required_variables=self.variables, required_frequency=self.frequency),
             *year_ranges((1980, 2020)),
             LiteralInput(
                 'ref_dataset',

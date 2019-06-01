@@ -81,17 +81,27 @@ def model_experiment_ensemble(model: str,
                               ensemble_name: str = 'Ensemble',
                               min_occurs=1,
                               max_occurs=150,
-                              required_variables = ['pr'],
-                              required_frequency = 'mon'):
+                              required_variables,
+                              required_frequency):
     # if not hasattr(model_experiment_ensemble, 'available_models'):
     #     parse_model_lists()
 
     finder = DataFinder.getInstance()
-    available_models, available_experiments, available_ensembles = finder.get_model_experiment_ensemble(required_variables=required_variables, required_frequency=required_frequency)
+    available_models, available_experiments, available_ensembles = finder.get_model_experiment_ensemble(
+        required_variables=required_variables, required_frequency=required_frequency)
 
     available_models = sorted(available_models, key=str.lower)
     available_experiments = sorted(available_experiments)
-    available_ensembles = sorted(available_ensembles,key=ensemble_comp)
+    available_ensembles = sorted(available_ensembles, key=ensemble_comp)
+
+    if not available_models:
+        available_models = ['None']
+
+    if not available_ensembles:
+        available_ensembles = ['None']
+
+    if not available_experiments:
+        available_experiments = ['None']
 
     model_long_name = model_name.replace('_', ' ').capitalize()
     experiment_long_name = experiment_name.replace('_', ' ').capitalize()
@@ -109,7 +119,6 @@ def model_experiment_ensemble(model: str,
     if default_experiment not in available_experiments:
         default_experiment = available_experiments[0]
 
-    
     inputs = [
         LiteralInput(model_name.lower(),
                      model_long_name,

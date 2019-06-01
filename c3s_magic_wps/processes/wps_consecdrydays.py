@@ -18,7 +18,7 @@ class ConsecDryDays(Process):
             *model_experiment_ensemble(model='bcc-csm1-1-m',
                                        experiment='historical',
                                        ensemble='r1i1p1',
-                                       max_occurs=1),
+                                       max_occurs=1, required_variables=self.variables, required_frequency=self.frequency),
             *year_ranges((2001, 2002)),
             LiteralInput('frlim',
                          'frlim',

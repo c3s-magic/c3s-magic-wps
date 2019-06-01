@@ -7,27 +7,29 @@ import copy
 
 import logging
 
-LOGGER = logging.getLogger("PYWPS")
-
 from pywps import configuration
 
+LOGGER = logging.getLogger("PYWPS")
 
 # Builds up a tree of folders with their contentaining folders
 # Not unlike the output of the "tree -J" command in linux
+
+
 def _dir_entry(path, name):
-        result = dict()
-        result['name'] = name
-      
-        contents = []
-        for dir in os.listdir(path):
-            subdir = os.path.join(path, dir)
-            if (os.path.isdir(subdir)):
-                contents.append(_dir_entry(subdir, dir))
+    result = dict()
+    result['name'] = name
 
-        if len(contents) > 0:
-            result['contents'] = contents
+    contents = []
+    for dir in os.listdir(path):
+        subdir = os.path.join(path, dir)
+        if (os.path.isdir(subdir)):
+            contents.append(_dir_entry(subdir, dir))
 
-        return result
+    if len(contents) > 0:
+        result['contents'] = contents
+
+    return result
+
 
 def _get_children_of(a_dict):
     if 'contents' in a_dict:
@@ -35,12 +37,14 @@ def _get_children_of(a_dict):
     else:
         return []
 
+
 def _has_chilren(a_dict):
     if 'contents' in a_dict:
-        #make sure we return a boolean
+        # make sure we return a boolean
         return len(a_dict['contents']) != 0
     return False
-                                                     
+
+
 class DataFinder():
     __instance = None
 
@@ -59,11 +63,12 @@ class DataFinder():
         if not os.path.isdir(self.archive_base):
             raise Exception('cmip5 folder not found at %s' % self.archive_base)
 
-        #use root instead of the actual filename to
-        #not needlessly reveal the location of the files on disk
+        # use root instead of the actual filename to
+        # not needlessly reveal the location of the files on disk
         self.data = _dir_entry(self.archive_base, 'root')
 
     # Obtain a pruned tree with models/experiments/ensembles containing the required variables and frequency only
+    # Note, it cannot handle variables in multiple realms as of yet
     def get_pruned_tree(self, required_variables=[], required_frequency='mon'):
         result = copy.deepcopy(self.data)
 
@@ -75,7 +80,7 @@ class DataFinder():
                             for mip in _get_children_of(frequency):
                                 for realm in _get_children_of(mip):
                                     for ensemble in _get_children_of(realm):
-                                        
+
                                         available_variables = []
                                         for variable in _get_children_of(ensemble):
                                             available_variables.append(variable['name'])
@@ -87,9 +92,9 @@ class DataFinder():
                                             #LOGGER.debug('removing %s from %s' %(ensemble, model))
                                             realm['contents'].remove(ensemble)
                                         else:
-                                            #remove unneeded information for the tree to reduce size
+                                            # remove unneeded information for the tree to reduce size
                                             del ensemble['contents']
-                                            
+
                                     if not _has_chilren(realm):
                                         mip['contents'].remove(realm)
                                 if not _has_chilren(mip):
@@ -131,9 +136,8 @@ class DataFinder():
                                             models.add(model['name'])
                                             experiments.add(experiment['name'])
                                             ensembles.add(ensemble['name'])
-        
+
         return (list(models), list(experiments), list(ensembles))
-         
 
 
 if __name__ == "__main__":
@@ -145,15 +149,14 @@ if __name__ == "__main__":
 
     #print(json.dumps(self.data, indent=2), file=sys.stderr)
 
-    models, experiments, ensembles = finder.get_model_experiment_ensemble(required_variables=['pr', 'tas'], required_frequency='mon')
+    models, experiments, ensembles = finder.get_model_experiment_ensemble(
+        required_variables=['pr', 'tas'], required_frequency='mon')
 
-    print (models)
-    print (experiments)
-    print (ensembles)
+    print(models)
+    print(experiments)
+    print(ensembles)
 
     pruned = finder.get_pruned_tree(required_variables=['pr'], required_frequency='mon')
 
     #print ("tree!", self.data)
-    print ("pruned tree!", pruned)
-
-    
+    print("pruned tree!", pruned)

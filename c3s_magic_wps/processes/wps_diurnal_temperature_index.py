@@ -20,7 +20,7 @@ class DiurnalTemperatureIndex(Process):
             *model_experiment_ensemble(model='MPI-ESM-MR',
                                        experiment='rcp85',
                                        ensemble='r1i1p1',
-                                       max_occurs=1),
+                                       max_occurs=1, required_variables=self.variables, required_frequency=self.frequency),
             *year_ranges((1961, 2000),
                          start_name='start_historical',
                          end_name='end_historical'),
