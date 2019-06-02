@@ -50,7 +50,7 @@ class DataFinder():
 
     @staticmethod
     def getInstance():
-        if DataFinder.__instance == None:
+        if DataFinder.__instance is None:
             DataFinder.__instance = DataFinder()
 
         return DataFinder.__instance
@@ -88,8 +88,9 @@ class DataFinder():
                                         LOGGER.debug('required_variables ' + str(required_variables))
                                         LOGGER.debug('available variables ' + str(available_variables))
 
-                                        if not all(required_variable in available_variables for required_variable in required_variables):
-                                            #LOGGER.debug('removing %s from %s' %(ensemble, model))
+                                        if not all(
+                                                required_variable in available_variables for required_variable in required_variables):
+                                            # LOGGER.debug('removing %s from %s' %(ensemble, model))
                                             realm['contents'].remove(ensemble)
                                         else:
                                             # remove unneeded information for the tree to reduce size
@@ -132,7 +133,8 @@ class DataFinder():
                                         LOGGER.debug('required_variables ' + str(required_variables))
                                         LOGGER.debug('available variables ' + str(available_variables))
 
-                                        if all(required_variable in available_variables for required_variable in required_variables):
+                                        if all(required_variable in available_variables
+                                               for required_variable in required_variables):
                                             models.add(model['name'])
                                             experiments.add(experiment['name'])
                                             ensembles.add(ensemble['name'])
@@ -147,7 +149,7 @@ if __name__ == "__main__":
 
     print(finder.data)
 
-    #print(json.dumps(self.data, indent=2), file=sys.stderr)
+    # print(json.dumps(self.data, indent=2), file=sys.stderr)
 
     models, experiments, ensembles = finder.get_model_experiment_ensemble(
         required_variables=['pr', 'tas'], required_frequency='mon')
@@ -158,5 +160,5 @@ if __name__ == "__main__":
 
     pruned = finder.get_pruned_tree(required_variables=['pr'], required_frequency='mon')
 
-    #print ("tree!", self.data)
+    # print ("tree!", self.data)
     print("pruned tree!", pruned)
