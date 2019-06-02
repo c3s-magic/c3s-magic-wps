@@ -19,7 +19,8 @@ class CombinedIndices(Process):
         self.variables = ['pr']
         self.frequency = 'mon'
         inputs = [
-            *model_experiment_ensemble(model='MPI-ESM-MR', experiment='historical', ensemble='r1i1p1', max_occurs=1, required_variables=self.variables, required_frequency=self.frequency),
+            *model_experiment_ensemble(model='MPI-ESM-MR', experiment='historical', ensemble='r1i1p1',
+                                       max_occurs=1, required_variables=self.variables, required_frequency=self.frequency),
             *year_ranges((1950, 2005)),
             LiteralInput('running_mean',
                          'Running Mean',

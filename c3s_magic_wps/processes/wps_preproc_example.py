@@ -18,7 +18,8 @@ class PreprocessExample(Process):
         self.variables = ['pr', 'ta']
         self.frequency = 'mon'
         inputs = [
-            *model_experiment_ensemble(model='bcc-csm1-1', experiment='historical', ensemble='r1i1p1', min_occurs=2, required_variables=self.variables, required_frequency=self.frequency),
+            *model_experiment_ensemble(model='bcc-csm1-1', experiment='historical', ensemble='r1i1p1',
+                                       min_occurs=2, required_variables=self.variables, required_frequency=self.frequency),
             *year_ranges((2000, 2005)),
             LiteralInput(
                 'extract_levels',
