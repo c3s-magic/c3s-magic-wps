@@ -69,7 +69,7 @@ class RainFARM(Process):
                 abstract=('spatial spectral slope (set to 0 to compute from'
                           'large scales)'),
                 data_type='float',
-                default=1.7,
+                default=0.,
             ),
             LiteralInput(
                 'nens',
