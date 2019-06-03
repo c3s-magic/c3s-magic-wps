@@ -44,7 +44,7 @@ class HyInt(Process):
                 'Regions',
                 abstract='regions for timeseries and maps',
                 data_type='string',
-                allowed_values=["GL", "SA", "AF", "EU", "EA"],
+                allowed_values=["GL", "GL60", "TR", "SA", "AF", "IN", "EU", "EA", "AU"],
                 default="GL",
                 min_occurs=1,
                 max_occurs=5,
