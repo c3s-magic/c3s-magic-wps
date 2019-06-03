@@ -86,7 +86,7 @@ def model_experiment_ensemble(model: str,
     # if not hasattr(model_experiment_ensemble, 'available_models'):
     #     parse_model_lists()
 
-    finder = DataFinder.getInstance()
+    finder = DataFinder.get_instance()
     available_models, available_experiments, available_ensembles = finder.get_model_experiment_ensemble(
         required_variables=required_variables, required_frequency=required_frequency)
 

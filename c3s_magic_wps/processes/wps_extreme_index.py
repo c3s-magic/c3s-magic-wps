@@ -21,8 +21,12 @@ class ExtremeIndex(Process):
         self.frequency = 'day'
 
         inputs = [
-            *model_experiment_ensemble(model='MPI-ESM-MR', experiment='rcp85', ensemble='r1i1p1',
-                                       max_occurs=1, required_variables=self.variables, required_frequency=self.frequency),
+            *model_experiment_ensemble(model='MPI-ESM-MR',
+                                       experiment='rcp85',
+                                       ensemble='r1i1p1',
+                                       max_occurs=1,
+                                       required_variables=self.variables,
+                                       required_frequency=self.frequency),
             *year_ranges((1971, 2000), start_name='start_historical', end_name='end_historical'),
             *year_ranges((2020, 2040), start_name='start_projection', end_name='end_projection'),
             LiteralInput('running_mean',

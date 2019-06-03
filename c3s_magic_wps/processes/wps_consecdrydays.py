@@ -18,7 +18,9 @@ class ConsecDryDays(Process):
             *model_experiment_ensemble(model='bcc-csm1-1-m',
                                        experiment='historical',
                                        ensemble='r1i1p1',
-                                       max_occurs=1, required_variables=self.variables, required_frequency=self.frequency),
+                                       max_occurs=1,
+                                       required_variables=self.variables,
+                                       required_frequency=self.frequency),
             *year_ranges((2001, 2002)),
             LiteralInput('frlim',
                          'frlim',
@@ -133,15 +135,13 @@ class ConsecDryDays(Process):
                 response.update_status("exception occured: " + str(e), 85)
         else:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'],
-                                   85)
+            response.update_status("exception occured: " + result['exception'], 85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(
-            os.path.join(self.workdir, 'output'),
-            'consecdrydays_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
+                                                                  'consecdrydays_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -150,22 +150,22 @@ class ConsecDryDays(Process):
         for plot, _ in self.plotlist:
             key = '{}_plot'.format(plot.lower())
             response.outputs[key].output_format = Format('application/png')
-            response.outputs[key].file = runner.get_output(
-                result['plot_dir'],
-                path_filter=os.path.join('dry_days', 'consecutive_dry_days'),
-                name_filter="*{}".format(plot),
-                output_format="png")
+            response.outputs[key].file = runner.get_output(result['plot_dir'],
+                                                           path_filter=os.path.join(
+                                                               'dry_days', 'consecutive_dry_days'),
+                                                           name_filter="*{}".format(plot),
+                                                           output_format="png")
 
         response.outputs['data_drymax'].output_format = FORMATS.NETCDF
-        response.outputs['data_drymax'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('dry_days', 'consecutive_dry_days'),
-            name_filter="*drymax",
-            output_format="nc")
+        response.outputs['data_drymax'].file = runner.get_output(result['work_dir'],
+                                                                 path_filter=os.path.join(
+                                                                     'dry_days', 'consecutive_dry_days'),
+                                                                 name_filter="*drymax",
+                                                                 output_format="nc")
 
         response.outputs['data_dryfreq'].output_format = FORMATS.NETCDF
-        response.outputs['data_dryfreq'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('dry_days', 'consecutive_dry_days'),
-            name_filter="*dryfreq",
-            output_format="nc")
+        response.outputs['data_dryfreq'].file = runner.get_output(result['work_dir'],
+                                                                  path_filter=os.path.join(
+                                                                      'dry_days', 'consecutive_dry_days'),
+                                                                  name_filter="*dryfreq",
+                                                                  output_format="nc")

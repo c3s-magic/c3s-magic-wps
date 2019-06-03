@@ -18,7 +18,9 @@ class ShapeSelect(Process):
             *model_experiment_ensemble(model='EC-EARTH',
                                        experiment='historical',
                                        ensemble='r1i1p1',
-                                       max_occurs=1, required_variables=self.variables, required_frequency=self.frequency),
+                                       max_occurs=1,
+                                       required_variables=self.variables,
+                                       required_frequency=self.frequency),
             *year_ranges((1990, 1999)),
             LiteralInput('shape',
                          'Shape',
@@ -131,15 +133,13 @@ class ShapeSelect(Process):
                 response.update_status("exception occured: " + str(e), 85)
         else:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'],
-                                   85)
+            response.update_status("exception occured: " + result['exception'], 85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(
-            os.path.join(self.workdir, 'output'),
-            'shapeselect_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
+                                                                  'shapeselect_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -148,16 +148,13 @@ class ShapeSelect(Process):
         # result plot
         response.update_status("collecting output ...", 80)
         response.outputs['data'].output_format = Format('application/png')
-        response.outputs['data'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('diagnostic1', 'script1'),
-            name_filter="CMIP5*",
-            output_format="nc")
+        response.outputs['data'].file = runner.get_output(result['work_dir'],
+                                                          path_filter=os.path.join('diagnostic1', 'script1'),
+                                                          name_filter="CMIP5*",
+                                                          output_format="nc")
 
-        response.outputs['xlsx_data'].output_format = Format(
-            'application/vnd.ms-excel')
-        response.outputs['xlsx_data'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('diagnostic1', 'script1'),
-            name_filter="CMIP5*",
-            output_format="xlsx")
+        response.outputs['xlsx_data'].output_format = Format('application/vnd.ms-excel')
+        response.outputs['xlsx_data'].file = runner.get_output(result['work_dir'],
+                                                               path_filter=os.path.join('diagnostic1', 'script1'),
+                                                               name_filter="CMIP5*",
+                                                               output_format="xlsx")

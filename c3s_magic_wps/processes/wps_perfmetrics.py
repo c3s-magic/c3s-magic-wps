@@ -105,8 +105,7 @@ class Perfmetrics(Process):
         response.update_status("collecting output ...", 80)
 
         response.outputs['rmsd'].output_format = Format('application/png')
-        response.outputs['rmsd'].file = runner.get_output(
-            result['plot_dir'],
-            path_filter=os.path.join('collect', 'RMSD'),
-            name_filter="*",
-            output_format="png")
+        response.outputs['rmsd'].file = runner.get_output(result['plot_dir'],
+                                                          path_filter=os.path.join('collect', 'RMSD'),
+                                                          name_filter="*",
+                                                          output_format="png")

@@ -18,8 +18,12 @@ class CapacityFactor(Process):
         self.frequency = 'day'
 
         inputs = [
-            *model_experiment_ensemble(model='MPI-ESM-MR', experiment='rcp85', ensemble='r1i1p1',
-                                       max_occurs=1, required_variables=self.variables, required_frequency=self.frequency),
+            *model_experiment_ensemble(model='MPI-ESM-MR',
+                                       experiment='rcp85',
+                                       ensemble='r1i1p1',
+                                       max_occurs=1,
+                                       required_variables=self.variables,
+                                       required_frequency=self.frequency),
             *year_ranges((1980, 2005)),
             LiteralInput(
                 'start_longitude',

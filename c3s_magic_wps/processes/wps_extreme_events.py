@@ -14,12 +14,7 @@ LOGGER = logging.getLogger("PYWPS")
 class ExtremeEvents(Process):
     def __init__(self):
         inputs = [
-            *model_experiment_ensemble(
-                model='MPI-ESM-MR',
-                experiment='historical',
-                ensemble='r1i1p1',
-                min_occurs=2
-            ),
+            *model_experiment_ensemble(model='MPI-ESM-MR', experiment='historical', ensemble='r1i1p1', min_occurs=2),
             *year_ranges((1981, 2000)),
             LiteralInput('ref_dataset',
                          'Reference Dataset',
@@ -128,14 +123,13 @@ class ExtremeEvents(Process):
                 response.update_status("exception occured: " + str(e), 85)
         else:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'],
-                                   85)
+            response.update_status("exception occured: " + result['exception'], 85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(
-            os.path.join(workdir, 'output'), 'extreme_events_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'),
+                                                                  'extreme_events_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -145,8 +139,7 @@ class ExtremeEvents(Process):
         for plot, _ in self.plotlist:
             key = '{}_plot'.format(plot.lower())
             response.outputs[key].output_format = Format('application/png')
-            response.outputs[key].file = runner.get_output(
-                result['plot_dir'],
-                path_filter=os.path.join('extreme_events', 'main'),
-                name_filter="{}*".format(plot),
-                output_format="png")
+            response.outputs[key].file = runner.get_output(result['plot_dir'],
+                                                           path_filter=os.path.join('extreme_events', 'main'),
+                                                           name_filter="{}*".format(plot),
+                                                           output_format="png")

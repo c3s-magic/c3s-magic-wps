@@ -18,8 +18,13 @@ class HyInt(Process):
         self.frequency = 'day'
 
         inputs = [
-            *model_experiment_ensemble(model='ACCESS1-0', experiment='rcp85',
-                                       ensemble='r1i1p1', min_occurs=2, max_occurs=100, required_variables=self.variables, required_frequency=self.frequency),
+            *model_experiment_ensemble(model='ACCESS1-0',
+                                       experiment='rcp85',
+                                       ensemble='r1i1p1',
+                                       min_occurs=2,
+                                       max_occurs=100,
+                                       required_variables=self.variables,
+                                       required_frequency=self.frequency),
             *year_ranges((1980, 2020)),
             LiteralInput(
                 'ref_dataset',
@@ -36,8 +41,9 @@ class HyInt(Process):
                 'Indices',
                 abstract='Indices to be analysed and plotted',
                 data_type='string',
-                allowed_values=["pa_norm", "hyint", "int_norm",
-                                "r95_norm", "wsl_norm", "dsl_norm", "int", "dsl", "wsl"],
+                allowed_values=[
+                    "pa_norm", "hyint", "int_norm", "r95_norm", "wsl_norm", "dsl_norm", "int", "dsl", "wsl"
+                ],
                 default="hyint",
                 min_occurs=1,
                 max_occurs=9,
@@ -66,68 +72,51 @@ class HyInt(Process):
                 data_type='integer',
                 default=1999,
             ),
-
         ]
 
         outputs = [
-            ComplexOutput(
-                'plot1',
-                'Plot1',
-                abstract='Single panel lon/lat map per individual index, multi-year mean',
-                as_reference=True,
-                supported_formats=[Format('image/png')]
-            ),
-            ComplexOutput(
-                'plot2',
-                'Plot2',
-                abstract='3-panel lon/lat maps per individual index with comparison to reference dataset, \
+            ComplexOutput('plot1',
+                          'Plot1',
+                          abstract='Single panel lon/lat map per individual index, multi-year mean',
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
+            ComplexOutput('plot2',
+                          'Plot2',
+                          abstract='3-panel lon/lat maps per individual index with comparison to reference dataset, \
                 multi-year mean',
-                as_reference=True,
-                supported_formats=[Format('image/png')]
-            ),
-            ComplexOutput(
-                'plot3',
-                'Plot3',
-                abstract='multipanel of indices of lon/lat maps with comparison to reference dataset, \
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
+            ComplexOutput('plot3',
+                          'Plot3',
+                          abstract='multipanel of indices of lon/lat maps with comparison to reference dataset, \
                 multi-year mean',
-                as_reference=True,
-                supported_formats=[Format('image/png')]
-            ),
-            ComplexOutput(
-                'plot12',
-                'Plot12',
-                abstract='multipanel of indices with timeseries over multiple regions',
-                as_reference=True,
-                supported_formats=[Format('image/png')]
-            ),
-            ComplexOutput(
-                'plot13',
-                'Plot13',
-                abstract='multipanel of indices with timeseries for multiple models',
-                as_reference=True,
-                supported_formats=[Format('image/png')]
-            ),
-            ComplexOutput(
-                'plot14',
-                'Plot14',
-                abstract='multipanel of indices with summary of trend coefficients over multiple regions',
-                as_reference=True,
-                supported_formats=[Format('image/png')]
-            ),
-            ComplexOutput(
-                'plot15',
-                'Plot15',
-                abstract='multipanel of indices with summary of trend coefficients for multiple models',
-                as_reference=True,
-                supported_formats=[Format('image/png')]
-            ),
-            ComplexOutput(
-                'archive',
-                'Archive',
-                abstract='The complete output of the ESMValTool processing as a zip archive.',
-                as_reference=True,
-                supported_formats=[Format('application/zip')]
-            ),
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
+            ComplexOutput('plot12',
+                          'Plot12',
+                          abstract='multipanel of indices with timeseries over multiple regions',
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
+            ComplexOutput('plot13',
+                          'Plot13',
+                          abstract='multipanel of indices with timeseries for multiple models',
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
+            ComplexOutput('plot14',
+                          'Plot14',
+                          abstract='multipanel of indices with summary of trend coefficients over multiple regions',
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
+            ComplexOutput('plot15',
+                          'Plot15',
+                          abstract='multipanel of indices with summary of trend coefficients for multiple models',
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
+            ComplexOutput('archive',
+                          'Archive',
+                          abstract='The complete output of the ESMValTool processing as a zip archive.',
+                          as_reference=True,
+                          supported_formats=[Format('application/zip')]),
             *default_outputs(),
         ]
 
@@ -211,8 +200,7 @@ class HyInt(Process):
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'),
-                                                                  'hyint_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'), 'hyint_result.zip')
         response.update_status("done.", 100)
         return response
 

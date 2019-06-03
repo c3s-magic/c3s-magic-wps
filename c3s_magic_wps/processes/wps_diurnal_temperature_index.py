@@ -20,13 +20,11 @@ class DiurnalTemperatureIndex(Process):
             *model_experiment_ensemble(model='MPI-ESM-MR',
                                        experiment='rcp85',
                                        ensemble='r1i1p1',
-                                       max_occurs=1, required_variables=self.variables, required_frequency=self.frequency),
-            *year_ranges((1961, 2000),
-                         start_name='start_historical',
-                         end_name='end_historical'),
-            *year_ranges((2030, 2080),
-                         start_name='start_projection',
-                         end_name='end_projection'),
+                                       max_occurs=1,
+                                       required_variables=self.variables,
+                                       required_frequency=self.frequency),
+            *year_ranges((1961, 2000), start_name='start_historical', end_name='end_historical'),
+            *year_ranges((2030, 2080), start_name='start_projection', end_name='end_projection'),
             LiteralInput(
                 'start_longitude',
                 'Start longitude',
@@ -103,15 +101,13 @@ class DiurnalTemperatureIndex(Process):
         response.update_status("starting ...", 0)
 
         # build esgf search constraints
-        constraints = dict(
-            model=request.inputs['model'][0].data,
-            experiment=request.inputs['experiment'][0].data,
-            ensemble=request.inputs['ensemble'][0].data,
-            start_year_historical=request.inputs['start_historical'][0].data,
-            end_year_historical=request.inputs['end_historical'][0].data,
-            start_year_projection=request.inputs['start_projection'][0].data,
-            end_year_projection=request.inputs['end_projection'][0].data
-        )
+        constraints = dict(model=request.inputs['model'][0].data,
+                           experiment=request.inputs['experiment'][0].data,
+                           ensemble=request.inputs['ensemble'][0].data,
+                           start_year_historical=request.inputs['start_historical'][0].data,
+                           end_year_historical=request.inputs['end_historical'][0].data,
+                           start_year_projection=request.inputs['start_projection'][0].data,
+                           end_year_projection=request.inputs['end_projection'][0].data)
 
         options = dict(
             start_longitude=request.inputs['start_longitude'][0].data,
@@ -158,15 +154,13 @@ class DiurnalTemperatureIndex(Process):
                 LOGGER.exception('Getting output failed: ' + str(e))
         else:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status(
-                "exception occured: " + result['exception'], 85)
+            response.update_status("exception occured: " + result['exception'], 85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(
-            os.path.join(self.workdir, 'output'),
-            'diurnal_temperature_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
+                                                                  'diurnal_temperature_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -175,15 +169,15 @@ class DiurnalTemperatureIndex(Process):
         # result plot
         response.update_status("collecting output ...", 80)
         response.outputs['plot'].output_format = Format('application/png')
-        response.outputs['plot'].file = runner.get_output(
-            result['plot_dir'],
-            path_filter=os.path.join('diurnal_temperature_indicator', 'main'),
-            name_filter="*",
-            output_format="png")
+        response.outputs['plot'].file = runner.get_output(result['plot_dir'],
+                                                          path_filter=os.path.join('diurnal_temperature_indicator',
+                                                                                   'main'),
+                                                          name_filter="*",
+                                                          output_format="png")
 
         response.outputs['data'].output_format = FORMATS.NETCDF
-        response.outputs['data'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('diurnal_temperature_indicator', 'main'),
-            name_filter="Seasonal_DTRindicator*",
-            output_format="nc")
+        response.outputs['data'].file = runner.get_output(result['work_dir'],
+                                                          path_filter=os.path.join('diurnal_temperature_indicator',
+                                                                                   'main'),
+                                                          name_filter="Seasonal_DTRindicator*",
+                                                          output_format="nc")

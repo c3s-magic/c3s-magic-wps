@@ -49,7 +49,7 @@ class DataFinder():
     __instance = None
 
     @staticmethod
-    def getInstance():
+    def get_instance():
         if DataFinder.__instance is None:
             DataFinder.__instance = DataFinder()
 
@@ -88,8 +88,8 @@ class DataFinder():
                                         LOGGER.debug('required_variables ' + str(required_variables))
                                         LOGGER.debug('available variables ' + str(available_variables))
 
-                                        if not all(
-                                                required_variable in available_variables for required_variable in required_variables):
+                                        if not all(required_variable in available_variables
+                                                   for required_variable in required_variables):
                                             # LOGGER.debug('removing %s from %s' %(ensemble, model))
                                             realm['contents'].remove(ensemble)
                                         else:
@@ -145,14 +145,14 @@ class DataFinder():
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
 
-    finder = DataFinder.getInstance()
+    finder = DataFinder.get_instance()
 
     print(finder.data)
 
     # print(json.dumps(self.data, indent=2), file=sys.stderr)
 
-    models, experiments, ensembles = finder.get_model_experiment_ensemble(
-        required_variables=['pr', 'tas'], required_frequency='mon')
+    models, experiments, ensembles = finder.get_model_experiment_ensemble(required_variables=['pr', 'tas'],
+                                                                          required_frequency='mon')
 
     print(models)
     print(experiments)

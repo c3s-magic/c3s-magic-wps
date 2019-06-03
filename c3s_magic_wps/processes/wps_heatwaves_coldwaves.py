@@ -18,8 +18,12 @@ class HeatwavesColdwaves(Process):
         self.frequency = 'day'
 
         inputs = [
-            *model_experiment_ensemble(model='bcc-csm1-1', experiment='rcp85', ensemble='r1i1p1',
-                                       max_occurs=1, required_variables=self.variables, required_frequency=self.frequency),
+            *model_experiment_ensemble(model='bcc-csm1-1',
+                                       experiment='rcp85',
+                                       ensemble='r1i1p1',
+                                       max_occurs=1,
+                                       required_variables=self.variables,
+                                       required_frequency=self.frequency),
             *year_ranges((1971, 2000), start_name='start_historical', end_name='end_historical'),
             *year_ranges((2060, 2080), start_name='start_projection', end_name='end_projection'),
             LiteralInput('quantile',
