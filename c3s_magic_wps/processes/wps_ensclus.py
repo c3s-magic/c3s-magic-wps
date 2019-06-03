@@ -89,7 +89,7 @@ class EnsClus(Process):
                           supported_formats=[FORMATS.NETCDF]),
             ComplexOutput('statistics',
                           'Statistics',
-                          abstract='Clustering Statictics',
+                          abstract='Clustering Statistics',
                           as_reference=True,
                           supported_formats=[Format('text/plain')]),
             ComplexOutput('archive',
