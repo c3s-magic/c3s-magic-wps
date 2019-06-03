@@ -1,0 +1,72 @@
+# ESMValTool
+# recipe_ExtremeEvents.yml 
+---
+documentation:
+  description: |
+     Calculate indices for monitoring changes in extremes based on daily temperature
+     and precipitation data. Producing Glecker and timeline plots of this as
+     shown in the IPCC_AR4 report
+
+  authors:
+    - broe_bj
+    - sand_ma
+    - mohr_cw
+    - arno_en
+    - hard_jo
+
+  maintainer:
+    - sand_ma
+
+  references:
+    - zhang-2011
+
+  projects:
+    - crescendo   
+    - c3s-magic  
+
+datasets:
+  {% for model in constraints['models'] %}
+  - dataset: {{constraints['models'][loop.index0].data}}
+    ensemble: {{constraints['ensembles'][loop.index0].data}}
+    project: CMIP5
+    exp: {{constraints['experiments'][loop.index0].data}}
+  {% endfor %}
+  - dataset: ERA-Interim
+    project: OBS
+    type: reanaly
+    version: 1
+    tier: 3
+
+diagnostics:
+  extreme_events:
+    description: calculate extreme events
+    variables:
+      pr:
+        mip: day
+        start_year: {{start_year}}
+        end_year: {{end_year}}
+      tas:
+        mip: day
+        start_year: {{start_year}}
+        end_year: {{end_year}}
+      tasmax:
+        mip: day
+        start_year: {{start_year}}
+        end_year: {{end_year}}
+      tasmin:
+        mip: day
+        start_year: {{start_year}}
+        end_year: {{end_year}}
+    
+    scripts:
+      main:
+        script: extreme_events/extreme_events.R
+        reference_datasets: {{constraints['reference']}}
+        regrid_dataset: {{constraints['reference']}}
+        mip_name: CMIP
+        timeseries_idx: ["sdiiETCCDI_yr", "r95pETCCDI_yr", "rx5dayETCCDI_yr", "rx1dayETCCDI_yr", "cddETCCDI_yr", "fdETCCDI_yr", "trETCCDI_yr", "txnETCCDI_yr", "txxETCCDI_yr", "tnnETCCDI_yr", "tnxETCCDI_yr"]
+        gleckler_idx: ["sdiiETCCDI_yr", "r95pETCCDI_yr", "rx5dayETCCDI_yr", "rx1dayETCCDI_yr", "cddETCCDI_yr", "fdETCCDI_yr", "trETCCDI_yr", "txnETCCDI_yr", "txxETCCDI_yr", "tnnETCCDI_yr", "tnxETCCDI_yr"]
+        ts_plt: true
+        glc_plt: true
+        base_range: [{{start_year}}, {{end_year}}]
+        analysis_range: [{{start_year}}, {{end_year}}]

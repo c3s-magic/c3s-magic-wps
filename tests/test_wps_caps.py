@@ -34,9 +34,10 @@ def test_wps_caps():
         'toymodel',
         'rainfarm',
         'quantile_bias',
-        'hyint'
+        'hyint',
         'smpi',
         'perfmetrics',
+        'extreme_events',
     ])
     print(sorted(names.split()))
     print(expected_caps)

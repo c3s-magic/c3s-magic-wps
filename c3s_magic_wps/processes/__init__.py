@@ -22,6 +22,7 @@ from .wps_rainfarm import RainFARM
 from .wps_hyint import HyInt
 from .wps_perfmetrics import Perfmetrics
 from .wps_smpi import SMPI
+from .wps_extreme_events import ExtremeEvents
 
 processes = sorted(
     [
@@ -49,6 +50,7 @@ processes = sorted(
         HyInt(),
         Perfmetrics(),
         SMPI(),
+        ExtremeEvents(),
     ],
     key=lambda process: process.title,
 )
