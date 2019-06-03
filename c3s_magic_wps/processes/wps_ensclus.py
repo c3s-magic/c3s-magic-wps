@@ -62,8 +62,7 @@ class EnsClus(Process):
                 'numpcs',
                 'Number of PCs',
                 abstract='Number of PCs to retain. Has priority over Percentage unless set to 0',
-                data_type='string',
-                allowed_values=['0', '5', '10', '20', '30', '40'],
+                data_type='integer',
                 default='0',
             ),
         ]
