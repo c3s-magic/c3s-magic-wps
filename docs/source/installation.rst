@@ -74,14 +74,13 @@ After successful installation you can start the service using the ``c3s_magic_wp
 
 The deployed WPS service is by default available on:
 
-http://localhost:5000/wps?service=WPS&version=1.0.0&request=GetCapabilities.
+http://localhost:5000/wps?service=WPS&version=1.0.0&request=GetCapabilities
 
 You can find which process uses a given port using the following command (here for port 5000):
 
 .. code-block:: sh
 
    $ netstat -nlp | grep :5000
-
 
 Check the log files for errors:
 
@@ -96,26 +95,36 @@ Run c3s magic wps as Docker container
 
 You can also choose to run c3s magic wps from a Docker container.
 
-Download c3s-magic-wps and build the docker container:  
+Download c3s-magic-wps, build the docker container and run it:  
 
 .. code-block:: sh
 
    $ git clone https://github.com/c3s-magic/c3s-magic-wps.git
    $ cd c3s-magic-wps
-   $ docker build -t c3s-magic-wps .
-   $ docker run -p 5000:5000 c3s-magic/c3s-magic-wps
+   $ docker-compose build              
+   $ docker-compose up
 
-WPS service should be available on port 5000:
+By default the WPS service should be available on port 5000:
+
+ http://localhost:5000/wps?service=wps&request=GetCapabilities
+
+Run docker exec to watch logs:
 
 .. code-block:: sh
 
-   $ firefox http://localhost:5000/wps?request=GetCapabilities&service=WPS
+   $ docker ps     # find container name
+   container_name
+   $ docker exec container_name tail -f /opt/wps/pywps.log
 
+Use docker-compose to stop the containers:
+
+.. code-block:: sh
+
+   $ docker-compose down
 
 Use Ansible to deploy c3s magic wps on your System
 --------------------------------------------------
 
 Use the `Ansible playbook`_ for PyWPS to deploy c3s magic wps on your system.
-
 
 .. _Ansible playbook: http://ansible-wps-playbook.readthedocs.io/en/latest/index.html

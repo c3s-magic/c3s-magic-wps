@@ -21,7 +21,8 @@ from .wps_toymodel import Toymodel
 from .wps_rainfarm import RainFARM
 from .wps_smpi import SMPI
 
-__all__ = sorted([
+__all__ = sorted(
+    [
         "CVDP",
         "EnsClus",
         "Sleep",
@@ -44,8 +45,8 @@ __all__ = sorted([
         "RainFARM",
         "Toymodel",
         "HyInt",
-    ])
-
+    ]
+)
 
 processes = sorted(
     [
