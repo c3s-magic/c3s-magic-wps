@@ -25,6 +25,12 @@ class EnsClus(Process):
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
             *year_ranges((1900, 2005)),
+            LiteralInput('variable',
+                         'Variable',
+                         abstract='Select the variable to simulate.',
+                         data_type='string',
+                         default='pr',
+                         allowed_values=['pr', 'tas']),
             LiteralInput(
                 'season',
                 'Season',
