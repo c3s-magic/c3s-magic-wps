@@ -13,37 +13,37 @@ LOGGER = logging.getLogger("PYWPS")
 
 class CVDP(Process):
     def __init__(self):
+        self.variables = ['tas', 'pr', 'psl', 'ts']
+        self.frequency = 'mon'
         inputs = [
             *model_experiment_ensemble(model='ACCESS1-0',
                                        experiment='historical',
-                                       ensemble='r1i1p1'),
+                                       ensemble='r1i1p1',
+                                       required_variables=self.variables,
+                                       required_frequency=self.frequency),
             *year_ranges((1850, 2005)),
         ]
         outputs = [
-            ComplexOutput(
-                'tas_trend_ann_plot',
-                'Annual TAS trend',
-                abstract='Annual trend in surface air temperature.',
-                as_reference=True,
-                supported_formats=[Format('image/png')]),
-            ComplexOutput(
-                'sst_trend_ann_plot',
-                'Annual SST trend',
-                abstract='Annual trend in sea surface temperature.',
-                as_reference=True,
-                supported_formats=[Format('image/png')]),
-            ComplexOutput(
-                'psl_trend_ann_plot',
-                'Annual PSL trend',
-                abstract='Annual trend in sea level pressure.',
-                as_reference=True,
-                supported_formats=[Format('image/png')]),
-            ComplexOutput(
-                'pr_trend_ann_plot',
-                'Annual precipitation trend',
-                abstract='Annual trend in precipitation.',
-                as_reference=True,
-                supported_formats=[Format('image/png')]),
+            ComplexOutput('tas_trend_ann_plot',
+                          'Annual TAS trend',
+                          abstract='Annual trend in surface air temperature.',
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
+            ComplexOutput('sst_trend_ann_plot',
+                          'Annual SST trend',
+                          abstract='Annual trend in sea surface temperature.',
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
+            ComplexOutput('psl_trend_ann_plot',
+                          'Annual PSL trend',
+                          abstract='Annual trend in sea level pressure.',
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
+            ComplexOutput('pr_trend_ann_plot',
+                          'Annual precipitation trend',
+                          abstract='Annual trend in precipitation.',
+                          as_reference=True,
+                          supported_formats=[Format('image/png')]),
             ComplexOutput('archive',
                           'Archive',
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
@@ -118,14 +118,12 @@ class CVDP(Process):
                 response.update_status("exception occured: " + str(e), 85)
         else:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'],
-                                   85)
+            response.update_status("exception occured: " + result['exception'], 85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(
-            os.path.join(workdir, 'output'), 'cvdp_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'), 'cvdp_result.zip')
 
         response.update_status("done.", 100)
         return response

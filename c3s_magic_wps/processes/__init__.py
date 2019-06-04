@@ -1,4 +1,5 @@
 from .wps_sleep import Sleep
+from .wps_meta import Meta
 from .wps_preproc_example import PreprocessExample
 from .wps_consecdrydays import ConsecDryDays
 from .wps_cvdp import CVDP
@@ -26,6 +27,7 @@ from .wps_extreme_events import ExtremeEvents
 
 processes = sorted(
     [
+        Meta(),
         CVDP(),
         EnsClus(),
         Sleep(),

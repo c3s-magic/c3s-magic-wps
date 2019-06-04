@@ -13,13 +13,16 @@ LOGGER = logging.getLogger("PYWPS")
 
 class QuantileBias(Process):
     def __init__(self):
+        self.variables = ['pr']
+        self.frequency = 'mon'
+
         inputs = [
-            *model_experiment_ensemble(
-                model='MPI-ESM-P',
-                experiment='historical',
-                ensemble='r1i1p1',
-                max_occurs=1,
-            ),
+            *model_experiment_ensemble(model='MPI-ESM-P',
+                                       experiment='historical',
+                                       ensemble='r1i1p1',
+                                       max_occurs=1,
+                                       required_variables=self.variables,
+                                       required_frequency=self.frequency),
             *year_ranges((1997, 1997)),
             LiteralInput('ref_dataset',
                          'Reference Dataset',

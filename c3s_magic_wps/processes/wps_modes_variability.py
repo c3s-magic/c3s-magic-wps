@@ -14,17 +14,18 @@ LOGGER = logging.getLogger("PYWPS")
 
 class ModesVariability(Process):
     def __init__(self):
+        self.variables = ['psl']
+        self.frequency = 'mon'
+
         inputs = [
             *model_experiment_ensemble(model='bcc-csm1-1',
                                        experiment='rcp85',
                                        ensemble='r1i1p1',
-                                       max_occurs=1),
-            *year_ranges((1971, 2000),
-                         start_name='start_historical',
-                         end_name='end_historical'),
-            *year_ranges((2020, 2050),
-                         start_name='start_projection',
-                         end_name='end_projection'),
+                                       max_occurs=1,
+                                       required_variables=self.variables,
+                                       required_frequency=self.frequency),
+            *year_ranges((1971, 2000), start_name='start_historical', end_name='end_historical'),
+            *year_ranges((2020, 2050), start_name='start_projection', end_name='end_projection'),
             LiteralInput('plot_type',
                          'Plot Type',
                          abstract='Plot type.',
@@ -135,15 +136,13 @@ class ModesVariability(Process):
         response.update_status("starting ...", 0)
 
         # build esgf search constraints
-        constraints = dict(
-            model=request.inputs['model'][0].data,
-            experiment=request.inputs['experiment'][0].data,
-            ensemble=request.inputs['ensemble'][0].data,
-            start_year_historical=request.inputs['start_historical'][0].data,
-            end_year_historical=request.inputs['end_historical'][0].data,
-            start_year_projection=request.inputs['start_projection'][0].data,
-            end_year_projection=request.inputs['end_projection'][0].data
-        )
+        constraints = dict(model=request.inputs['model'][0].data,
+                           experiment=request.inputs['experiment'][0].data,
+                           ensemble=request.inputs['ensemble'][0].data,
+                           start_year_historical=request.inputs['start_historical'][0].data,
+                           end_year_historical=request.inputs['end_historical'][0].data,
+                           start_year_projection=request.inputs['start_projection'][0].data,
+                           end_year_projection=request.inputs['end_projection'][0].data)
 
         options = dict(
             plot_type=request.inputs['plot_type'][0].data,
@@ -196,15 +195,13 @@ class ModesVariability(Process):
                 LOGGER.exception('Getting output failed: ' + str(e))
         else:
             LOGGER.exception('esmvaltool failed!')
-            response.update_status("exception occured: " + result['exception'],
-                                   85)
+            response.update_status("exception occured: " + result['exception'], 85)
 
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(
-            os.path.join(self.workdir, 'output'),
-            'modes_of_variability_result.zip')
+        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
+                                                                  'modes_of_variability_result.zip')
 
         response.update_status("done.", 100)
         return response
@@ -215,29 +212,25 @@ class ModesVariability(Process):
         for plot, _ in self.plotlist:
             key = '{}_plot'.format(plot.lower())
             response.outputs[key].output_format = Format('application/png')
-            response.outputs[key].file = runner.get_output(
-                result['plot_dir'],
-                path_filter=os.path.join('weather_regime', 'main'),
-                name_filter="*{}*".format(plot),
-                output_format="png")
+            response.outputs[key].file = runner.get_output(result['plot_dir'],
+                                                           path_filter=os.path.join('weather_regime', 'main'),
+                                                           name_filter="*{}*".format(plot),
+                                                           output_format="png")
 
         response.outputs['rmse'].output_format = FORMATS.NETCDF
-        response.outputs['rmse'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('weather_regime', 'main'),
-            name_filter="*rmse*",
-            output_format="nc")
+        response.outputs['rmse'].file = runner.get_output(result['work_dir'],
+                                                          path_filter=os.path.join('weather_regime', 'main'),
+                                                          name_filter="*rmse*",
+                                                          output_format="nc")
 
         response.outputs['exp'].output_format = FORMATS.NETCDF
-        response.outputs['exp'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('weather_regime', 'main'),
-            name_filter="*exp*",
-            output_format="nc")
+        response.outputs['exp'].file = runner.get_output(result['work_dir'],
+                                                         path_filter=os.path.join('weather_regime', 'main'),
+                                                         name_filter="*exp*",
+                                                         output_format="nc")
 
         response.outputs['obs'].output_format = FORMATS.NETCDF
-        response.outputs['obs'].file = runner.get_output(
-            result['work_dir'],
-            path_filter=os.path.join('weather_regime', 'main'),
-            name_filter="*obs*",
-            output_format="nc")
+        response.outputs['obs'].file = runner.get_output(result['work_dir'],
+                                                         path_filter=os.path.join('weather_regime', 'main'),
+                                                         name_filter="*obs*",
+                                                         output_format="nc")

@@ -15,6 +15,9 @@ LOGGER = logging.getLogger("PYWPS")
 
 class Perfmetrics(Process):
     def __init__(self):
+        self.variables = ['ta', 'ua', 'va', 'zg', 'hus', 'tas', 'ts', 'pr', 'clt', 'rlut', 'rsut']
+        self.frequency = 'mon'
+
         inputs = []
         outputs = [
             ComplexOutput('rmsd',
@@ -102,8 +105,7 @@ class Perfmetrics(Process):
         response.update_status("collecting output ...", 80)
 
         response.outputs['rmsd'].output_format = Format('application/png')
-        response.outputs['rmsd'].file = runner.get_output(
-            result['plot_dir'],
-            path_filter=os.path.join('collect', 'RMSD'),
-            name_filter="*",
-            output_format="png")
+        response.outputs['rmsd'].file = runner.get_output(result['plot_dir'],
+                                                          path_filter=os.path.join('collect', 'RMSD'),
+                                                          name_filter="*",
+                                                          output_format="png")

@@ -13,13 +13,15 @@ LOGGER = logging.getLogger("PYWPS")
 
 class ZMNAM(Process):
     def __init__(self):
+        self.variables = ['zg']
+        self.frequency = 'day'
         inputs = [
-            *model_experiment_ensemble(
-                model='MPI-ESM-MR',
-                experiment='historical',
-                ensemble='r1i1p1',
-                max_occurs=1,
-            ),
+            *model_experiment_ensemble(model='MPI-ESM-MR',
+                                       experiment='historical',
+                                       ensemble='r1i1p1',
+                                       max_occurs=1,
+                                       required_variables=self.variables,
+                                       required_frequency=self.frequency),
             *year_ranges((1979, 2005)),
         ]
         self.pressure_levels = [5000, 25000, 50000, 100000]

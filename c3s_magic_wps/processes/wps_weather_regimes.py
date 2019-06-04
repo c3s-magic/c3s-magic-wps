@@ -13,8 +13,15 @@ LOGGER = logging.getLogger("PYWPS")
 
 class WeatherRegimes(Process):
     def __init__(self):
+        self.variables = ['zg']
+        self.frequency = 'day'
         inputs = [
-            *model_experiment_ensemble(model='EC-EARTH', experiment='historical', ensemble='r2i1p1', max_occurs=1),
+            *model_experiment_ensemble(model='EC-EARTH',
+                                       experiment='historical',
+                                       ensemble='r2i1p1',
+                                       max_occurs=1,
+                                       required_variables=self.variables,
+                                       required_frequency=self.frequency),
             *year_ranges((1980, 1989)),
             LiteralInput('ref_model',
                          'Reference Model',

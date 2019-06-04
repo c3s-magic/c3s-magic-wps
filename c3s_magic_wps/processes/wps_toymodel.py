@@ -14,13 +14,16 @@ LOGGER = logging.getLogger("PYWPS")
 
 class Toymodel(Process):
     def __init__(self):
+        # more correctly the variable depends on the settings
+        self.variables = ['psl', 'tas']
+        self.frequency = 'mon'
         inputs = [
-            *model_experiment_ensemble(
-                model='ACCESS1-0',
-                experiment='historical',
-                ensemble='r1i1p1',
-                max_occurs=1,
-            ),
+            *model_experiment_ensemble(model='ACCESS1-0',
+                                       experiment='historical',
+                                       ensemble='r1i1p1',
+                                       max_occurs=1,
+                                       required_variables=self.variables,
+                                       required_frequency=self.frequency),
             *year_ranges((1999, 2001)),
             LiteralInput('variable',
                          'Variable',

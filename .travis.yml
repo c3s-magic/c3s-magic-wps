@@ -5,6 +5,8 @@ python:
 os:
   - linux
   # - osx
+env:
+  - CMIP_DATA_ROOT=/home/travis
 sudo: false
 install:
   # Python 3.x is default

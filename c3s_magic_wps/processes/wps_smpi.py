@@ -13,12 +13,17 @@ LOGGER = logging.getLogger("PYWPS")
 
 class SMPI(Process):
     def __init__(self):
+        # this list contains variables from multiple reals, which our data finder cannot handle yet.
+        # self.variables = ['ta', 'va', 'ua', 'hus', 'tas', 'psl', 'pr', 'tos', 'sic', 'tauu', 'tauv']
+        self.variables = ['ta', 'va', 'ua', 'hus', 'tas', 'psl', 'pr']
+        self.frequency = 'mon'
+
         inputs = [
-            *model_experiment_ensemble(
-                model='MPI-ESM-MR',
-                experiment='historical',
-                ensemble='r1i1p1',
-            ),
+            *model_experiment_ensemble(model='MPI-ESM-MR',
+                                       experiment='historical',
+                                       ensemble='r1i1p1',
+                                       required_variables=self.variables,
+                                       required_frequency=self.frequency),
             *year_ranges((1980, 2005)),
             LiteralInput(
                 'region',
