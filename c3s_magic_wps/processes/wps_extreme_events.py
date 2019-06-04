@@ -56,8 +56,8 @@ class ExtremeEvents(Process):
             version=runner.VERSION,
             abstract="""
                 Calculate indices for monitoring changes in extremes based on daily temperature
-                and precipitation data. Producing Glecker and timeline plots of this as
-                shown in the IPCC_AR4 repor
+                and precipitation data. Producing Glecker and timeline plots of this as shown in
+                the IPCC_AR5 report
             """,
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),

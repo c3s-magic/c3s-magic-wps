@@ -76,7 +76,7 @@ class SMPI(Process):
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
-                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_zmnam.html',
+                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_smpi.html',
                     role=util.WPS_ROLE_DOC,
                 ),
             ],
