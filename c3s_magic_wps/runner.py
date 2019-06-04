@@ -125,12 +125,13 @@ def get_output(output_dir, path_filter, name_filter=None, output_format='pdf'):
     return matches[0]
 
 
-def compress_output(output_dir, archive_file):
+def compress_output(output_dir, archive_file, exclude_preproc=True):
     with zipfile.ZipFile(archive_file, 'w', zipfile.ZIP_DEFLATED) as ziph:
         for root, dirs, files in os.walk(output_dir):
-            for file in files:
-                path = os.path.join(root, file)
-                arcname = os.path.relpath(path, output_dir)
-                ziph.write(path, arcname)
+            if not exclude_preproc or 'preproc' not in root:
+                for file in files:
+                    path = os.path.join(root, file)
+                    arcname = os.path.relpath(path, output_dir)
+                    ziph.write(path, arcname)
 
     return archive_file
