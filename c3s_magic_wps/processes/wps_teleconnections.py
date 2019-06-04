@@ -17,9 +17,9 @@ class Teleconnections(Process):
         self.frequency = 'day'
 
         inputs = [
-            *model_experiment_ensemble(model='EC-EARTH',
+            *model_experiment_ensemble(model='ACCESS1-0',
                                        experiment='historical',
-                                       ensemble='r2i1p1',
+                                       ensemble='r1i1p1',
                                        max_occurs=1,
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
