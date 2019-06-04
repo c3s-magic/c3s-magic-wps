@@ -39,7 +39,7 @@ Download ESMValTool add dependencies to your conda environment
 
 Install ESMValTool:
 
-*Note: this step assumes you have Julia and Rscript installed*
+*Note: this step assumes you have* `Julia <https://julialang.org/downloads/>`_ *and* `Rscript <https://www.r-project.org/>`_ *installed*
 
 .. code-block:: sh
 

@@ -26,4 +26,3 @@ Metrics
    :members:
    :undoc-members:
    :show-inheritance:
-
