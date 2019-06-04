@@ -8,7 +8,6 @@
    configuration
    processes
    changes
-   tutorial
 
 Indices and tables
 ==================

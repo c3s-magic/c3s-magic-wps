@@ -25,6 +25,33 @@ from .wps_perfmetrics import Perfmetrics
 from .wps_smpi import SMPI
 from .wps_extreme_events import ExtremeEvents
 
+__all__ = sorted(
+    [
+        "CVDP",
+        "EnsClus",
+        "Sleep",
+        "Blocking",
+        "PreprocessExample",
+        "ZMNAM",
+        "Teleconnections",
+        "WeatherRegimes",
+        "ModesVariability",
+        "CombinedIndices",
+        "MultimodelProducts",
+        "HeatwavesColdwaves",
+        "DiurnalTemperatureIndex",
+        "CapacityFactor",
+        "ExtremeIndex",
+        "DroughtIndicator",
+        "ConsecDryDays",
+        "ShapeSelect",
+        "QuantileBias",
+        "RainFARM",
+        "Toymodel",
+        "HyInt",
+    ]
+)
+
 processes = sorted(
     [
         Meta(),
