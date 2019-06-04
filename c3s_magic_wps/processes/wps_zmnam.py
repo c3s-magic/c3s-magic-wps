@@ -71,6 +71,7 @@ class ZMNAM(Process):
                     'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_zmnam.html',
                     role=util.WPS_ROLE_DOC,
                 ),
+                Metadata('Estimated Calculation Time', '3 minutes'),
             ],
             inputs=inputs,
             outputs=outputs,

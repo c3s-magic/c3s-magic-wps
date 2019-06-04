@@ -108,7 +108,8 @@ class MultimodelProducts(Process):
                     """The Multimodel Products metric requires at least one model to be chosen, but multiple models
                     is supported. For each model choose a projection scenario (e.g. rcp26) and the relevant historical
                     experiment will be added by the WPS process. Also make sure to set the climatology and anomaly
-                    start and end years correctly.""")
+                    start and end years correctly."""),
+                Metadata('Estimated Calculation Time', '1 minute'),
             ],
             inputs=inputs,
             outputs=outputs,

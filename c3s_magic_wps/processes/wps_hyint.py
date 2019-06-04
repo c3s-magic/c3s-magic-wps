@@ -132,7 +132,8 @@ class HyInt(Process):
                          'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_hyint.html',
                          role=util.WPS_ROLE_DOC),
                 Metadata('Note: Selected models should be experiment (eg. "rcp85") and not historical. The historical \
-                data will be added automatically.')
+                data will be added automatically.'),
+                Metadata('Estimated Calculation Time', '30 minutes'),
             ],
             inputs=inputs,
             outputs=outputs,

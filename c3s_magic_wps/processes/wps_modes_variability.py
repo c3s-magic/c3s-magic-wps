@@ -125,6 +125,7 @@ class ModesVariability(Process):
                     'Documentation',
                     'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_modes_of_variability.html',  # noqa
                     role=util.WPS_ROLE_DOC),
+                Metadata('Estimated Calculation Time', '30 seconds'),
             ],
             inputs=inputs,
             outputs=outputs,

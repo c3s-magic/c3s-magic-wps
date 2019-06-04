@@ -139,7 +139,8 @@ class RainFARM(Process):
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
                          'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_rainfarm.html',
-                         role=util.WPS_ROLE_DOC)
+                         role=util.WPS_ROLE_DOC),
+                Metadata('Estimated Calculation Time', '3 Minutes'),
             ],
             inputs=inputs,
             outputs=outputs,

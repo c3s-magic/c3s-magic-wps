@@ -63,6 +63,7 @@ class CVDP(Process):
                 Metadata('Documentation',
                          'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_cvdp.html',
                          role=util.WPS_ROLE_DOC),
+                Metadata('Estimated Calculation Time', '2 Minutes'),
             ],
             inputs=inputs,
             outputs=outputs,

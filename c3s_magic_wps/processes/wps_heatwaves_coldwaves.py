@@ -85,6 +85,7 @@ class HeatwavesColdwaves(Process):
                 Metadata('Media',
                          util.diagdata_url() + '/heatwaves_coldwaves/extreme_spells_energy.png',
                          role=util.WPS_ROLE_MEDIA),
+                Metadata('Estimated Calculation Time', '4 minutes'),
             ],
             inputs=inputs,
             outputs=outputs,
