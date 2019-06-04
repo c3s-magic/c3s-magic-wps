@@ -66,6 +66,7 @@ class ExtremeEvents(Process):
                     'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_extreme_events.html',
                     role=util.WPS_ROLE_DOC,
                 ),
+                Metadata('Estimated Calculation Time', '4 hours'),
             ],
             inputs=inputs,
             outputs=outputs,

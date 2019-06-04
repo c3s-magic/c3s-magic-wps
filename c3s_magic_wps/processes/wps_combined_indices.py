@@ -90,7 +90,8 @@ class CombinedIndices(Process):
                 Metadata(
                     'Documentation',
                     'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_combined_climate_extreme_index.html',  # noqa
-                    role=util.WPS_ROLE_DOC)
+                    role=util.WPS_ROLE_DOC),
+                Metadata('Estimated Calculation Time', '1 minute'),
             ],
             inputs=inputs,
             outputs=outputs,

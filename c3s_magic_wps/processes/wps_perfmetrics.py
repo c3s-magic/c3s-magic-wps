@@ -46,7 +46,8 @@ class Perfmetrics(Process):
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
                          'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_perfmetrics.html',
-                         role=util.WPS_ROLE_DOC)
+                         role=util.WPS_ROLE_DOC),
+                Metadata('Estimated Calculation Time', '20 Minutes'),
             ],
             inputs=inputs,
             outputs=outputs,

@@ -91,6 +91,7 @@ class DiurnalTemperatureIndex(Process):
                 Metadata('Media',
                          util.diagdata_url() + '/dtr/diurnal_temperature_variation.png',
                          role=util.WPS_ROLE_MEDIA),
+                Metadata('Estimated Calculation Time', '6 minutes'),
             ],
             inputs=inputs,
             outputs=outputs,

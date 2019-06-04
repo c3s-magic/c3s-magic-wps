@@ -96,6 +96,7 @@ class CapacityFactor(Process):
                     'Documentation',
                     'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_capacity_factor.html',
                     role=util.WPS_ROLE_DOC),
+                Metadata('Estimated Calculation Time', '1 minute'),
             ],
             inputs=inputs,
             outputs=outputs,

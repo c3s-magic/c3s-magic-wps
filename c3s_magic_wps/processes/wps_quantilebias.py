@@ -66,6 +66,7 @@ class QuantileBias(Process):
                     'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_quantilebias.html',
                     role=util.WPS_ROLE_DOC,
                 ),
+                Metadata('Estimated Calculation Time', '1 Minute'),
             ],
             inputs=inputs,
             outputs=outputs,

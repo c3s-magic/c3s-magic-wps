@@ -133,7 +133,8 @@ class EnsClus(Process):
                     'Model Selection',
                     """The Ensemble Clustering metric requires at least two models to be chosen,
                        choosing more models is supported.""",
-                )
+                ),
+                Metadata('Estimated Calculation Time', '4 minutes'),
             ],
             inputs=inputs,
             outputs=outputs,

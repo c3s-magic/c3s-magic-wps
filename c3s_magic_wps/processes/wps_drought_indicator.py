@@ -84,6 +84,7 @@ class DroughtIndicator(Process):
                 Metadata('Documentation',
                          'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_spei.html',
                          role=util.WPS_ROLE_DOC),
+                Metadata('Estimated Calculation Time', '45 minutes'),
             ],
             inputs=inputs,
             outputs=outputs,

@@ -85,6 +85,7 @@ class Blocking(Process):
                     'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_miles.html',
                     role=util.WPS_ROLE_DOC,
                 ),
+                Metadata('Estimated Calculation Time', '2 minutes'),
             ],
             inputs=inputs,
             outputs=outputs,

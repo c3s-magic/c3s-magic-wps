@@ -86,7 +86,8 @@ class PreprocessExample(Process):
                     'Model Selection',
                     """This preprocessor example requires at least two models to be chosen. Any combination is valid,
                     however, only the first two models will return their output inline. The output of any models beyond
-                    the first two are included in the zip file.""")
+                    the first two are included in the zip file."""),
+                Metadata('Estimated Calculation Time', '1 Minute'),
             ],
             inputs=inputs,
             outputs=outputs,
