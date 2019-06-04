@@ -25,14 +25,14 @@ class HyInt(Process):
                                        max_occurs=100,
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
-            *year_ranges((1980, 2020)),
+            *year_ranges((2005, 2020)),
             LiteralInput(
-                'ref_dataset',
-                'Reference Dataset',
-                abstract='Choose a reference dataset like ERA-Interim.',
+                'ref_model',
+                'Reference Model',
+                abstract='Choose a reference model like ACCESS1-0.',
                 data_type='string',
-                allowed_values=['ERA-Interim'],
-                default='ERA-Interim',
+                allowed_values=['ACCESS1-0'],
+                default='ACCESS1-0',
                 min_occurs=1,
                 max_occurs=1,
             ),
@@ -53,7 +53,7 @@ class HyInt(Process):
                 'Regions',
                 abstract='regions for timeseries and maps',
                 data_type='string',
-                allowed_values=["GL", "SA", "AF", "EU", "EA"],
+                allowed_values=["GL", "GL60", "TR", "SA", "AF", "IN", "EU", "EA", "AU"],
                 default="GL",
                 min_occurs=1,
                 max_occurs=5,
@@ -148,7 +148,7 @@ class HyInt(Process):
             models=request.inputs['model'],
             experiments=request.inputs['experiment'],
             ensembles=request.inputs['ensemble'],
-            reference=request.inputs['ref_dataset'][0].data,
+            reference=request.inputs['ref_model'][0].data,
         )
 
         options = dict(
