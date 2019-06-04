@@ -9,6 +9,7 @@ Installation
 
 Install from Conda
 ------------------
+*Note: These installation instructions assume you have* `Anaconda <https://docs.anaconda.com/anaconda/install/>`_ *installed.*
 
 .. warning::
 
@@ -17,7 +18,9 @@ Install from Conda
 Install from GitHub
 -------------------
 
-Check out code from the c3s magic wps GitHub repo and start the installation:
+*Note: These installation instructions assume you have* `Anaconda <https://docs.anaconda.com/anaconda/install/>`_ *installed.*
+
+Check out code from the c3s magic wps GitHub repo and create a conda environment:
 
 .. code-block:: sh
 
@@ -25,20 +28,31 @@ Check out code from the c3s magic wps GitHub repo and start the installation:
    $ cd c3s-magic-wps
    $ conda env create -f environment.yml
    $ source activate c3s_magic_wps
-   $ python setup.py develop
 
-... or do it the lazy way
-+++++++++++++++++++++++++
-
-The previous installation instructions assume you have Anaconda installed.
-We provide also a ``Makefile`` to run this installation without additional steps:
+Download ESMValTool add dependencies to your conda environment
 
 .. code-block:: sh
 
-   $ git clone https://github.com/c3s-magic/c3s-magic-wps.git
-   $ cd c3s-magic-wps
-   $ make clean    # cleans up a previous Conda environment
-   $ make install  # installs Conda if necessary and runs the above installation steps
+   $ git clone -b version2_master https://github.com/ESMValGroup/ESMValTool.git ../esmvaltool
+   $ cd ../esmvaltool
+   $ conda env update -n c3s_magic_wps -f environment.yml
+
+Install ESMValTool:
+
+*Note: this step assumes you have Julia and Rscript installed*
+
+.. code-block:: sh
+
+   $ pip install -e
+   $ Rscript esmvaltool/install/R/setup.R
+   $ julia esmvaltool/install/Julia/setup.jl
+
+Finally install the WPS:
+
+.. code-block:: sh
+
+   $ cd ../c3s-magic-wps
+   $ python setup.py develop
 
 Start c3s magic wps PyWPS service
 ---------------------------------
@@ -56,11 +70,11 @@ After successful installation you can start the service using the ``c3s_magic_wp
    loading configuration
    forked process id: 42
 
+*Note: Remember the process ID (PID) so you can stop the service with* ``kill PID``.
+
 The deployed WPS service is by default available on:
 
 http://localhost:5000/wps?service=WPS&version=1.0.0&request=GetCapabilities.
-
-.. NOTE:: Remember the process ID (PID) so you can stop the service with ``kill PID``.
 
 You can find which process uses a given port using the following command (here for port 5000):
 
@@ -75,62 +89,27 @@ Check the log files for errors:
 
    $ tail -f  pywps.log
 
-... or do it the lazy way
-+++++++++++++++++++++++++
-
-You can also use the ``Makefile`` to start and stop the service:
-
-.. code-block:: sh
-
-  $ make start
-  $ make status
-  $ tail -f pywps.log
-  $ make stop
-
-
 Run c3s magic wps as Docker container
 -------------------------------------
 
-You can also choose to run c3s magic wps as a Docker container.
+*Note: These installation instructions assume you have* `Docker <https://docs.docker.com/install/>`_ *installed.*
 
+You can also choose to run c3s magic wps from a Docker container.
 
-.. warning::
+Download c3s-magic-wps and build the docker container:  
 
-  TODO: Describe Docker container support.
-  
-.. warning::
-  TODO: can we simply do: 
-Run the docker container:  
-  $ docker build -t c3s-magic/c3s-magic-wps .
-  $ docker run -p 5000:5000 c3s-magic/c3s-magic-wps
+.. code-block:: sh
 
-WPS service should be available on port 5000::
+   $ git clone https://github.com/c3s-magic/c3s-magic-wps.git
+   $ cd c3s-magic-wps
+   $ docker build -t c3s-magic-wps .
+   $ docker run -p 5000:5000 c3s-magic/c3s-magic-wps
 
-  $ http://localhost:5000/wps?request=GetCapabilities&service=WPS
-  
+WPS service should be available on port 5000:
 
-Get docker images using docker-compose::
+.. code-block:: sh
 
-    $ docker-compose pull
-
-Start the demo with docker-compose::
-
-    $ docker-compose up -d  # runs with -d in the background
-    $ docker-compose logs -f  # check the logs if running in background
-
-By default the WPS service should be available on port 5000::
-
-    $ firefox "http://localhost:5000/wps?service=wps&request=GetCapabilities"
-
-Run docker exec to watch logs::
-
-    $ docker ps     # find container name
-    copernicus-wps-demo_copernicus_1
-    $ docker exec copernicus-wps-demo_copernicus_1 tail -f /opt/wps/pywps.log
-
-Use docker-compose to stop the containers::
-
-    $ docker-compose down
+   $ firefox http://localhost:5000/wps?request=GetCapabilities&service=WPS
 
 
 Use Ansible to deploy c3s magic wps on your System
