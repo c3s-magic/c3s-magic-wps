@@ -69,7 +69,7 @@ class RainFARM(Process):
                 abstract=('spatial spectral slope (set to 0 to compute from'
                           'large scales)'),
                 data_type='float',
-                default=1.7,
+                default=0.,
             ),
             LiteralInput(
                 'nens',
@@ -103,14 +103,6 @@ class RainFARM(Process):
                 data_type='string',
                 allowed_values=['true', 'false'],
                 default='true',
-            ),
-            LiteralInput(
-                'weights_climo',
-                'Weights Climo',
-                abstract='set to false if no orographic weights are to be used',
-                data_type='string',
-                allowed_values=['true', 'false'],
-                default='false',
             ),
         ]
 
@@ -172,7 +164,7 @@ class RainFARM(Process):
             nf=request.inputs['nf'][0].data,
             conserv_glob=request.inputs['conserv_glob'][0].data,
             conserv_smooth=request.inputs['conserv_smooth'][0].data,
-            weights_climo=request.inputs['weights_climo'][0].data,
+            weights_climo='false',
         )
 
         # generate recipe
