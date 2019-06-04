@@ -20,7 +20,8 @@ class ConsecDryDays(Process):
             *year_ranges((2001, 2002)),
             LiteralInput('frlim',
                          'frlim',
-                         abstract='The shortest number of consecutive dry days for entering statistic on frequency of dry periods.',
+                         abstract=('The shortest number of consecutive dry days '
+                                   'for entering statistic on frequency of dry periods.'),
                          data_type='string',
                          allowed_values=['2.5', '5', '10'],
                          default='5'),
