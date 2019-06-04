@@ -138,5 +138,5 @@ class CVDP(Process):
             response.outputs[key].file = runner.get_output(
                 result['work_dir'],  # Yes, it's in the work dir
                 path_filter=os.path.join('diagnostic1', 'cvdp'),
-                name_filter="{}.trends.ann.format(var.lower())",
+                name_filter="{}.trends.ann".format(var.lower()),
                 output_format="png")
