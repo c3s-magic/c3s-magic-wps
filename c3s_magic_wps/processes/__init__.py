@@ -21,6 +21,32 @@ from .wps_toymodel import Toymodel
 from .wps_rainfarm import RainFARM
 from .wps_smpi import SMPI
 
+__all__ = sorted([
+        "CVDP",
+        "EnsClus",
+        "Sleep",
+        "Blocking",
+        "PreprocessExample",
+        "ZMNAM",
+        "Teleconnections",
+        "WeatherRegimes",
+        "ModesVariability",
+        "CombinedIndices",
+        "MultimodelProducts",
+        "HeatwavesColdwaves",
+        "DiurnalTemperatureIndex",
+        "CapacityFactor",
+        "ExtremeIndex",
+        "DroughtIndicator",
+        "ConsecDryDays",
+        "ShapeSelect",
+        "QuantileBias",
+        "RainFARM",
+        "Toymodel",
+        "HyInt",
+    ])
+
+
 processes = sorted(
     [
         CVDP(),
