@@ -4,6 +4,7 @@ channels:
 - conda-forge
 - defaults
 dependencies:
+- python=3.6
 - pip
 # install pywps from github for now, as it fixes a problem
 # with sql logging usage
