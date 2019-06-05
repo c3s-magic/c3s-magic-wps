@@ -78,14 +78,14 @@ class RainFARM(Process):
             ),
             LiteralInput(
                 'nens',
-                'n Ensemble',
+                'No. of ensemble members',
                 abstract='number of ensemble members to be calculated',
                 data_type='integer',
                 default=2,
             ),
             LiteralInput(
                 'nf',
-                'n Subdivisions',
+                'No. of subdivisions',
                 abstract=('number of subdivisions for downscaling (e.g. 8 will '
                           'produce output fields with linear resolution '
                           'increased by a factor 8)'),

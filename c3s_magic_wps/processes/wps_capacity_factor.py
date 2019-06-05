@@ -24,32 +24,32 @@ class CapacityFactor(Process):
                                        max_occurs=1,
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
-            *year_ranges((1980, 2005)),
+            *year_ranges((2025, 2030)),
             LiteralInput(
                 'start_longitude',
                 'Start longitude',
-                abstract='minimum longitude',
+                abstract='Minimum longitude.',
                 data_type='integer',
                 default=200,
             ),
             LiteralInput(
                 'end_longitude',
                 'End longitude',
-                abstract='maximum longitude',
+                abstract='Maximum longitude.',
                 data_type='integer',
                 default=300,
             ),
             LiteralInput(
                 'start_latitude',
                 'Start latitude',
-                abstract='minimum latitude',
+                abstract='Minimum latitude.',
                 data_type='integer',
                 default=27,
             ),
             LiteralInput(
                 'end_latitude',
                 'End latitude',
-                abstract='maximum latitude',
+                abstract='Maximum latitude.',
                 data_type='integer',
                 default=70,
             ),
@@ -58,8 +58,8 @@ class CapacityFactor(Process):
                 'Season',
                 abstract='Season',
                 data_type='string',
-                allowed_values=['djf', 'mam', 'jja', 'son'],
-                default='djf',
+                allowed_values=['DJF', 'MAM', 'JJA', 'SON'],
+                default='DJF',
             ),
         ]
         self.plotlist = []
@@ -118,7 +118,7 @@ class CapacityFactor(Process):
             end_longitude=request.inputs['end_longitude'][0].data,
             start_latitude=request.inputs['start_latitude'][0].data,
             end_latitude=request.inputs['end_latitude'][0].data,
-            season=request.inputs['season'][0].data,
+            season=request.inputs['season'][0].data.lower(),
         )
 
         # generate recipe

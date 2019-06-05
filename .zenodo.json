@@ -1,0 +1,34 @@
+{
+    "creators": [
+        {
+            "affiliation": "Netherlands eScience Center",
+            "name": "Weel, Berend"
+        },
+        {
+            "affiliation": "Netherlands eScience Center",
+            "name": "van Haren, Ronald"
+        },
+        {
+            "affiliation": "Netherlands eScience Center",
+            "name": "Drost, Niels"
+        }
+        {
+            "affiliation": "Netherlands eScience Center",
+            "name": "Camphuijsen, Jaro"
+        }
+        {
+            "affiliation": "Netherlands eScience Center",
+            "name": "Andela, Bouwe"
+        },
+        {
+            "affiliation": "Netherlands eScience Center",
+            "name": "Dzigan, Yifat"
+        },
+
+    ],
+    "description": "c3s-magic-wps is Web Processing Service for Climate Data Analysis in the MAGIC project.\n",
+    "license": {
+        "id": "Apache-2.0"
+    },
+    "title": "c3s-magic-wps"
+}

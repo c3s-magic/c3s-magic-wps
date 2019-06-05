@@ -31,7 +31,7 @@ class MultimodelProducts(Process):
             LiteralInput(
                 'moninf',
                 'First month month of the seasonal mean period',
-                abstract="""The first month of the seasonal mean period to be computed, if none the monthly anomalies
+                abstract="""First month of the seasonal mean period to be computed, if none the monthly anomalies
                             will be computed.""",
                 data_type='string',
                 allowed_values=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', 'null'],
@@ -39,7 +39,7 @@ class MultimodelProducts(Process):
             LiteralInput(
                 'monsup',
                 'Last month month of the seasonal mean period',
-                abstract="""the last month of the seasonal mean period to be computed, if none the monthly anomalies
+                abstract="""Last month of the seasonal mean period to be computed, if none the monthly anomalies
                             will be computed.""",
                 data_type='string',
                 allowed_values=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
@@ -47,15 +47,15 @@ class MultimodelProducts(Process):
             LiteralInput(
                 'agreement_threshold',
                 'Agreement Threshold',
-                abstract="""Integer between 0 and 100 indicating the threshold in percent for the minimum agreement
+                abstract="""Threshold in percent for the minimum agreement
                             between models on the sign of the multi-model mean anomaly for the stipling to be
                             plotted.""",
                 data_type='integer',
-                allowed_values=[i for i in range(0, 101)],
+                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=0, maxval=100),
                 default=80),
             LiteralInput('running_mean',
                          'Running Mean',
-                         abstract='integer indictating the length of the window for the running mean to be computed.',
+                         abstract='Number of days for which the running mean is computed.',
                          data_type='integer',
                          allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1, maxval=365),
                          default=5),
