@@ -32,7 +32,7 @@ class HeatwavesColdwaves(Process):
                          'Quantile',
                          abstract='Quantile defining the exceedance/non-exceedance threshold.',
                          data_type='float',
-                         allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=0.0),
+                         allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=0.0, maxval=1.0),
                          default=0.8),
             LiteralInput('min_duration',
                          'Minimum duration',
