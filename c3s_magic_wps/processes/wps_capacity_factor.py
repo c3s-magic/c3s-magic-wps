@@ -58,8 +58,8 @@ class CapacityFactor(Process):
                 'Season',
                 abstract='Season',
                 data_type='string',
-                allowed_values=['djf', 'mam', 'jja', 'son'],
-                default='djf',
+                allowed_values=['DJF', 'MAM', 'JJA', 'SON'],
+                default='DJF',
             ),
         ]
         self.plotlist = []
@@ -118,7 +118,7 @@ class CapacityFactor(Process):
             end_longitude=request.inputs['end_longitude'][0].data,
             start_latitude=request.inputs['start_latitude'][0].data,
             end_latitude=request.inputs['end_latitude'][0].data,
-            season=request.inputs['season'][0].data,
+            season=request.inputs['season'][0].data.lower(),
         )
 
         # generate recipe
