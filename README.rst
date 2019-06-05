@@ -1,5 +1,8 @@
 c3s magic wps
 ===================
+.. image:: https://img.shields.io/badge/License-Apache%202.0-blue.svg
+    :target: https://opensource.org/licenses/Apache-2.0
+    :alt: License
 
 .. image:: https://img.shields.io/badge/docs-latest-brightgreen.svg
    :target: http://c3s-magic-wps.readthedocs.io/en/latest/?badge=latest
