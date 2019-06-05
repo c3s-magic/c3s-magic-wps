@@ -22,6 +22,13 @@ COPY environment.yml /opt/environment.yml
 # Create conda environment
 RUN conda env create -n wps -f /opt/environment.yml
 
+# Install development version of pyWPS
+
+RUN git clone https://github.com/geopython/pywps.git /opt/pywps
+
+WORKDIR /opt/pywps
+RUN ["/bin/bash", "-c", "source activate wps && pip install ."]
+
 # Install development version of ESMValTool
 
 #Clone GitHub version of ESMValTool
