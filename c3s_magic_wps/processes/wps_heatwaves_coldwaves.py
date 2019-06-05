@@ -38,7 +38,7 @@ class HeatwavesColdwaves(Process):
                          'Minimum duration',
                          abstract='Minimum duration in days of a heatwave/coldwave event.',
                          data_type='integer',
-                         allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1),
+                         allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1, maxval=366),
                          default=5),
             LiteralInput('operator',
                          'Operator',
