@@ -4,6 +4,8 @@ import os
 from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
+from pywps.inout.literaltypes import AllowedValue
+from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
 
@@ -30,12 +32,13 @@ class HeatwavesColdwaves(Process):
                          'Quantile',
                          abstract='Quantile defining the exceedance/non-exceedance threshold.',
                          data_type='float',
-                         allowed_values=[0.5, 0.6, 0.7, 0.8, 0.9],
+                         allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=0.0),
                          default=0.8),
             LiteralInput('min_duration',
                          'Minimum duration',
-                         abstract='Minimum duration in days of a heatwave/coldwave event.'.,
+                         abstract='Minimum duration in days of a heatwave/coldwave event.',
                          data_type='integer',
+                         allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1),
                          default=5),
             LiteralInput('operator',
                          'Operator',
