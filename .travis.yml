@@ -28,7 +28,7 @@ install:
   # ESMValTool
   - CURWORK=$PWD
   - cd ..
-  - git clone -b version2_development https://github.com/ESMValGroup/ESMValTool.git esmvaltool
+  - git clone -b v2.0a2 https://github.com/ESMValGroup/ESMValTool.git esmvaltool
   - conda env update -n c3s_magic_wps -f esmvaltool/environment.yml
   - cd esmvaltool
   - pip install .
