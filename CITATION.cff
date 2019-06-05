@@ -33,5 +33,5 @@ message: "If you use this software, please cite it using these metadata."
 repository-code: "https://github.com/c3s-magic/c3s-magic-wps"
 title: c3s-magic-wps
 date-released: 2019-06-05
-version: "1.0"
+version: "1.0.0"
 ...
