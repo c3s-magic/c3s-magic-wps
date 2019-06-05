@@ -31,7 +31,7 @@ class ExtremeIndex(Process):
             *year_ranges((2020, 2040), start_name='start_projection', end_name='end_projection'),
             LiteralInput('running_mean',
                          'Running Mean',
-                         abstract='Length of the window for whih the running mean is computed.',
+                         abstract='Length of the window for which the running mean is computed.',
                          data_type='integer',
                          allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1, maxval=365),
                          default=5),
