@@ -24,6 +24,10 @@
             "affiliation": "Netherlands eScience Center",
             "name": "Dzigan, Yifat"
         },
+        {
+            "affiliation": "Deutsches Klimarechenzentrum",
+            "name": "Ehbrecht, Carsten"
+        },
 
     ],
     "description": "c3s-magic-wps is Web Processing Service for Climate Data Analysis in the MAGIC project.\n",
