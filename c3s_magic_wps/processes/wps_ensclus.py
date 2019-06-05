@@ -14,7 +14,7 @@ LOGGER = logging.getLogger("PYWPS")
 
 class EnsClus(Process):
     def __init__(self):
-        self.variables = ['pr']
+        self.variables = ['pr', 'tas']
         self.frequency = 'mon'
 
         inputs = [
@@ -159,6 +159,7 @@ class EnsClus(Process):
             numclus=request.inputs['numclus'][0].data,
             perc=request.inputs['perc'][0].data,
             numpcs=request.inputs['numpcs'][0].data,
+            variable=request.inputs['variable'][0].data,
         )
 
         # generate recipe
