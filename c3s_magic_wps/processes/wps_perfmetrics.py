@@ -40,7 +40,7 @@ class Perfmetrics(Process):
             version=runner.VERSION,
             abstract="""The goal is to create a standard recipe for the calculation of performance metrics to quantify
                         the ability of the models to reproduce the climatological mean annual cycle for selected
-                        “Essential Climate Variables” (ECVs) plus some additional corresponding diagnostics and plots
+                        Essential Climate Variables (ECVs) plus some additional corresponding diagnostics and plots
                         to better understand and interpret the results.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
