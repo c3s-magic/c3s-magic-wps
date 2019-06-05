@@ -4,6 +4,8 @@ import os
 from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
+from pywps.inout.literaltypes import AllowedValue
+from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
 
@@ -28,18 +30,19 @@ class HeatwavesColdwaves(Process):
             *year_ranges((2060, 2080), start_name='start_projection', end_name='end_projection'),
             LiteralInput('quantile',
                          'Quantile',
-                         abstract='quantile defining the exceedance/non-exceedance threshold',
+                         abstract='Quantile defining the exceedance/non-exceedance threshold.',
                          data_type='float',
-                         allowed_values=[0.5, 0.6, 0.7, 0.8, 0.9],
+                         allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=0.0, maxval=1.0),
                          default=0.8),
             LiteralInput('min_duration',
                          'Minimum duration',
-                         abstract='Min duration in days of a heatwave/coldwave event',
+                         abstract='Minimum duration in days of a heatwave/coldwave event.',
                          data_type='integer',
+                         allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1),
                          default=5),
             LiteralInput('operator',
                          'Operator',
-                         abstract='either `>` for exceedances or `<` for non-exceedances',
+                         abstract='Exceedance/non-exceedance of historic threshold.',
                          data_type='string',
                          allowed_values=['exceedances', 'non-exceedances'],
                          default='non-exceedances'),
