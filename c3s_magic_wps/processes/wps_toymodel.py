@@ -136,6 +136,7 @@ class Toymodel(Process):
             end_latitude=request.inputs['end_latitude'][0].data,
             beta=request.inputs['beta'][0].data,
             number_of_members=request.inputs['number_of_members'][0].data,
+            variable=request.inputs['variable'][0].data,
         )
 
         # generate recipe
