@@ -1,7 +1,7 @@
 # YAML 1.2
 ---
 abstract: |
-  Satsense is a library for land use classification using satellite imagery.
+  c3s-magic-wps is Web Processing Service for Climate Data Analysis in the MAGIC project. The software in this WPS powers the processes behind the C3S-MAGIC portal. The processes are run on CP4CDS infrastructure.
 authors:
   -
     affiliation: "Netherlands eScience Center"
