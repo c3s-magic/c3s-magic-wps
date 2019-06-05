@@ -7,18 +7,17 @@ Installation
     :local:
     :depth: 1
 
-Install from Conda
+Install from PyPI
 ------------------
-*Note: These installation instructions assume you have* `Anaconda <https://docs.anaconda.com/anaconda/install/>`_ *installed.*
 
-.. warning::
-
-   TODO: Prepare Conda package.
+The MAGIC WPS is available as a package in `PyPI <https://pypi.org/>` (c3s-magic-wps). A working installation of `ESMValTool <https://www.esmvaltool.org/>`_ is required, currently version 2.0a2 is supported.
 
 Install from GitHub
 -------------------
 
 *Note: These installation instructions assume you have* `Anaconda <https://docs.anaconda.com/anaconda/install/>`_ *installed.*
+
+*Note: these installtion instructions assume you have* `Julia <https://julialang.org/downloads/>`_ *installed*
 
 Check out code from the c3s magic wps GitHub repo and create a conda environment:
 
@@ -29,23 +28,14 @@ Check out code from the c3s magic wps GitHub repo and create a conda environment
    $ conda env create -f environment.yml
    $ source activate c3s_magic_wps
 
-Download ESMValTool add dependencies to your conda environment
+*Note: the environment will pull pywps and esmvaltool from github via pip*
+
+Next, to complete the installation of ESMValTool a R and Julia script are required. These are available in the package. Please adjust to match the installation location of conda on your system
 
 .. code-block:: sh
 
-   $ git clone -b version2_master https://github.com/ESMValGroup/ESMValTool.git ../esmvaltool
-   $ cd ../esmvaltool
-   $ conda env update -n c3s_magic_wps -f environment.yml
-
-Install ESMValTool:
-
-*Note: this step assumes you have* `Julia <https://julialang.org/downloads/>`_ *and* `Rscript <https://www.r-project.org/>`_ *installed*
-
-.. code-block:: sh
-
-   $ pip install -e
-   $ Rscript esmvaltool/install/R/setup.R
-   $ julia esmvaltool/install/Julia/setup.jl
+   $ Rscript /opt/conda/envs/c3s-magic-wps/lib/python3.6/site-packages/esmvaltool/install/R/setup.R
+   $ julia /opt/conda/envs/c3s-magic-wps/lib/python3.6/site-packages/esmvaltool/install/Julia/setup.jl
 
 Finally install the WPS:
 
@@ -54,12 +44,23 @@ Finally install the WPS:
    $ cd ../c3s-magic-wps
    $ python setup.py develop
 
+Configure c3s magic wps PyWPS service
+-------------------------------------
+
+The wps can be configured using the `pywps configuration files <https://pywps.readthedocs.io/en/master/configuration.html>`_. See the etc folder for examples. Create a file called ``.custom.cfg`` to customize settings for your installation. A path to the cmip and obs files is needed to run the metrics.
+
+See the :ref:`installation` section for more info
+
+
 Start c3s magic wps PyWPS service
 ---------------------------------
 
-After successful installation you can start the service using the ``c3s_magic_wps`` command-line.
+After successful installation you can start the service using the ``c3s_magic_wps`` command-line. An additional environment variable is needed with the location of the model data.
 
 .. code-block:: sh
+
+   $ export CMIP_DATA_ROOT=/path/to/cmip/files
+
 
    $ c3s_magic_wps --help # show help
    $ c3s_magic_wps start  # start service with default configuration
@@ -95,7 +96,7 @@ Run c3s magic wps as Docker container
 
 You can also choose to run c3s magic wps from a Docker container.
 
-Download c3s-magic-wps, build the docker container and run it:  
+Download c3s-magic-wps, build the docker container and run it using docker-compose:  
 
 .. code-block:: sh
 

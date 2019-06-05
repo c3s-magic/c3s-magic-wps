@@ -38,6 +38,11 @@ For example change the hostname (*demo.org*) and logging level:
    [logging]
    level = DEBUG
 
+   [data]
+   archive_root =/cmip5
+   obs_root = /obs
+
+
 Start the service with your custom configuration:
 
 .. code-block:: sh

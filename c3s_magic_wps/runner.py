@@ -15,7 +15,7 @@ template_env = Environment(loader=PackageLoader('c3s_magic_wps', '/templates/esm
                                'yml',
                            ]))
 
-VERSION = "2.0.0"
+VERSION = "1.0.0"
 
 
 def run(recipe_file, config_file, skip_nonexistent=False):
