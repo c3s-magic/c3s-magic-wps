@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
-CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
+CHANGES = open(os.path.join(here, 'CHANGELOG.rst')).read()
 
 about = {}
 with open(os.path.join(here, 'c3s_magic_wps', '__version__.py'), 'r') as f:
@@ -17,15 +17,13 @@ with open(os.path.join(here, 'c3s_magic_wps', '__version__.py'), 'r') as f:
 reqs = [line.strip() for line in open('requirements.txt')]
 
 classifiers = [
-    'Development Status :: 3 - Alpha',
+    'Development Status :: 5 - Production/Stable',
     'Intended Audience :: Developers',
     'Intended Audience :: Science/Research',
     'Operating System :: MacOS :: MacOS X',
     'Operating System :: POSIX',
     'Programming Language :: Python',
     'Natural Language :: English',
-    "Programming Language :: Python :: 2",
-    'Programming Language :: Python :: 2.7',
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3.6',
     'Topic :: Scientific/Engineering :: Atmospheric Science',
