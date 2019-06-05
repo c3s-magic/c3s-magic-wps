@@ -7,7 +7,11 @@ services:
       - "5000:5000"
     environment:
       - "WPS_OUTPUT_URL=http://localhost:5000/wps"
+      - "CMIP_DATA_ROOT=/cmip5"
 
+    volumes:
+          - /cmip5
+          - /obs
 
 # docker-compose build
 # docker-compose up
