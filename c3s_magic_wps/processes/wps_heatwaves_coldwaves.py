@@ -42,7 +42,7 @@ class HeatwavesColdwaves(Process):
                          default=5),
             LiteralInput('operator',
                          'Operator',
-                         abstract='(Exceedance/non-exceedance of historic threshold.',
+                         abstract='Exceedance/non-exceedance of historic threshold.',
                          data_type='string',
                          allowed_values=['exceedances', 'non-exceedances'],
                          default='non-exceedances'),
