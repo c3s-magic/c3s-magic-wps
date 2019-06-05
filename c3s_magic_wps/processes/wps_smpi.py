@@ -25,7 +25,7 @@ class SMPI(Process):
                                        min_occurs=2,
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
-            *year_ranges((1980, 2005)),
+            *year_ranges((1980, 1985)),
             LiteralInput(
                 'region',
                 'Region',
