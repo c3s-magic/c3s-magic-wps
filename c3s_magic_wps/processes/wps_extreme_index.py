@@ -35,6 +35,34 @@ class ExtremeIndex(Process):
                          data_type='integer',
                          allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1, maxval=365),
                          default=5),
+            LiteralInput(
+                'start_longitude',
+                'Start longitude',
+                abstract='minimum longitude.',
+                data_type='integer',
+                default=-60,
+            ),
+            LiteralInput(
+                'end_longitude',
+                'End longitude',
+                abstract='maximum longitude.',
+                data_type='integer',
+                default=40,
+            ),
+            LiteralInput(
+                'start_latitude',
+                'Start latitude',
+                abstract='minimum latitude.',
+                data_type='integer',
+                default=30,
+            ),
+            LiteralInput(
+                'end_latitude',
+                'End latitude',
+                abstract='maximum latitude.',
+                data_type='integer',
+                default=70,
+            ),
         ]
         self.plotlist = [
             ('t10p', [Format('image/png')]),
@@ -104,6 +132,10 @@ class ExtremeIndex(Process):
             end_historical='{}-12-31'.format(request.inputs['end_historical'][0].data),
             start_projection='{}-01-01'.format(request.inputs['start_projection'][0].data),
             end_projection='{}-12-31'.format(request.inputs['end_projection'][0].data),
+            start_longitude=request.inputs['start_longitude'][0].data,
+            end_longitude=request.inputs['end_longitude'][0].data,
+            start_latitude=request.inputs['start_latitude'][0].data,
+            end_latitude=request.inputs['end_latitude'][0].data,
         )
 
         # generate recipe

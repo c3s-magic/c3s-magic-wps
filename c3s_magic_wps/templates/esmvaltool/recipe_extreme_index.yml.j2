@@ -37,10 +37,10 @@ preprocessors:
     mask_fillvalues:
       threshold_fraction: 0.95
     extract_region:
-      start_longitude: -60
-      end_longitude: 40
-      start_latitude: 30
-      end_latitude: 70
+      start_longitude: {{options['start_longitude']}} #  -60
+      end_longitude: {{options['end_longitude']}} #  40
+      start_latitude: {{options['start_latitude']}} #  30
+      end_latitude: {{options['end_latitude']}} #  70
 
 diagnostics:
   extreme_index:
