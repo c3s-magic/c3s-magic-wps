@@ -5,7 +5,9 @@ channels:
 - defaults
 dependencies:
 - pip
-- pywps=4.2
+# install pywps from github for now, as it fixes a problem
+# with sql logging usage
+#- pywps=4.2
 - jinja2
 - click
 - psutil
