@@ -21,7 +21,7 @@ class EnsClus(Process):
             *model_experiment_ensemble(model='ACCESS1-0',
                                        experiment='historical',
                                        ensemble='r1i1p1',
-                                       min_occurs=2,
+                                       min_occurs=3,
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
             *year_ranges((1900, 2005)),
