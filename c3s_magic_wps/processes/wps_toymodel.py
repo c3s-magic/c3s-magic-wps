@@ -18,12 +18,14 @@ class Toymodel(Process):
         self.variables = ['psl', 'tas']
         self.frequency = 'mon'
         inputs = [
-            *model_experiment_ensemble(model='ACCESS1-0',
-                                       experiment='historical',
-                                       ensemble='r1i1p1',
-                                       max_occurs=1,
-                                       required_variables=self.variables,
-                                       required_frequency=self.frequency),
+            LiteralInput('dataset',
+                         'Dataset',
+                         abstract='Choose a dataset like ERA-Interim.',
+                         data_type='string',
+                         allowed_values=['ERA-Interim'],
+                         default='ERA-Interim',
+                         min_occurs=1,
+                         max_occurs=1),
             *year_ranges((1999, 2001)),
             LiteralInput('variable',
                          'Variable',
@@ -123,11 +125,7 @@ class Toymodel(Process):
         workdir = self.workdir
 
         # build esgf search constraints
-        constraints = dict(
-            model=request.inputs['model'][0].data,
-            experiment=request.inputs['experiment'][0].data,
-            ensemble=request.inputs['ensemble'][0].data,
-        )
+        constraints = dict()
 
         options = dict(
             start_longitude=request.inputs['start_longitude'][0].data,
