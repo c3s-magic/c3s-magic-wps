@@ -30,14 +30,14 @@ class CapacityFactor(Process):
                 'Start longitude',
                 abstract='Minimum longitude.',
                 data_type='integer',
-                default=200,
+                default=240,
             ),
             LiteralInput(
                 'end_longitude',
                 'End longitude',
                 abstract='Maximum longitude.',
                 data_type='integer',
-                default=300,
+                default=285,
             ),
             LiteralInput(
                 'start_latitude',
@@ -51,7 +51,7 @@ class CapacityFactor(Process):
                 'End latitude',
                 abstract='Maximum latitude.',
                 data_type='integer',
-                default=70,
+                default=50,
             ),
             LiteralInput(
                 'season',
