@@ -109,9 +109,9 @@ class HeatwavesColdwaves(Process):
 
         op = request.inputs['operator'][0].data
         if op == 'exceedances':
-            operator = '>'
+            operator = "'>'"
         elif op == 'non-exceedances':
-            operator = '<'
+            operator = "'<'"
         else:
             raise Exception('Unknown operator for task: ' + op)
 
