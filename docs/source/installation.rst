@@ -7,13 +7,10 @@ Installation
     :local:
     :depth: 1
 
-Install from Conda
+Install from PyPI
 ------------------
-*Note: These installation instructions assume you have* `Anaconda <https://docs.anaconda.com/anaconda/install/>`_ *installed.*
 
-.. warning::
-
-   TODO: Prepare Conda package.
+The MAGIC WPS is available as a package in `PyPI <https://pypi.org/>` (c3s-magic-wps). A working installation of `ESMValTool <https://www.esmvaltool.org/>`_ is required, currently version 2.0a2 is supported.
 
 Install from GitHub
 -------------------
