@@ -1,7 +1,7 @@
 # vim:set ft=dockerfile:
 FROM continuumio/miniconda3
-MAINTAINER https://github.com/c3s-magic/c3s-magic-wps
-LABEL Description="c3s magic WPS Demo" Vendor="c3s-magic" Version="0.3.0"
+LABEL maintainer=https://github.com/c3s-magic/c3s-magic-wps
+LABEL description="c3s magic WPS Demo" Vendor="c3s-magic" Version="0.3.0"
 
 # Update Debian system
 RUN apt-get update && apt-get install -y \
@@ -22,17 +22,25 @@ COPY environment.yml /opt/environment.yml
 # Create conda environment
 RUN conda env create -n wps -f /opt/environment.yml
 
+# Install development version of pyWPS
+
+RUN git clone https://github.com/geopython/pywps.git /opt/pywps
+
+WORKDIR /opt/pywps
+RUN ["/bin/bash", "-c", "source activate wps && pip install ."]
+
 # Install development version of ESMValTool
 
-#Clone GitHub version of ESMValTool
-RUN git clone -b v2.0a2 https://github.com/ESMValGroup/ESMValTool.git /opt/esmvaltool
+# Clone GitHub version of ESMValTool
+# RUN git clone -b v2.0a2 https://github.com/ESMValGroup/ESMValTool.git /opt/esmvaltool
 
 #Add dependancies of esmvaltool to wps conda environement created earlier
 WORKDIR /opt/esmvaltool
-RUN conda env update -n wps -f environment.yml
-RUN ["/bin/bash", "-c", "source activate wps && pip install -e ."]
-RUN ["/bin/bash", "-c", "source activate wps && Rscript esmvaltool/install/R/setup.R"]
-RUN ["/bin/bash", "-c", "source activate wps && julia esmvaltool/install/Julia/setup.jl"]
+
+# RUN conda env update -n wps -f environment.yml
+# RUN ["/bin/bash", "-c", "source activate wps && pip install -e ."]
+RUN ["/bin/bash", "-c", "source activate wps && Rscript /opt/conda/envs/wps/lib/python3.6/site-packages/esmvaltool/install/R/setup.R"]
+RUN ["/bin/bash", "-c", "source activate wps && julia /opt/conda/envs/wps/lib/python3.6/site-packages/esmvaltool/install/Julia/setup.jl"]
 # RUN ["/bin/bash", "-c", "source activate wps && conda install -c conda-forge cdo==1.9.5 hdf5==1.10.3"]
 
 # Copy WPS project
@@ -48,7 +56,7 @@ EXPOSE 5000
 ENTRYPOINT ["/bin/bash", "-c"]
 CMD ["source activate wps && j2 /opt/wps/etc/magic-docker.cfg.j2 > /opt/wps/etc/magic-docker.cfg && exec c3s_magic_wps start -b 0.0.0.0 -c /opt/wps/etc/magic-docker.cfg"]
 
-# docker build -t c3s-magic/c3s-magic-wps .
-# docker run -p 5000:5000 c3s-magic/c3s-magic-wps
+# docker-compose build
+# docker-compose up
 # http://localhost:5000/wps?request=GetCapabilities&service=WPS
 # http://localhost:5000/wps?request=DescribeProcess&service=WPS&identifier=all&version=1.0.0

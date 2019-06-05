@@ -1,13 +1,34 @@
 name: c3s_magic_wps
 channels:
-- birdhouse
-- conda-forge
-- defaults
+  #  - birdhouse
+  - conda-forge
+  - defaults
 dependencies:
-- pip
-- pywps=4.2
-- jinja2
-- click
-- psutil
-- pip:
-  - j2cli
+  - python=3.6
+  - pip
+  - esmpy
+  - iris>=2.2
+  - matplotlib<3  # Can be installed from PyPI, but is a dependency of iris and should be pinned.
+  - python-stratify
+  - xarray>=0.12.0  # Can be installed from PyPI, but here to get a consistent set of depencies with iris.
+
+# Non-Python dependencies
+  - graphviz
+  - cdo
+  - imagemagick
+  - nco
+
+# Multi language support:
+  - ncl>=6.5.0
+  - r-base
+  - r-curl  # Dependency of lintr, but fails to compile because it cannot find libcurl installed from conda.
+  - r-udunits2  # Fails to compile because it cannot find udunits2 installed from conda.
+
+  - jinja2
+  - click
+  - psutil
+  - pip:
+    - j2cli
+    # install pywps from github for now, as it fixes a problem
+    - git+https://github.com/geopython/pywps.git
+    - git+https://github.com/ESMValGroup/ESMValTool.git@v2.0a2
