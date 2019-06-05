@@ -31,9 +31,9 @@ class ShapeSelect(Process):
             LiteralInput(
                 'weighting_method',
                 'Weighting method',
-                abstract="""The preferred weighting method ‘mean_inside’ - mean of all grid points inside polygon;
-                         ‘representative’ - one point inside or close to the polygon is used to represent the complete
-                         area.""",
+                abstract="""The preferred weighting method: mean_inside - mean of all
+                        grid points inside polygon or representative - one point inside or close
+                        to the polygon is used to represent the complete area.""",
                 data_type='string',
                 allowed_values=['mean_inside', 'representative'],
                 default='mean_inside'),
