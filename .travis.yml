@@ -25,21 +25,13 @@ install:
   - source activate c3s_magic_wps
   # Packages for testing
   - conda install pytest flake8
-  # pyWPS from github (eep!)
-  - CURWORK=$PWD
-  - cd ..
-  - git clone https://github.com/geopython/pywps.git pywps
-  - cd pywps
-  - pip install .
-  - cd $CURWORK
    # ESMValTool
-  - CURWORK=$PWD
-  - cd ..
-  - git clone -b v2.0a2 https://github.com/ESMValGroup/ESMValTool.git esmvaltool
-  - conda env update -n c3s_magic_wps -f esmvaltool/environment.yml
-  - cd esmvaltool
-  - pip install .
-  - cd $CURWORK
+   #  - CURWORK=$PWD
+   # - cd ..
+   #- git clone -b v2.0a2 https://github.com/ESMValGroup/ESMValTool.git esmvaltool
+   #- cd esmvaltool
+   #- pip install .
+   #- cd $CURWORK
   # Install Emu WPS
   - python setup.py install
 before_script:
