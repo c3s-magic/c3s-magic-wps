@@ -11,11 +11,11 @@
         {
             "affiliation": "Netherlands eScience Center",
             "name": "Drost, Niels"
-        }
+        },
         {
             "affiliation": "Netherlands eScience Center",
             "name": "Camphuijsen, Jaro"
-        }
+        },
         {
             "affiliation": "Netherlands eScience Center",
             "name": "Andela, Bouwe"
@@ -27,10 +27,10 @@
         {
             "affiliation": "Deutsches Klimarechenzentrum",
             "name": "Ehbrecht, Carsten"
-        },
+        }
 
     ],
-    "description": "c3s-magic-wps is Web Processing Service for Climate Data Analysis in the MAGIC project.\n",
+    "description": "c3s-magic-wps is Web Processing Service for Climate Data Analysis in the MAGIC project.",
     "license": {
         "id": "Apache-2.0"
     },
