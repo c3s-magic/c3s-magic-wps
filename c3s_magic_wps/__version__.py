@@ -7,4 +7,4 @@
 __author__ = ('Berend Weel', 'Ronald van Haren', 'Niels Drost',
               'Jaro Camphuijsen', 'Bouwe Andela', 'Yifat Dzigan')
 __email__ = 'b.weel@esciencecenter.nl'
-__version__ = '1.0.0'
+__version__ = '1.0.0rc1'
