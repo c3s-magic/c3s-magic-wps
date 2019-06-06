@@ -12,6 +12,9 @@ c3s magic wps
    :target: https://travis-ci.com/c3s-magic/c3s-magic-wps
    :alt: Travis Build
 
+.. image:: https://badge.fury.io/py/c3s-magic-wps.svg
+    :target: https://badge.fury.io/py/c3s-magic-wps
+
 .. image:: https://zenodo.org/badge/184254565.svg
    :target: https://zenodo.org/badge/latestdoi/184254565
 
