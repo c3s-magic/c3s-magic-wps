@@ -28,14 +28,14 @@ class CombinedIndices(Process):
             *year_ranges((1950, 2005)),
             LiteralInput('running_mean',
                          'Running Mean',
-                         abstract='integer indictating the length of the window for the running mean to be computed.',
+                         abstract='Length of the window for which the running mean is computed.',
                          data_type='integer',
                          allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1, maxval=365),
                          default=5),
             LiteralInput(
                 'moninf',
                 'First month month of the seasonal mean period',
-                abstract="""The first month of the seasonal mean period to be computed, if none the monthly anomalies
+                abstract="""First month of the seasonal mean period to be computed, if null the monthly anomalies
                             will be computed.""",
                 data_type='string',
                 allowed_values=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', 'null'],
@@ -43,20 +43,20 @@ class CombinedIndices(Process):
             LiteralInput(
                 'monsup',
                 'Last month month of the seasonal mean period',
-                abstract="""the last month of the seasonal mean period to be computed, if none the monthly anomalies
+                abstract="""Last month of the seasonal mean period to be computed, if null the monthly anomalies
                             will be computed.""",
                 data_type='string',
-                allowed_values=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+                allowed_values=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', 'null'],
                 default='3'),
             LiteralInput('region',
                          'Region',
-                         abstract='Region',
+                         abstract='Region over which to calculate the metric.',
                          data_type='string',
                          allowed_values=['NAO', 'Nino3', 'Nino3.4', 'Nino4', 'SOI'],
                          default='NAO'),
             LiteralInput('standardized',
                          'Standardized',
-                         abstract='boolean indictating if standardization should be computed.',
+                         abstract='Boolean indictating if standardization should be computed.',
                          data_type='boolean',
                          default=True),
         ]

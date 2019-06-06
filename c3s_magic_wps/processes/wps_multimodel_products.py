@@ -55,7 +55,7 @@ class MultimodelProducts(Process):
                 default=80),
             LiteralInput('running_mean',
                          'Running Mean',
-                         abstract='Number of days for which the running mean is computed.',
+                         abstract='Length of the window for which the running mean is computed.',
                          data_type='integer',
                          allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1, maxval=365),
                          default=5),

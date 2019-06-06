@@ -39,7 +39,7 @@ class HyInt(Process):
             LiteralInput(
                 'indices',
                 'Indices',
-                abstract='Indices to be analysed and plotted',
+                abstract='Indices to be analysed and plotted.',
                 data_type='string',
                 allowed_values=[
                     "pa_norm", "hyint", "int_norm", "r95_norm", "wsl_norm", "dsl_norm", "int", "dsl", "wsl"
@@ -51,7 +51,7 @@ class HyInt(Process):
             LiteralInput(
                 'regions',
                 'Regions',
-                abstract='regions for timeseries and maps',
+                abstract='Regions for timeseries and maps.',
                 data_type='string',
                 allowed_values=["GL", "GL60", "TR", "SA", "AF", "IN", "EU", "EA", "AU"],
                 default="GL",
@@ -61,14 +61,14 @@ class HyInt(Process):
             LiteralInput(
                 'norm_year_start',
                 'Norm year start',
-                abstract='first year of reference normalization period to be used for normalized indices',
+                abstract='First year of reference normalization period to be used for normalized indices.',
                 data_type='integer',
                 default=1980,
             ),
             LiteralInput(
                 'norm_year_end',
                 'Norm year end',
-                abstract='last year of reference normalization period to be used for normalized indices',
+                abstract='Last year of reference normalization period to be used for normalized indices.',
                 data_type='integer',
                 default=1999,
             ),

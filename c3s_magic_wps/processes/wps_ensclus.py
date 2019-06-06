@@ -42,7 +42,7 @@ class EnsClus(Process):
             LiteralInput(
                 'area',
                 'Area',
-                abstract='Area',
+                abstract='Area over which to calculate.',
                 data_type='string',
                 allowed_values=['EU', 'EAT', 'PNA', 'NH'],
                 default='EU',
@@ -50,7 +50,7 @@ class EnsClus(Process):
             LiteralInput(
                 'extreme',
                 'Extreme',
-                abstract='Extreme',
+                abstract='Extreme metric.',
                 data_type='string',
                 allowed_values=[
                     '60th_percentile', '75th_percentile', '90th_percentile', 'mean', 'maximum', 'std', 'trend'
@@ -60,7 +60,7 @@ class EnsClus(Process):
             LiteralInput(
                 'numclus',
                 'Number of Clusters',
-                abstract='Numclus',
+                abstract='Number of clusters.',
                 data_type='integer',
                 default=2,
             ),
