@@ -16,6 +16,7 @@ class Meta(Process):
         inputs = [
             LiteralInput('process',
                          'Process for which to return the available data',
+                         abstract='Process for which to return the available data.',
                          default='',
                          data_type='string',
                          min_occurs=0,

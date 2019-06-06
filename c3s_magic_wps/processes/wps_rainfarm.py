@@ -27,43 +27,43 @@ class RainFARM(Process):
             LiteralInput(
                 'start_longitude',
                 'Start longitude',
-                abstract='minimum longitude',
+                abstract='Minimum longitude.',
                 data_type='integer',
                 default=5,
             ),
             LiteralInput(
                 'end_longitude',
                 'End longitude',
-                abstract='maximum longitude',
+                abstract='Maximum longitude.',
                 data_type='integer',
                 default=15,
             ),
             LiteralInput(
                 'start_latitude',
                 'Start latitude',
-                abstract='minimum latitude',
+                abstract='Minimum latitude.',
                 data_type='integer',
                 default=40,
             ),
             LiteralInput(
                 'end_latitude',
                 'End latitude',
-                abstract='maximum latitude',
+                abstract='Maximum latitude.',
                 data_type='integer',
                 default=50,
             ),
             LiteralInput(
                 'target_grid',
                 'Target Grid',
-                abstract=('in degrees (e.g. 1x1) can also be the name of one '
-                          'of the datasets to use the grid from that dataset'),
+                abstract=('Target grid in degrees (e.g. 1x1) can also be the name of one '
+                          'of the datasets to use the grid from that dataset.'),
                 data_type='string',
                 default='1x1',
             ),
             LiteralInput(
                 'scheme',
                 'Scheme',
-                abstract='regridding scheme',
+                abstract='Regridding scheme to be used.',
                 data_type='string',
                 allowed_values=['linear', 'nearest', 'area_weighted', 'unstructured_nearest'],
                 default='area_weighted',
@@ -71,31 +71,31 @@ class RainFARM(Process):
             LiteralInput(
                 'slope',
                 'Slope',
-                abstract=('spatial spectral slope (set to 0 to compute from'
-                          'large scales)'),
+                abstract=('Spatial spectral slope (set to 0 to compute from'
+                          'large scales).'),
                 data_type='float',
                 default=0.,
             ),
             LiteralInput(
                 'nens',
                 'No. of ensemble members',
-                abstract='number of ensemble members to be calculated',
+                abstract='Number of ensemble members to be calculated.',
                 data_type='integer',
                 default=2,
             ),
             LiteralInput(
                 'nf',
                 'No. of subdivisions',
-                abstract=('number of subdivisions for downscaling (e.g. 8 will '
+                abstract=('Number of subdivisions for downscaling (e.g. 8 will '
                           'produce output fields with linear resolution '
-                          'increased by a factor 8)'),
+                          'increased by a factor 8).'),
                 data_type='integer',
                 default=8,
             ),
             LiteralInput(
                 'conserv_glob',
                 'Conserve Global',
-                abstract='conserve precipitation over full domain',
+                abstract='Conserve precipitation over full domain?',
                 data_type='string',
                 allowed_values=['true', 'false'],
                 default='false',
@@ -103,8 +103,8 @@ class RainFARM(Process):
             LiteralInput(
                 'conserv_smooth',
                 'Conserve Smooth',
-                abstract=('conserve precipitation using convolution (if '
-                          'neither is chosen box conservation is used)'),
+                abstract=('Conserve precipitation using convolution (if '
+                          'neither is chosen box conservation is used)?'),
                 data_type='string',
                 allowed_values=['true', 'false'],
                 default='true',

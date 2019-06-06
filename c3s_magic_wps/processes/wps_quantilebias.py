@@ -34,7 +34,7 @@ class QuantileBias(Process):
                          max_occurs=1),
             LiteralInput('perc_lev',
                          'Quantile',
-                         abstract='Quantile in percentage (%)',
+                         abstract='Quantile in percentage (%).',
                          data_type='integer',
                          default=75),
         ]

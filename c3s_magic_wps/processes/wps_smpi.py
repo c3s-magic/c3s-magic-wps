@@ -29,7 +29,7 @@ class SMPI(Process):
             LiteralInput(
                 'region',
                 'Region',
-                abstract="""Selected region""",
+                abstract="""Region over which to calculate the metric.""",
                 data_type='string',
                 allowed_values=[
                     'global', 'trop', 'nhext', 'shext', 'nhtrop', 'shtrop', 'nh', 'sh', 'nhmidlat', 'shmidlat',
@@ -41,8 +41,8 @@ class SMPI(Process):
                 'smpi_n_bootstrap',
                 'Number of bootstrapping members',
                 abstract="""
-                    number of bootstrapping members used to determine uncertainties on model-reference differences
-                    (typical number of bootstrapping members: 100)
+                    Number of bootstrapping members used to determine uncertainties on model-reference differences
+                    (typical number of bootstrapping members: 100).
                 """,
                 data_type='integer',
                 default=100,
