@@ -181,8 +181,9 @@ class MultimodelProducts(Process):
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(os.path.join(self.workdir, 'output'),
-                                                                  'multimodel_products_result.zip')
+        response.outputs['archive'].file = runner.compress_output(
+            os.path.join(self.workdir, 'output'),
+            os.path.join(self.workdir, 'multimodel_products_result.zip'))
 
         response.update_status("done.", 100)
         return response
