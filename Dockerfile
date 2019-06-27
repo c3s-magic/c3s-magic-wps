@@ -29,11 +29,6 @@ RUN git clone https://github.com/geopython/pywps.git /opt/pywps
 WORKDIR /opt/pywps
 RUN ["/bin/bash", "-c", "source activate wps && pip install ."]
 
-# Install development version of ESMValTool
-
-# Clone GitHub version of ESMValTool
-# RUN git clone -b v2.0a2 https://github.com/ESMValGroup/ESMValTool.git /opt/esmvaltool
-
 #Add dependancies of esmvaltool to wps conda environement created earlier
 WORKDIR /opt/esmvaltool
 

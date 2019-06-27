@@ -3,6 +3,7 @@ channels:
   #  - birdhouse
   - conda-forge
   - defaults
+  - esmvalgroup
 dependencies:
   - python=3.6
   - pip
@@ -11,6 +12,7 @@ dependencies:
   - matplotlib<3  # Can be installed from PyPI, but is a dependency of iris and should be pinned.
   - python-stratify
   - xarray>=0.12.0  # Can be installed from PyPI, but here to get a consistent set of depencies with iris.
+  - esmvaltool=2.0a2
 
 # Non-Python dependencies
   - graphviz
@@ -31,4 +33,3 @@ dependencies:
     - j2cli
     # install pywps from github for now, as it fixes a problem
     - git+https://github.com/geopython/pywps.git
-    - git+https://github.com/ESMValGroup/ESMValTool.git@v2.0a2
