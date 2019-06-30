@@ -58,7 +58,7 @@ master_doc = 'index'
 # General information about the project.
 project = u'C3S Magic WPS'
 copyright = u"2019, Netherlands eScience Center"
-author = u"Berend Weel"
+author = u"The C3S Magic Partners"
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
@@ -150,7 +150,7 @@ latex_elements = {
 latex_documents = [
     (master_doc, 'c3s_magic_wps.tex',
      u'c3s magic wps Documentation',
-     u'Berend Weel', 'manual'),
+     u'The C3S Magic Partners', 'manual'),
 ]
 
 
