@@ -1,4 +1,4 @@
-c3s magic wps
+C3S MAGIC WPS
 ===================
 .. image:: https://img.shields.io/badge/License-Apache%202.0-blue.svg
     :target: https://opensource.org/licenses/Apache-2.0
