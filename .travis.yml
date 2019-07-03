@@ -7,7 +7,6 @@ os:
   # - osx
 env:
   - CMIP_DATA_ROOT=/home/travis
-sudo: false
 install:
   # Python 3.x is default
   - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
@@ -21,7 +20,7 @@ install:
   # Install Julia
   - wget https://julialang-s3.julialang.org/bin/linux/x64/1.0/julia-1.0.3-linux-x86_64.tar.gz
   - tar xfz julia-*-linux-x86_64.tar.gz
-  - ln -s $(pwd)/julia-*/bin/julia /usr/bin/julia
+  - sudo ln -s $(pwd)/julia-*/bin/julia /usr/bin/julia
   # Create environment (specifies python version explicitly)
   - conda env create -n c3s_magic_wps -f environment.yml
   - source activate c3s_magic_wps
