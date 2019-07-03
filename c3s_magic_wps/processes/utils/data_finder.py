@@ -56,16 +56,35 @@ class DataFinder():
         return DataFinder.__instance
 
     def __init__(self):
-        self.archive_base = os.environ['CMIP_DATA_ROOT']
+        self.archive_base = os.environ.get('CMIP_DATA_ROOT')
 
-        LOGGER.debug("searching for model data in the following folder: `%s`", self.archive_base)
+        if not self.archive_base:
+            raise Exception('CMIP_DATA_ROOT environment variable not set, please set to cmip5 folder')
+
+        LOGGER.info("searching for model data in the following folder: `%s`", self.archive_base)
 
         if not os.path.isdir(self.archive_base):
             raise Exception('cmip5 folder not found at %s' % self.archive_base)
 
-        # use root instead of the actual filename to
-        # not needlessly reveal the location of the files on disk
-        self.data = _dir_entry(self.archive_base, 'root')
+        self.cache_file = os.environ.get('CMIP_META_CACHE_FILE')
+
+        if self.cache_file:
+            LOGGER.info("using `%s` as file for storing cmip meta cache", self.cache_file)
+
+            if os.path.isfile(self.cache_file):
+                with open(self.cache_file, "r") as read_file:
+                    self.data = json.load(read_file)
+                    LOGGER.debug("loaded meta data from '%s'", self.cache_file)
+            else:
+                self.data = _dir_entry(self.archive_base, 'root')
+
+                with open(self.cache_file, "w") as write_file:
+                    json.dump(self.data, write_file)
+                    LOGGER.debug("written meta data to '%s'", self.cache_file)
+        else:
+            # use root instead of the actual filename to
+            # not needlessly reveal the location of the files on disk
+            self.data = _dir_entry(self.archive_base, 'root')
 
     # Obtain a pruned tree with models/experiments/ensembles containing the required variables and frequency only
     # Note, it cannot handle variables in multiple realms as of yet
@@ -140,3 +159,8 @@ class DataFinder():
                                             ensembles.add(ensemble['name'])
 
         return (list(models), list(experiments), list(ensembles))
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level="DEBUG")
+    DataFinder()
