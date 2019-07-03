@@ -21,7 +21,7 @@ install:
   # Install Julia
   - wget https://julialang-s3.julialang.org/bin/linux/x64/1.0/julia-1.0.3-linux-x86_64.tar.gz
   - tar xfz julia-*-linux-x86_64.tar.gz
-  - ln -s $(pwd)/julia-*/bin/julia /usr/bin/julia
+  - export $PATH="$(pwd)/julia-*/bin/julia:$PATH"
   # Create environment (specifies python version explicitly)
   - conda env create -n c3s_magic_wps -f environment.yml
   - source activate c3s_magic_wps
