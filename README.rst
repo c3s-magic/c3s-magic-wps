@@ -1,5 +1,5 @@
 C3S MAGIC WPS
-===================
+=============
 .. image:: https://img.shields.io/badge/License-Apache%202.0-blue.svg
     :target: https://opensource.org/licenses/Apache-2.0
     :alt: License
@@ -24,14 +24,14 @@ Web Processing Service for Climate Data Analysis in the MAGIC project. The softw
 * Documentation: https://c3s-magic-wps.readthedocs.io.
 
 Links
------
+~~~~~
 
 * `Climate Data Store`_
 * `C3S MAGIC Portal`_
 * `CP4CDS Quality Control`_
 
 Credits
--------
+~~~~~
 
 This package was created with Cookiecutter_ and the `bird-house/cookiecutter-birdhouse`_ project template.
 
