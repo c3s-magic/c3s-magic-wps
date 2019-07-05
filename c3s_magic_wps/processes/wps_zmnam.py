@@ -80,7 +80,6 @@ class ZMNAM(Process):
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)
-        workdir = self.workdir
 
         # build esgf search constraints
         constraints = dict(
@@ -92,7 +91,7 @@ class ZMNAM(Process):
         # generate recipe
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
-            workdir=workdir,
+            workdir=self.workdir,
             diag='zmnam',
             constraints=constraints,
             start_year=request.inputs['start_year'][0].data,
@@ -130,7 +129,9 @@ class ZMNAM(Process):
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'), 'zmnam_result.zip')
+        response.outputs['archive'].file = runner.compress_output(
+            os.path.join(self.workdir, 'output'),
+            os.path.join(self.workdir, 'zmnam_result.zip'))
 
         response.update_status("done.", 100)
         return response

@@ -75,7 +75,6 @@ class ExtremeEvents(Process):
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)
-        workdir = self.workdir
 
         # build esgf search constraints
         constraints = dict(
@@ -90,7 +89,7 @@ class ExtremeEvents(Process):
         # generate recipe
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(
-            workdir=workdir,
+            workdir=self.workdir,
             diag='extreme_events',
             options=options,
             constraints=constraints,
@@ -129,8 +128,9 @@ class ExtremeEvents(Process):
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'),
-                                                                  'extreme_events_result.zip')
+        response.outputs['archive'].file = runner.compress_output(
+            os.path.join(self.workdir, 'output'),
+            os.path.join(self.workdir, 'extreme_events_result.zip'))
 
         response.update_status("done.", 100)
         return response

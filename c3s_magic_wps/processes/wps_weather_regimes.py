@@ -80,7 +80,6 @@ class WeatherRegimes(Process):
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)
-        workdir = self.workdir
 
         # build esgf search constraints
         constraints = dict(
@@ -100,7 +99,7 @@ class WeatherRegimes(Process):
         start_year = request.inputs['start_year'][0].data
         end_year = request.inputs['end_year'][0].data
         recipe_file, config_file = runner.generate_recipe(
-            workdir=workdir,
+            workdir=self.workdir,
             diag='miles_regimes',
             constraints=constraints,
             options=options,
@@ -141,8 +140,9 @@ class WeatherRegimes(Process):
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'),
-                                                                  'weather_regimes_result.zip')
+        response.outputs['archive'].file = runner.compress_output(
+            os.path.join(self.workdir, 'output'),
+            os.path.join(self.workdir, 'weather_regimes_result.zip'))
 
         response.update_status("done.", 100)
         return response

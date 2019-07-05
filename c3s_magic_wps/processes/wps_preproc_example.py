@@ -97,7 +97,6 @@ class PreprocessExample(Process):
 
     def _handler(self, request, response):
         response.update_status("starting ...", 0)
-        workdir = self.workdir
 
         # build esgf search constraints
         constraints = dict(
@@ -110,7 +109,7 @@ class PreprocessExample(Process):
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
-        recipe_file, config_file = runner.generate_recipe(workdir=workdir,
+        recipe_file, config_file = runner.generate_recipe(workdir=self.workdir,
                                                           diag='python',
                                                           constraints=constraints,
                                                           start_year=request.inputs['start_year'][0].data,
@@ -149,8 +148,9 @@ class PreprocessExample(Process):
         response.update_status("creating archive of diagnostic result ...", 90)
 
         response.outputs['archive'].output_format = Format('application/zip')
-        response.outputs['archive'].file = runner.compress_output(os.path.join(workdir, 'output'),
-                                                                  'preproc_result.zip')
+        response.outputs['archive'].file = runner.compress_output(
+            os.path.join(self.workdir, 'output'),
+            os.path.join(self.workdir, 'preproc_result.zip'))
 
         response.update_status("done.", 100)
         return response
