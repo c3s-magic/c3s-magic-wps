@@ -28,7 +28,7 @@ Check out code from the c3s magic wps GitHub repo and create a conda environment
    $ conda env create -f environment.yml
    $ source activate c3s_magic_wps
 
-*Note: the environment will pull pywps and esmvaltool from github via pip*
+*Note: the environment will pull pywps from github via pip, ESMValTool is installed using conda*
 
 Next, to complete the installation of ESMValTool a R and Julia script are required. These are available in the package. Please adjust to match the installation location of conda on your system
 
