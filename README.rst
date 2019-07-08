@@ -24,14 +24,14 @@ Web Processing Service for Climate Data Analysis in the MAGIC project. The softw
 * Documentation: https://c3s-magic-wps.readthedocs.io.
 
 Links
-~~~~~
+-----
 
 * `Climate Data Store`_
 * `C3S MAGIC Portal`_
 * `CP4CDS Quality Control`_
 
 Credits
-~~~~~
+-------
 
 This package was created with Cookiecutter_ and the `bird-house/cookiecutter-birdhouse`_ project template.
 
