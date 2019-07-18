@@ -13,3 +13,6 @@ def create_app(cfgfiles=None):
     print(config_files)
     service = Service(processes=processes, cfgfiles=config_files)
     return service
+
+
+application = create_app()
