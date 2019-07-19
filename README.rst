@@ -18,7 +18,11 @@ C3S MAGIC WPS
 .. image:: https://zenodo.org/badge/184254565.svg
    :target: https://zenodo.org/badge/latestdoi/184254565
 
+.. inclusion-marker-start-do-not-remove
+
 Web Processing Service for Climate Data Analysis in the MAGIC project. The software in this WPS powers the processes behind the C3S-MAGIC portal. The processes are run on CP4CDS infrastructure.
+
+.. inclusion-marker-end-do-not-remove
 
 * Free software: Apache Software License 2.0
 * Documentation: https://c3s-magic-wps.readthedocs.io.
