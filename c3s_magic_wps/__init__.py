@@ -3,4 +3,4 @@
 
 from .__version__ import __author__, __email__, __version__
 
-from .wsgi import create_app
+from .wsgi import application
