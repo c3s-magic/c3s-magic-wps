@@ -5,7 +5,7 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from .utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
+from .utils import default_outputs, model_experiment_ensemble, year_ranges, region, outputs_from_plot_names
 
 from .. import runner, util
 
@@ -25,34 +25,7 @@ class CapacityFactor(Process):
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
             *year_ranges((2025, 2030)),
-            LiteralInput(
-                'start_longitude',
-                'Start longitude',
-                abstract='Minimum longitude.',
-                data_type='integer',
-                default=240,
-            ),
-            LiteralInput(
-                'end_longitude',
-                'End longitude',
-                abstract='Maximum longitude.',
-                data_type='integer',
-                default=285,
-            ),
-            LiteralInput(
-                'start_latitude',
-                'Start latitude',
-                abstract='Minimum latitude.',
-                data_type='integer',
-                default=27,
-            ),
-            LiteralInput(
-                'end_latitude',
-                'End latitude',
-                abstract='Maximum latitude.',
-                data_type='integer',
-                default=50,
-            ),
+            *region(240, 285, 27, 50),
             LiteralInput(
                 'season',
                 'Season',
