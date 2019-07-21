@@ -77,15 +77,15 @@ class Blocking(Process):
             identifier="blocking",
             title="Blocking metrics and indices",
             version=runner.VERSION,
-            abstract="Calculate Blocking metrics that shows the mid-latitude 1D and 2D blocking indices.",
+            abstract=("Calculate Blocking metrics that shows the mid-latitude 1D and 2D blocking indices."
+                      "The estimated calculation time of this process is 2 minutes for the default values supplied."),
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
-                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_miles.html',
+                    'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_miles.html',
                     role=util.WPS_ROLE_DOC,
                 ),
-                Metadata('Estimated Calculation Time', '2 minutes'),
             ],
             inputs=inputs,
             outputs=outputs,
