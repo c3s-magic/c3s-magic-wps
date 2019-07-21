@@ -25,7 +25,7 @@ class CapacityFactor(Process):
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
             *year_ranges((2025, 2030)),
-            *region(240, 285, 27, 50),
+            *region(-120, -75, 27, 50),
             LiteralInput(
                 'season',
                 'Season',
