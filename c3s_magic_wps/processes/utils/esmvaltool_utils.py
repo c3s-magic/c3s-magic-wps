@@ -24,17 +24,50 @@ def year_ranges(start_end_defaults, start_name='start_year', end_name='end_year'
         LiteralInput(start_name,
                      "{}".format(start_long_name),
                      data_type='integer',
-                     abstract='{} of model data. Minimum 1850 in case of historical, and 2005 in case of rcp experiments.'.format(
+                     abstract='{} of model data. Valid minimum value is 1850 in case of historical, and 2005 in case of rcp experiments.'.format(
                          start_long_name),
                      default=default_start_year,
                      allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100)),
         LiteralInput(end_name,
                      "{}".format(end_long_name),
                      data_type='integer',
-                     abstract='{} of model data. Maximum 2005 in case of historical, and 2100 in case of rcp experiments.'.format(
+                     abstract='{} of model data. Valid maximum value is 2005 in case of historical, and 2100 in case of rcp experiments.'.format(
                          end_long_name),
                      default=default_end_year,
                      allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100))
+    ]
+
+
+def region(default_start_longitude=0, default_end_longitude=360, default_start_latitude=-90, default_end_latitude=90):
+    return [
+        LiteralInput(
+            'start_longitude',
+            'Start longitude',
+            abstract='Minimum longitude. Valid range from 0 to 360.',
+            data_type='integer',
+            default=default_start_longitude,
+            allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=0, maxval=360)),
+        LiteralInput(
+            'end_longitude',
+            'End longitude',
+            abstract='Maximum longitude. Valid range from 0 to 360.',
+            data_type='integer',
+            default=default_end_longitude,
+            allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=0, maxval=360)),
+        LiteralInput(
+            'start_latitude',
+            'Start latitude',
+            abstract='Minimum latitude. Valid range from -90 to 90.',
+            data_type='integer',
+            default=default_start_latitude,
+            allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=-90, maxval=90)),
+        LiteralInput(
+            'end_latitude',
+            'End latitude',
+            abstract='Maximum latitude. Valid range from -90 to 90.',
+            data_type='integer',
+            default=default_end_latitude,
+            allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=-90, maxval=90)),
     ]
 
 
