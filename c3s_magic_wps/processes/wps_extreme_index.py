@@ -7,7 +7,7 @@ from pywps.response.status import WPS_STATUS
 from pywps.inout.literaltypes import AllowedValue
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
-from .utils import default_outputs, model_experiment_ensemble, year_ranges
+from .utils import default_outputs, model_experiment_ensemble, year_ranges, historic_projection_year_ranges, region
 from .utils import outputs_from_plot_names, outputs_from_data_names
 
 from .. import runner, util
@@ -27,42 +27,14 @@ class ExtremeIndex(Process):
                                        max_occurs=1,
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
-            *year_ranges((1971, 2000), start_name='start_historical', end_name='end_historical'),
-            *year_ranges((2020, 2040), start_name='start_projection', end_name='end_projection'),
+            *historic_projection_year_ranges(1971, 2000, 2020, 2040),
             LiteralInput('running_mean',
                          'Running Mean',
                          abstract='Length of the window for which the running mean is computed.',
                          data_type='integer',
                          allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1, maxval=365),
                          default=5),
-            LiteralInput(
-                'start_longitude',
-                'Start longitude',
-                abstract='Minimum longitude.',
-                data_type='integer',
-                default=-60,
-            ),
-            LiteralInput(
-                'end_longitude',
-                'End longitude',
-                abstract='Maximum longitude.',
-                data_type='integer',
-                default=40,
-            ),
-            LiteralInput(
-                'start_latitude',
-                'Start latitude',
-                abstract='Minimum latitude.',
-                data_type='integer',
-                default=30,
-            ),
-            LiteralInput(
-                'end_latitude',
-                'End latitude',
-                abstract='Maximum latitude.',
-                data_type='integer',
-                default=70,
-            ),
+            *region(-60, 40, 30, 70)
         ]
         self.plotlist = [
             ('t10p', [Format('image/png')]),
