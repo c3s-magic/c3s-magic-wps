@@ -89,14 +89,14 @@ class CapacityFactor(Process):
             version=runner.VERSION,
             abstract=("The goal of this diagnostic is to compute the wind capacity factor, taking as input the daily "
                       "instantaneous surface wind speed, which is then extrapolated to obtain the wind speed at a "
-                      "height of 100 m as described in Lledó (2017)."),
+                      "height of 100 m as described in Lledo (2017). "
+                      "The estimated calculation time of this process is 1 minute for the default values supplied."),
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
-                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_capacity_factor.html',
+                    'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_capacity_factor.html',
                     role=util.WPS_ROLE_DOC),
-                Metadata('Estimated Calculation Time', '1 minute'),
             ],
             inputs=inputs,
             outputs=outputs,
