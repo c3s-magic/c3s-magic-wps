@@ -5,6 +5,8 @@ import re
 
 from pywps import (FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process)
 from pywps.app.Common import Metadata
+from pywps.inout.literaltypes import AllowedValue
+from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from ...util import static_directory
 
@@ -22,13 +24,17 @@ def year_ranges(start_end_defaults, start_name='start_year', end_name='end_year'
         LiteralInput(start_name,
                      "{}".format(start_long_name),
                      data_type='integer',
-                     abstract='{} of model data.'.format(start_long_name),
-                     default=default_start_year),
+                     abstract='{} of model data. Minimum 1850 in case of historical, and 2005 in case of rcp experiments.'.format(
+                         start_long_name),
+                     default=default_start_year,
+                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100)),
         LiteralInput(end_name,
                      "{}".format(end_long_name),
                      data_type='integer',
-                     abstract='{} of model data.'.format(end_long_name),
-                     default=default_end_year)
+                     abstract='{} of model data. Maximum 2005 in case of historical, and 2100 in case of rcp experiments.'.format(
+                         end_long_name),
+                     default=default_end_year,
+                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100))
     ]
 
 
