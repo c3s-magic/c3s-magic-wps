@@ -49,13 +49,13 @@ datasets:
      ensemble: {{constraints['ensemble']}}
      start_year: {{start_year}}
      end_year: {{end_year}}
-   - dataset: ERA-Interim
+   - dataset: {{constraints['reference']}}
      project: OBS
      type: reanaly
      version: 1
-     tier: 3
-     start_year: {{start_year}}
-     end_year: {{end_year}}
+     tier: {{constraints['ref_tier']}}
+     start_year: {{constraints['start_reference']}}
+     end_year: {{constraints['end_reference']}}
 
 preprocessors:
     preproc1:
