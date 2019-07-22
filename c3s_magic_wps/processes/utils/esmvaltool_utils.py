@@ -24,15 +24,15 @@ def year_ranges(start_end_defaults, start_name='start_year', end_name='end_year'
         LiteralInput(start_name,
                      "{}".format(start_long_name),
                      data_type='integer',
-                     abstract='{} of model data. Valid minimum value is 1850 in case of historical, and 2005 in case of rcp experiments.'.format(
-                         start_long_name),
+                     abstract=('{} of model data. Valid minimum value is 1850 in case of historical,'
+                               'and 2005 in case of rcp experiments.'.format(start_long_name)),
                      default=default_start_year,
                      allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100)),
         LiteralInput(end_name,
                      "{}".format(end_long_name),
                      data_type='integer',
-                     abstract='{} of model data. Valid maximum value is 2005 in case of historical, and 2100 in case of rcp experiments.'.format(
-                         end_long_name),
+                     abstract=('{} of model data. Valid maximum value is 2005 in case of historical,'
+                               ' and 2100 in case of rcp experiments.'.format(end_long_name)),
                      default=default_end_year,
                      allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100))
     ]
@@ -56,7 +56,8 @@ def reference_year_ranges(default_start_reference, default_end_reference):
     ]
 
 
-def historic_projection_year_ranges(default_start_historical, default_end_historical, default_start_projection, default_end_projection):
+def historic_projection_year_ranges(default_start_historical, default_end_historical,
+                                    default_start_projection, default_end_projection):
 
     return [
         LiteralInput("start_historical",
