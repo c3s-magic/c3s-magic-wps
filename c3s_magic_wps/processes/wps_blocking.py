@@ -27,7 +27,7 @@ class Blocking(Process):
                          'Reference Dataset',
                          abstract='Choose a reference dataset like ERA-Interim.',
                          data_type='string',
-                         allowed_values=['ERA-Interim', 'NCEP'],
+                         allowed_values=['ERA-Interim'],
                          default='ERA-Interim',
                          min_occurs=1,
                          max_occurs=1),
@@ -106,6 +106,7 @@ class Blocking(Process):
             end_year_reference=request.inputs['end_reference'][0].data,
         )
 
+        # automatically determine OBS tier
         if constraints['reference'] == 'ERA-Interim':
             constraints['ref_tier'] = '3'
         else:
