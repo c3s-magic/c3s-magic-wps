@@ -38,20 +38,21 @@ def year_ranges(start_end_defaults, start_name='start_year', end_name='end_year'
     ]
 
 
+# for now uses valid ranges from ERA-Interim only
 def reference_year_ranges(default_start_reference, default_end_reference):
     return [
         LiteralInput("start_reference",
                      "Start reference",
                      data_type='integer',
-                     abstract='Start year of reference period. Valid minimum value is 1948 in case of NCEP, and 1979 in case of ERA-Interim.',
+                     abstract='Start year of reference period. Valid minimum value is 1979.',
                      default=default_start_reference,
                      allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1979, maxval=2018)),
         LiteralInput("end_reference",
                      "End Reference",
                      data_type='integer',
-                     abstract='End year of reference period. Valid maximum value is 2018, for both NCEP and ERA-Interim.',
+                     abstract='End year of reference period. Valid maximum value is 2018.',
                      default=default_end_reference,
-                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100))
+                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1979, maxval=2018))
     ]
 
 
