@@ -80,7 +80,8 @@ class DiurnalTemperatureIndex(Process):
             title="Diurnal Temperature Variation (DTR) Indicator",
             version=runner.VERSION,
             abstract="""
-                Metric showing the diurnal temperature indicator to estimate energy demand.
+                Metric showing the diurnal temperature indicator to estimate energy demand. The estimated calculation
+                time of this process is 6 minutes for the default values supplied.
             """,
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
@@ -88,10 +89,6 @@ class DiurnalTemperatureIndex(Process):
                     'Documentation',
                     'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_diurnal_temperature_index.html',  # noqa
                     role=util.WPS_ROLE_DOC),
-                Metadata('Media',
-                         util.diagdata_url() + '/dtr/diurnal_temperature_variation.png',
-                         role=util.WPS_ROLE_MEDIA),
-                Metadata('Estimated Calculation Time', '6 minutes'),
             ],
             inputs=inputs,
             outputs=outputs,

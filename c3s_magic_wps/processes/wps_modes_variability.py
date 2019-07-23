@@ -118,14 +118,14 @@ class ModesVariability(Process):
             abstract="""Diagnostics showing the RMSE between the observed and
             modelled patterns of variability obtained through classification
             and their relative relative bias (percentage) in the frequency of
-            occurrence and the persistence of each mode.""",
+            occurrence and the persistence of each mode. The estimated calculation
+            time of this process is 30 seconds for the default values supplied.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
                     'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_modes_of_variability.html',  # noqa
                     role=util.WPS_ROLE_DOC),
-                Metadata('Estimated Calculation Time', '30 seconds'),
             ],
             inputs=inputs,
             outputs=outputs,

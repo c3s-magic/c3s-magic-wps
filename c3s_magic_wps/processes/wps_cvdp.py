@@ -57,13 +57,17 @@ class CVDP(Process):
             identifier="cvdp",
             title="NCAR CVDPackage",
             version=runner.VERSION,
-            abstract="Run the NCAR CVDPackage",
+            abstract="""The Climate Variability Diagnostics Package (CVDP) developed by NCAR’s Climate Analysis Section
+                        is an analysis tool that documents the major modes of climate variability in models and
+                        observations, including ENSO, Pacific Decadal Oscillation, Atlantic Multi-decadal Oscillation,
+                        Northern and Southern Annular Modes, North Atlantic Oscillation, Pacific North and South American
+                        teleconnection patterns. The estimated calculation time of this process is 2 minutes for the
+                        default values supplied.",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
                          'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_cvdp.html',
                          role=util.WPS_ROLE_DOC),
-                Metadata('Estimated Calculation Time', '2 Minutes'),
             ],
             inputs=inputs,
             outputs=outputs,

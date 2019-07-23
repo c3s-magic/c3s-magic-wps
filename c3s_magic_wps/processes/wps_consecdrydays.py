@@ -67,14 +67,13 @@ class ConsecDryDays(Process):
             version=runner.VERSION,
             abstract="""Calculates the longest period of consecutive dry days (days with at least 'prlim' mm/day) in
                         the provided time series, as well as the number of periods of at least 'frlim' consecutive dry
-                        days. 'prlim' and 'frlim' are provided by the user.""",
+                        days. 'prlim' and 'frlim' are provided by the user. The estimated calculation time of this
+                        process is 30 seconds for the default values supplied.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
                          'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_consecdrydays.html',
                          role=util.WPS_ROLE_DOC),
-                Metadata('Media', util.diagdata_url() + '/consecdrydays/drydays.png', role=util.WPS_ROLE_MEDIA),
-                Metadata('Estimated Calculation Time', '30 seconds'),
             ],
             inputs=inputs,
             outputs=outputs,

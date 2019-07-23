@@ -69,17 +69,14 @@ class ExtremeIndex(Process):
             title="Combined Climate Extreme Index",
             version=runner.VERSION,
             abstract="""Metric showing extreme indices relevant to the insurance industry (heat, cold, wind, flood and
-                        drought indices).""",
+                        drought indices). The estimated calculation
+                        time of this process is 2 minutes for the default values supplied.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
                     'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_combined_climate_extreme_index.html',  # noqa
                     role=util.WPS_ROLE_DOC),
-                # Metadata('Media',
-                #          util.diagdata_url() + '/risk_index/insurance_risk_indices.png',
-                #          role=util.WPS_ROLE_MEDIA),
-                Metadata('Estimated Calculation Time', '2 minutes'),
             ],
             inputs=inputs,
             outputs=outputs,
