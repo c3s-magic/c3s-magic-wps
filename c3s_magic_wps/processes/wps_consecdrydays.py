@@ -71,7 +71,7 @@ class ConsecDryDays(Process):
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
-                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_consecdrydays.html',
+                         'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_consecdrydays.html',
                          role=util.WPS_ROLE_DOC),
                 Metadata('Media', util.diagdata_url() + '/consecdrydays/drydays.png', role=util.WPS_ROLE_MEDIA),
                 Metadata('Estimated Calculation Time', '30 seconds'),

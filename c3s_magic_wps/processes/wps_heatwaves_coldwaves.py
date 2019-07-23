@@ -83,7 +83,7 @@ class HeatwavesColdwaves(Process):
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
-                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_heatwaves_coldwaves.html',
+                    'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_heatwaves_coldwaves.html',
                     role=util.WPS_ROLE_DOC),
                 Metadata('Media',
                          util.diagdata_url() + '/heatwaves_coldwaves/extreme_spells_energy.png',

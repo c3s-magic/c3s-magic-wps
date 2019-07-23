@@ -74,7 +74,7 @@ class ExtremeIndex(Process):
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
-                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_combined_climate_extreme_index.html',  # noqa
+                    'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_combined_climate_extreme_index.html',  # noqa
                     role=util.WPS_ROLE_DOC),
                 # Metadata('Media',
                 #          util.diagdata_url() + '/risk_index/insurance_risk_indices.png',

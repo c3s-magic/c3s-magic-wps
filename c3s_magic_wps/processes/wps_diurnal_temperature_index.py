@@ -86,7 +86,7 @@ class DiurnalTemperatureIndex(Process):
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
-                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_diurnal_temperature_index.html',  # noqa
+                    'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_diurnal_temperature_index.html',  # noqa
                     role=util.WPS_ROLE_DOC),
                 Metadata('Media',
                          util.diagdata_url() + '/dtr/diurnal_temperature_variation.png',

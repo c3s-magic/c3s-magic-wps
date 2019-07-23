@@ -98,7 +98,7 @@ class MultimodelProducts(Process):
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
-                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_multimodel_products.html',
+                    'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_multimodel_products.html',
                     role=util.WPS_ROLE_DOC),
                 Metadata('Media',
                          util.diagdata_url() + '/multimodel_products/bsc_anomaly_timeseries.png',

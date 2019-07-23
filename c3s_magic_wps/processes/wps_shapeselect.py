@@ -68,7 +68,7 @@ class ShapeSelect(Process):
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
-                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_shapeselect.html',
+                         'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_shapeselect.html',
                          role=util.WPS_ROLE_DOC),
                 # Metadata('Media',
                 #          util.diagdata_url() + '/shapefile_selection/OBS_CRU_reanaly_1_T2Ms_tas_1990-1994.png',
