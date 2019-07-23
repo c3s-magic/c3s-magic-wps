@@ -19,8 +19,8 @@ class Sleep(Process):
                                     ],
                                     inputs=inputs,
                                     outputs=outputs,
-                                    store_supported=True,
-                                    status_supported=True)
+                                    store_supported=False,
+                                    status_supported=False)
 
     @staticmethod
     def _handler(request, response):

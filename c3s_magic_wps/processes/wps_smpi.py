@@ -72,6 +72,7 @@ class SMPI(Process):
                 The SMPI (called "I2") is based on the comparison of several different climate variables (atmospheric,
                 surface and oceanic) between climate model simulations and observations or reanalyses, and it focuses
                 on the validation of the time-mean state of climate.
+                The estimated calculation time of this process is 10 minutes for the default values supplied.
             """,
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
@@ -80,7 +81,6 @@ class SMPI(Process):
                     'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_smpi.html',
                     role=util.WPS_ROLE_DOC,
                 ),
-                Metadata('Estimated Calculation Time', '10 minutes'),
             ],
             inputs=inputs,
             outputs=outputs,

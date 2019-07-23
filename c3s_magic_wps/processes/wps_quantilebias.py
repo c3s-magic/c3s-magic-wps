@@ -58,7 +58,9 @@ class QuantileBias(Process):
             identifier="quantile_bias",
             title="Quantile Bias",
             version=runner.VERSION,
-            abstract="""Diagnostic showing the quantile bias between models and a reference dataset.""",
+            abstract="""Diagnostic showing the quantile bias between models and a reference dataset.
+                        The estimated calculation time of this process is 1 minute for the default values supplied.
+                        """,
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
@@ -66,7 +68,6 @@ class QuantileBias(Process):
                     'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_quantilebias.html',
                     role=util.WPS_ROLE_DOC,
                 ),
-                Metadata('Estimated Calculation Time', '1 Minute'),
             ],
             inputs=inputs,
             outputs=outputs,

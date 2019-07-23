@@ -66,14 +66,14 @@ class Teleconnections(Process):
             identifier="teleconnections",
             title="Teleconnection indices",
             version=runner.VERSION,
-            abstract="Diagnostic providing teleconnection indices (Z500 empirical orthogonal functions)",
+            abstract="""Diagnostic providing teleconnection indices (Z500 empirical orthogonal functions)
+                        The estimated calculation time of this process is 2 minutes for the default values supplied.
+                        """,
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
                          'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_miles.html',
                          role=util.WPS_ROLE_DOC),
-                # Metadata('Media', util.diagdata_url() + '/pydemo/pydemo_thumbnail.png', role=util.WPS_ROLE_MEDIA),
-                Metadata('Estimated Calculation Time', '2 minutes'),
             ],
             inputs=inputs,
             outputs=outputs,

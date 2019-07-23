@@ -63,7 +63,9 @@ class ZMNAM(Process):
             identifier="zmnam",
             title="Stratosphere-troposphere coupling and annular modes indices (ZMNAM)",
             version=runner.VERSION,
-            abstract="Stratosphere-troposphere coupling and annular modes indices (ZMNAM)",
+            abstract="""Metric calculating Stratosphere-troposphere coupling and annular modes indices (ZMNAM).
+                        The estimated calculation time of this process is 3 minutes for the default values supplied.
+                        """,
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
@@ -71,7 +73,6 @@ class ZMNAM(Process):
                     'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_zmnam.html',
                     role=util.WPS_ROLE_DOC,
                 ),
-                Metadata('Estimated Calculation Time', '3 minutes'),
             ],
             inputs=inputs,
             outputs=outputs,

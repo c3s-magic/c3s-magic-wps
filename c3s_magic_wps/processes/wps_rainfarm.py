@@ -134,13 +134,15 @@ class RainFARM(Process):
                         developed to apply the stochastic precipitation downscaling method to climate models. The
                         selected region needs to have equal and even number of longitude (in any case it is cut) and
                         latitude grid points (e.g., 2x2, 4x4, ...). Warning: downcaling can reach very high resolution,
-                        so select a limited area.""",
+                        so select a limited area.
+
+                        The estimated calculation time of this process is 3 minutes for the default values supplied.
+                        """,
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
                          'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_rainfarm.html',
                          role=util.WPS_ROLE_DOC),
-                Metadata('Estimated Calculation Time', '3 Minutes'),
             ],
             inputs=inputs,
             outputs=outputs,
