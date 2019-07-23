@@ -25,7 +25,7 @@ def year_ranges(start_end_defaults, start_name='start_year', end_name='end_year'
                      "{}".format(start_long_name),
                      data_type='integer',
                      abstract=('{} of model data. Valid minimum value is 1850 in case of historical,'
-                               'and 2005 in case of rcp experiments.'.format(start_long_name)),
+                               ' and 2005 in case of rcp experiments.'.format(start_long_name)),
                      default=default_start_year,
                      allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100)),
         LiteralInput(end_name,
