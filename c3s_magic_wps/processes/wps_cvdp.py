@@ -62,7 +62,7 @@ class CVDP(Process):
                         observations, including ENSO, Pacific Decadal Oscillation, Atlantic Multi-decadal Oscillation,
                         Northern and Southern Annular Modes, North Atlantic Oscillation, Pacific North and South American
                         teleconnection patterns. The estimated calculation time of this process is 2 minutes for the
-                        default values supplied.",
+                        default values supplied.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
