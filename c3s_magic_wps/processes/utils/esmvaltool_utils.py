@@ -5,6 +5,8 @@ import re
 
 from pywps import (FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process)
 from pywps.app.Common import Metadata
+from pywps.inout.literaltypes import AllowedValue
+from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from ...util import static_directory
 
@@ -22,13 +24,100 @@ def year_ranges(start_end_defaults, start_name='start_year', end_name='end_year'
         LiteralInput(start_name,
                      "{}".format(start_long_name),
                      data_type='integer',
-                     abstract='{} of model data.'.format(start_long_name),
-                     default=default_start_year),
+                     abstract=('{} of model data. Valid minimum value is 1850 in case of historical,'
+                               ' and 2005 in case of rcp experiments.'.format(start_long_name)),
+                     default=default_start_year,
+                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100)),
         LiteralInput(end_name,
                      "{}".format(end_long_name),
                      data_type='integer',
-                     abstract='{} of model data.'.format(end_long_name),
-                     default=default_end_year)
+                     abstract=('{} of model data. Valid maximum value is 2005 in case of historical,'
+                               ' and 2100 in case of rcp experiments.'.format(end_long_name)),
+                     default=default_end_year,
+                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100))
+    ]
+
+
+# for now uses valid ranges from ERA-Interim only
+def reference_year_ranges(default_start_reference, default_end_reference):
+    return [
+        LiteralInput("start_reference",
+                     "Start reference",
+                     data_type='integer',
+                     abstract='Start year of reference period. Valid minimum value is 1979.',
+                     default=default_start_reference,
+                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1979, maxval=2018)),
+        LiteralInput("end_reference",
+                     "End Reference",
+                     data_type='integer',
+                     abstract='End year of reference period. Valid maximum value is 2018.',
+                     default=default_end_reference,
+                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1979, maxval=2018))
+    ]
+
+
+def historic_projection_year_ranges(default_start_historical, default_end_historical,
+                                    default_start_projection, default_end_projection):
+
+    return [
+        LiteralInput("start_historical",
+                     "Start historical year",
+                     data_type='integer',
+                     abstract='Start historical year of model data. Valid minimum value is 1850.',
+                     default=default_start_historical,
+                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2005)),
+        LiteralInput("end_historical",
+                     "End historical year",
+                     data_type='integer',
+                     abstract='End historical year of model data. Valid maximum value is 2005.',
+                     default=default_end_historical,
+                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2005)),
+        LiteralInput("start_projection",
+                     "Start projection year",
+                     data_type='integer',
+                     abstract='Start projection year of model data. Valid minimum value is 2005.',
+                     default=default_start_projection,
+                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=2005, maxval=2100)),
+        LiteralInput("end_projection",
+                     "End projection year",
+                     data_type='integer',
+                     abstract='End projection year of model data. Valid maximum value is 2100.',
+                     default=default_end_projection,
+                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=2005, maxval=2100))
+
+    ]
+
+
+def region(default_start_longitude=0, default_end_longitude=360, default_start_latitude=-90, default_end_latitude=90):
+    return [
+        LiteralInput(
+            'start_longitude',
+            'Start longitude',
+            abstract='Minimum longitude. Range usually from -180 to 180.',
+            data_type='integer',
+            default=default_start_longitude,
+            allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=-360, maxval=360)),
+        LiteralInput(
+            'end_longitude',
+            'End longitude',
+            abstract='Maximum longitude. Range usually from -180 to 180.',
+            data_type='integer',
+            default=default_end_longitude,
+            allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=-360, maxval=360)),
+        LiteralInput(
+            'start_latitude',
+            'Start latitude',
+            abstract='Minimum latitude. Valid range from -90 to 90.',
+            data_type='integer',
+            default=default_start_latitude,
+            allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=-90, maxval=90)),
+        LiteralInput(
+            'end_latitude',
+            'End latitude',
+            abstract='Maximum latitude. Valid range from -90 to 90.',
+            data_type='integer',
+            default=default_end_latitude,
+            allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=-90, maxval=90)),
     ]
 
 

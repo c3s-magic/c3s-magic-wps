@@ -122,19 +122,16 @@ class EnsClus(Process):
             abstract="""Cluster analysis tool based on the k-means algorithm
                 for ensembles of climate model simulations. EnsClus group
                 ensemble members according to similar characteristics and
-                select the most representative member for each cluster.""",
+                select the most representative member for each cluster. The estimated calculation
+                time of this process is 4 minutes for the default values supplied.
+                The Ensemble Clustering metric requires at least two models to be chosen,
+                choosing more models is supported.
+                """,
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
-                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_ensclus.html',
+                         'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_ensclus.html',
                          role=util.WPS_ROLE_DOC),
-                Metadata('Media', util.diagdata_url() + '/ensclus/ensclus_thumbnail.png', role=util.WPS_ROLE_MEDIA),
-                Metadata(
-                    'Model Selection',
-                    """The Ensemble Clustering metric requires at least two models to be chosen,
-                       choosing more models is supported.""",
-                ),
-                Metadata('Estimated Calculation Time', '4 minutes'),
             ],
             inputs=inputs,
             outputs=outputs,

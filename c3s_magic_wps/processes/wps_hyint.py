@@ -125,15 +125,15 @@ class HyInt(Process):
             identifier="hyint",
             title="HyInt - Hydroclimatic intensity and extremes",
             version=runner.VERSION,
-            abstract='HyInt hydroclimatic indices calculation and plotting.',
+            abstract="""HyInt hydroclimatic indices calculation and plotting. The estimated calculation
+                        time of this process is 30 minutes for the default values supplied. Selected models
+                        should be experiment (eg. "rcp85") and not historical. The historical
+                        data will be added automatically.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
-                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_hyint.html',
+                         'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_hyint.html',
                          role=util.WPS_ROLE_DOC),
-                Metadata('Note: Selected models should be experiment (eg. "rcp85") and not historical. The historical \
-                data will be added automatically.'),
-                Metadata('Estimated Calculation Time', '30 minutes'),
             ],
             inputs=inputs,
             outputs=outputs,

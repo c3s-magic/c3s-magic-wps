@@ -104,12 +104,14 @@ class Toymodel(Process):
             title="Toymodel",
             version=runner.VERSION,
             abstract="""The goal of this diagnostic is to simulate single-model ensembles from an observational dataset
-                        to investigate the effect of observational uncertainty.""",
+                        to investigate the effect of observational uncertainty.
+                        The estimated calculation time of this process is 30 seconds for the default values supplied.
+                        """,
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
-                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_toymodel.html',
+                    'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_toymodel.html',
                     role=util.WPS_ROLE_DOC,
                 ),
             ],

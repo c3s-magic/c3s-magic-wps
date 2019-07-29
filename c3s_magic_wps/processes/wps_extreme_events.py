@@ -57,16 +57,16 @@ class ExtremeEvents(Process):
             abstract="""
                 Calculate indices for monitoring changes in extremes based on daily temperature
                 and precipitation data. Producing Glecker and timeline plots of this as shown in
-                the IPCC_AR5 report
+                the IPCC_AR5 report. The estimated calculation
+                time of this process is 4 hours for the default values supplied.
             """,
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
-                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_extreme_events.html',
+                    'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_extreme_events.html',
                     role=util.WPS_ROLE_DOC,
                 ),
-                Metadata('Estimated Calculation Time', '4 hours'),
             ],
             inputs=inputs,
             outputs=outputs,

@@ -6,7 +6,8 @@ from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
 from .. import runner, util
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
+from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names
+from .utils import year_ranges, reference_year_ranges
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -31,6 +32,7 @@ class Blocking(Process):
                          default='ERA-Interim',
                          min_occurs=1,
                          max_occurs=1),
+            *reference_year_ranges(1980, 1989),
             LiteralInput('season',
                          'Season',
                          abstract='Choose a season like DJF.',
@@ -77,15 +79,15 @@ class Blocking(Process):
             identifier="blocking",
             title="Blocking metrics and indices",
             version=runner.VERSION,
-            abstract="Calculate Blocking metrics that shows the mid-latitude 1D and 2D blocking indices.",
+            abstract=("Calculate Blocking metrics that shows the mid-latitude 1D and 2D blocking indices."
+                      "The estimated calculation time of this process is 2 minutes for the default values supplied."),
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
-                    'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_miles.html',
+                    'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_miles.html',
                     role=util.WPS_ROLE_DOC,
                 ),
-                Metadata('Estimated Calculation Time', '2 minutes'),
             ],
             inputs=inputs,
             outputs=outputs,
@@ -100,7 +102,16 @@ class Blocking(Process):
             model=request.inputs['model'][0].data,
             experiment=request.inputs['experiment'][0].data,
             ensemble=request.inputs['ensemble'][0].data,
+            reference=request.inputs['ref_dataset'][0].data,
+            start_year_reference=request.inputs['start_reference'][0].data,
+            end_year_reference=request.inputs['end_reference'][0].data,
         )
+
+        # automatically determine OBS tier
+        if constraints['reference'] == 'ERA-Interim':
+            constraints['ref_tier'] = '3'
+        else:
+            constraints['ref_tier'] = '2'
 
         options = dict(season=request.inputs['season'][0].data)
 

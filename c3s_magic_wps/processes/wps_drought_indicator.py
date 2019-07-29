@@ -78,13 +78,13 @@ class DroughtIndicator(Process):
             identifier="drought_indicator",
             title="Drought indicator",
             version=runner.VERSION,
-            abstract="""The drought indicator calculates diagnostics for meteorological drought.""",
+            abstract="""The drought indicator calculates diagnostics for meteorological drought. The estimated calculation
+                time of this process is 45 minutes for the default values supplied.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
-                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_spei.html',
+                         'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_spei.html',
                          role=util.WPS_ROLE_DOC),
-                Metadata('Estimated Calculation Time', '45 minutes'),
             ],
             inputs=inputs,
             outputs=outputs,

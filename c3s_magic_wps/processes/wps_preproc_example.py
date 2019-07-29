@@ -75,19 +75,20 @@ class PreprocessExample(Process):
                         or diagnostics can be calculated. It is a base component for many other
                         diagnostics and metrics shown on this portal. It can be applied to
                         tailor the climate model data to the need of the user for its own
-                        calculations.""",
+                        calculations.
+
+                        The estimated calculation time of this process is 1 minute for the default values supplied.
+
+                        This preprocessor example requires at least two models to be chosen. Any combination is valid,
+                        however, only the first two models will return their output inline. The output of any models
+                        beyond the first two are included in the zip file.
+                        """,
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata(
                     'Documentation',
-                    'https://esmvaltool.readthedocs.io/en/version2_development/user_guide2/index.html#esmvaltool-preprocessor',  # noqa
+                    'https://esmvaltool.readthedocs.io/en/v2.0a2/user_guide2/index.html#esmvaltool-preprocessor',  # noqa
                     role=util.WPS_ROLE_DOC),
-                Metadata(
-                    'Model Selection',
-                    """This preprocessor example requires at least two models to be chosen. Any combination is valid,
-                    however, only the first two models will return their output inline. The output of any models beyond
-                    the first two are included in the zip file."""),
-                Metadata('Estimated Calculation Time', '1 Minute'),
             ],
             inputs=inputs,
             outputs=outputs,

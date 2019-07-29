@@ -41,13 +41,13 @@ class Perfmetrics(Process):
             abstract="""The goal is to create a standard recipe for the calculation of performance metrics to quantify
                         the ability of the models to reproduce the climatological mean annual cycle for selected
                         Essential Climate Variables (ECVs) plus some additional corresponding diagnostics and plots
-                        to better understand and interpret the results.""",
+                        to better understand and interpret the results. The estimated calculation time of this process
+                        is 20 minutes for the default values supplied.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
-                         'https://esmvaltool.readthedocs.io/en/version2_development/recipes/recipe_perfmetrics.html',
+                         'https://esmvaltool.readthedocs.io/en/v2.0a2/recipes/recipe_perfmetrics.html',
                          role=util.WPS_ROLE_DOC),
-                Metadata('Estimated Calculation Time', '20 Minutes'),
             ],
             inputs=inputs,
             outputs=outputs,
