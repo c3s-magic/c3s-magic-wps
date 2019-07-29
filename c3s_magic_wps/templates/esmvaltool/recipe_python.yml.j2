@@ -29,13 +29,13 @@ datasets:
     start_year: {{start_year}}
     end_year: {{end_year}}
   {% endfor %}
-  - dataset: ERA-Interim
+  - dataset: {{constraints['reference']}}
     project: OBS
-    tier: 3
     type: reanaly
     version: 1
-    start_year: {{start_year}}
-    end_year: {{end_year}}
+    tier: {{constraints['ref_tier']}}
+    start_year: {{constraints['start_year_reference']}}
+    end_year: {{constraints['end_year_reference']}}
   {# - {dataset: CanESM2,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: 2000,  end_year: 2002}
   - {dataset: GFDL-ESM2G,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: 2000,  end_year: 2002}
   - {dataset: MPI-ESM-LR,  project: CMIP5,  mip: Amon,  exp: historical,  ensemble: r1i1p1,  start_year: 2000,  end_year: 2002} #}

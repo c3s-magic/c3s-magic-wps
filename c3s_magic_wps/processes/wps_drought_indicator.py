@@ -103,6 +103,8 @@ class DroughtIndicator(Process):
             experiment=request.inputs['experiment'][0].data,
             ensemble=request.inputs['ensemble'][0].data,
             reference=request.inputs['ref_dataset'][0].data,
+            start_year_reference=request.inputs['start_reference'][0].data,
+            end_year_reference=request.inputs['end_reference'][0].data,
         )
 
         options = dict()

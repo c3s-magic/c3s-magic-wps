@@ -65,7 +65,7 @@ class EnsClus(Process):
                 abstract='Number of clusters.',
                 data_type='integer',
                 default=2,
-                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1),
+                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1, maxval=1000),
             ),
             LiteralInput(
                 'perc',
@@ -82,7 +82,7 @@ class EnsClus(Process):
                 abstract='Number of PCs to retain. Has priority over Percentage unless set to 0',
                 data_type='integer',
                 default='0',
-                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=0),
+                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=0, maxval=1000),
             ),
         ]
         outputs = [

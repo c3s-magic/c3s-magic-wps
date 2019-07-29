@@ -58,7 +58,7 @@ class RainFARM(Process):
                 abstract='Number of ensemble members to be calculated.',
                 data_type='integer',
                 default=2,
-                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1),
+                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1, maxval=1000),
             ),
             LiteralInput(
                 'nf',
@@ -68,7 +68,7 @@ class RainFARM(Process):
                           'increased by a factor 8).'),
                 data_type='integer',
                 default=8,
-                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1),
+                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1, maxval=1000),
             ),
             LiteralInput(
                 'conserv_glob',

@@ -48,7 +48,7 @@ class SMPI(Process):
                 """,
                 data_type='integer',
                 default=100,
-                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1),
+                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1, maxval=1000),
 
             ),
         ]

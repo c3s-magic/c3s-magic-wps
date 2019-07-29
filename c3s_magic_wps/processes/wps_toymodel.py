@@ -41,7 +41,7 @@ class Toymodel(Process):
                 abstract='Number of members to be generated.',
                 data_type='integer',
                 default=2,
-                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1),
+                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1, maxval=1000),
             ),
         ]
         # self.plotlist = [
