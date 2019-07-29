@@ -8,7 +8,7 @@ from pywps.response.status import WPS_STATUS
 
 from .. import runner, util
 from .utils import (default_outputs, model_experiment_ensemble, outputs_from_data_names, outputs_from_plot_names,
-                    year_ranges)
+                    year_ranges, check_constraints)
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -105,6 +105,14 @@ class PreprocessExample(Process):
             ensembles=request.inputs['ensemble'],
             experiments=request.inputs['experiment'],
         )
+
+        # try:
+        check_constraints(constraints)
+        # except Exception as e:
+        #     response.update_status("invalid input settings: " + str(e), 100)
+        #     LOGGER.exception('Check contraints failed: ' + str(e))
+        #     response.outputs['success'].data = False
+        #     return response
 
         options = dict(extract_levels=request.inputs['extract_levels'][0].data)
 

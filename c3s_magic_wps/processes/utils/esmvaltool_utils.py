@@ -6,6 +6,7 @@ import re
 from pywps import (FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process)
 from pywps.app.Common import Metadata
 from pywps.inout.literaltypes import AllowedValue
+from pywps.app.exceptions import ProcessError
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from ...util import static_directory
@@ -260,3 +261,33 @@ def outputs_from_data_names(datalist):
                           as_reference=True,
                           supported_formats=file_formats))
     return data_outputs
+
+# check for illegal combinations of contraints such as duplicate entries an uneven length values
+
+
+def check_constraints(constraints):
+    LOGGER.debug('Checking contraints: %s', constraints)
+    if not 'models' in constraints:
+        raise ProcessError("No models found in input")
+
+    if not 'experiments' in constraints:
+        raise ProcessError("No experiment found in input")
+
+    if not 'ensembles' in constraints:
+        raise ProcessError("No ensembles found in input")
+
+    length = len(constraints['models'])
+
+    if len(constraints['experiments']) != length:
+        raise ProcessError("Not the same number of experiments selected as models")
+
+    if len(constraints['ensembles']) != length:
+        raise ProcessError("Not the same number of ensembles selected as models")
+
+    for i in range(length):
+        for j in range(i + 1, length):
+            if (constraints['models'][i] == constraints['models'][j]
+                and constraints['experiments'][i] == constraints['experiments'][j]
+                    and constraints['ensembles'][i] == constraints['ensembles'][j]):
+                raise ProcessError("Duplicate entry for %s %s %s. Please use unique entries for datasets" %
+                                   (constraints['models'][i], constraints['experiments'][i], constraints['ensembles'][i]))

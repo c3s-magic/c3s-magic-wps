@@ -6,8 +6,8 @@ from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
 from .. import runner, util
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names
-from .utils import year_ranges, reference_year_ranges
+from .utils import (default_outputs, model_experiment_ensemble, outputs_from_plot_names,
+                    year_ranges, reference_year_ranges)
 
 LOGGER = logging.getLogger("PYWPS")
 
