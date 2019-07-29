@@ -76,7 +76,7 @@ class PreprocessExample(Process):
                         diagnostics and metrics shown on this portal. It can be applied to
                         tailor the climate model data to the need of the user for its own
                         calculations.
-                        
+
                         The estimated calculation time of this process is 1 minute for the default values supplied.
 
                         This preprocessor example requires at least two models to be chosen. Any combination is valid,
