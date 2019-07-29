@@ -5,6 +5,8 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.inout.literaltypes import make_allowedvalues
 from pywps.response.status import WPS_STATUS
+from pywps.inout.literaltypes import AllowedValue
+from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .. import runner, util
 from .utils import (default_outputs, model_experiment_ensemble, outputs_from_data_names, outputs_from_plot_names,
@@ -30,7 +32,7 @@ class PreprocessExample(Process):
                 'Extraction levels',
                 abstract='Choose an extraction level for the preprocessor.',
                 data_type='float',
-                # allowed_values=make_allowedvalues([0.0, 110000.0]),
+                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=0.0, maxval=11000.0),
                 default=85000.0),
         ]
         self.plotlist = [

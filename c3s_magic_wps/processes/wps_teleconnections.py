@@ -7,6 +7,7 @@ from pywps.response.status import WPS_STATUS
 
 from .. import runner, util
 from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
+from .utils import reference_year_ranges
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -32,6 +33,7 @@ class Teleconnections(Process):
                          default='ERA-Interim',
                          min_occurs=1,
                          max_occurs=1),
+            *reference_year_ranges((1980, 1989)),
             LiteralInput('season',
                          'Season',
                          abstract='Choose a season like DJF.',

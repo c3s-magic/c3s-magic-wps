@@ -8,6 +8,7 @@ from pywps.inout.literaltypes import AllowedValue
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
+from .utils import historic_projection_year_ranges
 
 from .. import runner, util
 
@@ -26,8 +27,7 @@ class HeatwavesColdwaves(Process):
                                        max_occurs=1,
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
-            *year_ranges((1971, 2000), start_name='start_historical', end_name='end_historical'),
-            *year_ranges((2060, 2080), start_name='start_projection', end_name='end_projection'),
+            *historic_projection_year_ranges(1971, 2000, 2060, 2080),
             LiteralInput('quantile',
                          'Quantile',
                          abstract='Quantile defining the exceedance/non-exceedance threshold.',

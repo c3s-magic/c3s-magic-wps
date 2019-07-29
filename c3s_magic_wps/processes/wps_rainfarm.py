@@ -4,9 +4,12 @@ import os
 from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
+from pywps.inout.literaltypes import AllowedValue
+from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .. import runner, util
 from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
+from .utils import region
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -24,34 +27,7 @@ class RainFARM(Process):
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
             *year_ranges((1997, 1999)),
-            LiteralInput(
-                'start_longitude',
-                'Start longitude',
-                abstract='Minimum longitude.',
-                data_type='integer',
-                default=5,
-            ),
-            LiteralInput(
-                'end_longitude',
-                'End longitude',
-                abstract='Maximum longitude.',
-                data_type='integer',
-                default=15,
-            ),
-            LiteralInput(
-                'start_latitude',
-                'Start latitude',
-                abstract='Minimum latitude.',
-                data_type='integer',
-                default=40,
-            ),
-            LiteralInput(
-                'end_latitude',
-                'End latitude',
-                abstract='Maximum latitude.',
-                data_type='integer',
-                default=50,
-            ),
+            *region(5, 15, 40, 50),
             LiteralInput(
                 'target_grid',
                 'Target Grid',
@@ -82,6 +58,7 @@ class RainFARM(Process):
                 abstract='Number of ensemble members to be calculated.',
                 data_type='integer',
                 default=2,
+                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1),
             ),
             LiteralInput(
                 'nf',
@@ -91,6 +68,7 @@ class RainFARM(Process):
                           'increased by a factor 8).'),
                 data_type='integer',
                 default=8,
+                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1),
             ),
             LiteralInput(
                 'conserv_glob',

@@ -4,6 +4,8 @@ import os
 from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
+from pywps.inout.literaltypes import AllowedValue
+from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .. import runner, util
 from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
@@ -36,6 +38,7 @@ class QuantileBias(Process):
                          'Quantile',
                          abstract='Quantile in percentage (%).',
                          data_type='integer',
+                         allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=0, maxval=100),
                          default=75),
         ]
 

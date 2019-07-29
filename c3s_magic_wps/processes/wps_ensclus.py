@@ -4,6 +4,8 @@ import os
 from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
+from pywps.inout.literaltypes import AllowedValue
+from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .. import runner, util
 
@@ -63,14 +65,16 @@ class EnsClus(Process):
                 abstract='Number of clusters.',
                 data_type='integer',
                 default=2,
+                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1),
             ),
             LiteralInput(
                 'perc',
                 'Percentage',
                 abstract='Percentage of total Variance',
-                data_type='string',
-                allowed_values=['70', '80', '90'],
+                data_type='integer',
                 default='80',
+                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=0, maxval=100),
+
             ),
             LiteralInput(
                 'numpcs',
@@ -78,6 +82,7 @@ class EnsClus(Process):
                 abstract='Number of PCs to retain. Has priority over Percentage unless set to 0',
                 data_type='integer',
                 default='0',
+                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=0),
             ),
         ]
         outputs = [
