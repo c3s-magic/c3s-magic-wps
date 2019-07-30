@@ -4,9 +4,12 @@ import os
 from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
+from pywps.inout.literaltypes import AllowedValue
+from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .. import runner, util
 from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
+from .utils import reference_year_ranges
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -32,10 +35,12 @@ class QuantileBias(Process):
                          default='GPCP-SG',
                          min_occurs=1,
                          max_occurs=1),
+            *reference_year_ranges(1997, 1997),
             LiteralInput('perc_lev',
                          'Quantile',
                          abstract='Quantile in percentage (%).',
                          data_type='integer',
+                         allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=0, maxval=100),
                          default=75),
         ]
 
@@ -83,6 +88,8 @@ class QuantileBias(Process):
             experiment=request.inputs['experiment'][0].data,
             ensemble=request.inputs['ensemble'][0].data,
             reference=request.inputs['ref_dataset'][0].data,
+            start_year_reference=request.inputs['start_reference'][0].data,
+            end_year_reference=request.inputs['end_reference'][0].data,
         )
 
         options = dict(perc_lev=request.inputs['perc_lev'][0].data)

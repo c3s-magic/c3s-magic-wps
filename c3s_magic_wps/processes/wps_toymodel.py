@@ -4,8 +4,11 @@ import os
 from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
+from pywps.inout.literaltypes import AllowedValue
+from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .utils import default_outputs, year_ranges, model_experiment_ensemble, outputs_from_plot_names
+from .utils import region
 
 from .. import runner, util
 
@@ -31,47 +34,14 @@ class Toymodel(Process):
                          data_type='string',
                          default='psl',
                          allowed_values=['psl', 'tas']),
-            LiteralInput(
-                'start_longitude',
-                'Start longitude',
-                abstract='Minimum longitude.',
-                data_type='integer',
-                default=-40,
-            ),
-            LiteralInput(
-                'end_longitude',
-                'End longitude',
-                abstract='Maximum longitude.',
-                data_type='integer',
-                default=40,
-            ),
-            LiteralInput(
-                'start_latitude',
-                'Start latitude',
-                abstract='Minimum latitude.',
-                data_type='integer',
-                default=30,
-            ),
-            LiteralInput(
-                'end_latitude',
-                'End latitude',
-                abstract='Maximum latitude.',
-                data_type='integer',
-                default=50,
-            ),
-            LiteralInput(
-                'beta',
-                'Beta',
-                abstract='User defined underdispersion (beta >= 0).',
-                data_type='float',
-                default=0.7,
-            ),
+            *region(-40, 40, 30, 50),
             LiteralInput(
                 'number_of_members',
                 'Number of members',
                 abstract='Number of members to be generated.',
                 data_type='integer',
                 default=2,
+                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1, maxval=1000),
             ),
         ]
         # self.plotlist = [

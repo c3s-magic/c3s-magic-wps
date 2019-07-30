@@ -4,6 +4,8 @@ import os
 from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
+from pywps.inout.literaltypes import AllowedValue
+from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
 
@@ -64,6 +66,7 @@ class HyInt(Process):
                 abstract='First year of reference normalization period to be used for normalized indices.',
                 data_type='integer',
                 default=1980,
+                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100)
             ),
             LiteralInput(
                 'norm_year_end',
@@ -71,6 +74,7 @@ class HyInt(Process):
                 abstract='Last year of reference normalization period to be used for normalized indices.',
                 data_type='integer',
                 default=1999,
+                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100)
             ),
         ]
 

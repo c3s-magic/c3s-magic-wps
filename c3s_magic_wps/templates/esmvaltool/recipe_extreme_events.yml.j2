@@ -31,11 +31,13 @@ datasets:
     project: CMIP5
     exp: {{constraints['experiments'][loop.index0].data}}
   {% endfor %}
-  - dataset: ERA-Interim
+  - dataset: {{constraints['reference']}}
     project: OBS
     type: reanaly
     version: 1
-    tier: 3
+    tier: {{constraints['ref_tier']}}
+    start_year: {{constraints['start_year_reference']}}
+    end_year: {{constraints['end_year_reference']}}
 
 diagnostics:
   extreme_events:
