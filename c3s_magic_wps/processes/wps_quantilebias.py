@@ -26,7 +26,7 @@ class QuantileBias(Process):
                                        max_occurs=1,
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
-            *year_ranges((1997, 1997), end_year=2018),
+            *year_ranges((1997, 1997), start_year=1979, end_year=2018),
             LiteralInput('ref_dataset',
                          'Reference Dataset',
                          abstract='Choose a reference dataset like GPCP-SG.',
