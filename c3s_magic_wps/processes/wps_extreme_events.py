@@ -7,6 +7,7 @@ from pywps.response.status import WPS_STATUS
 
 from .. import runner, util
 from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
+from .utils import reference_year_ranges
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -24,7 +25,9 @@ class ExtremeEvents(Process):
                          default='ERA-Interim',
                          min_occurs=1,
                          max_occurs=1),
+            *reference_year_ranges(1980, 1989),
         ]
+
         self.plotlist = [
             ('Glecker', [Format('image/png')]),
             ('r95', [Format('image/png')]),
@@ -82,6 +85,8 @@ class ExtremeEvents(Process):
             experiments=request.inputs['experiment'],
             ensembles=request.inputs['ensemble'],
             reference=request.inputs['ref_dataset'][0].data,
+            start_year_reference=request.inputs['start_reference'][0].data,
+            end_year_reference=request.inputs['end_reference'][0].data,
         )
 
         options = dict()

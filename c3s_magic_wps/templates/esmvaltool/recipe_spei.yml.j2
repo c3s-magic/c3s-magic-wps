@@ -10,11 +10,15 @@ datasets:
      project: CMIP5
      exp: {{constraints['experiment']}}
      ensemble: {{constraints['ensemble']}}
+     start_year: {{start_year}}
+     end_year: {{end_year}}
    - dataset: {{constraints['reference']}}
      project: OBS
      type: reanaly
      version: 1
-     tier: 3
+     tier: {{constraints['ref_tier']}}
+     start_year: {{constraints['start_year_reference']}}
+     end_year: {{constraints['end_year_reference']}}
 
 preprocessors:
   preprocessor:
@@ -29,8 +33,6 @@ diagnostics:
       pr: &var
         reference_dataset: {{constraints['reference']}}
         preprocessor: preprocessor
-        start_year: {{start_year}}
-        end_year: {{end_year}}
         mip: Amon
       tas: *var
     scripts:
