@@ -32,7 +32,7 @@ class PreprocessExample(Process):
                 'Extraction levels',
                 abstract='Choose an extraction level for the preprocessor.',
                 data_type='float',
-                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=0.0, maxval=11000.0),
+                allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=0.0, maxval=110000.0),
                 default=85000.0),
         ]
         self.plotlist = [
