@@ -7,6 +7,7 @@ from pywps.response.status import WPS_STATUS
 
 from .. import runner, util
 from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
+from .utils import historic_projection_year_ranges, region
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -23,36 +24,8 @@ class DiurnalTemperatureIndex(Process):
                                        max_occurs=1,
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
-            *year_ranges((1990, 2000), start_name='start_historical', end_name='end_historical'),
-            *year_ranges((2070, 2080), start_name='start_projection', end_name='end_projection'),
-            LiteralInput(
-                'start_longitude',
-                'Start longitude',
-                abstract='Minimum longitude.',
-                data_type='integer',
-                default=-10,
-            ),
-            LiteralInput(
-                'end_longitude',
-                'End longitude',
-                abstract='Maximum longitude.',
-                data_type='integer',
-                default=40,
-            ),
-            LiteralInput(
-                'start_latitude',
-                'Start latitude',
-                abstract='Minimum latitude.',
-                data_type='integer',
-                default=27,
-            ),
-            LiteralInput(
-                'end_latitude',
-                'End latitude',
-                abstract='Maximum latitude.',
-                data_type='integer',
-                default=70,
-            ),
+            *historic_projection_year_ranges(1990, 2000, 2070, 2080),
+            *region(-10, 40, 27, 70)
         ]
         self.plotlist = []
         outputs = [
