@@ -35,7 +35,7 @@ class QuantileBias(Process):
                          default='GPCP-SG',
                          min_occurs=1,
                          max_occurs=1),
-            *reference_year_ranges((1997, 1997)),
+            *reference_year_ranges(1997, 1997),
             LiteralInput('perc_lev',
                          'Quantile',
                          abstract='Quantile in percentage (%).',

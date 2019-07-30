@@ -32,7 +32,7 @@ class WeatherRegimes(Process):
                          default='ERA-Interim',
                          min_occurs=1,
                          max_occurs=1),
-            *reference_year_ranges((1980, 1989)),
+            *reference_year_ranges(1980, 1989),
             # Removed on request of Jost
             # LiteralInput('season', 'Season',
             #              abstract='Choose a season like DJF.',

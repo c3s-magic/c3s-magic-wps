@@ -25,7 +25,7 @@ class ExtremeEvents(Process):
                          default='ERA-Interim',
                          min_occurs=1,
                          max_occurs=1),
-            *reference_year_ranges((1980, 1989)),
+            *reference_year_ranges(1980, 1989),
         ]
 
         self.plotlist = [
