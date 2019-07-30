@@ -21,7 +21,7 @@ class ConsecDryDays(Process):
                                        max_occurs=1,
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
-            *year_ranges((2001, 2002)),
+            *year_ranges((2001, 2002), end_year=2018),
             LiteralInput('frlim',
                          'Frlim',
                          abstract=('The shortest number of consecutive dry days '
