@@ -278,6 +278,8 @@ def check_constraints(constraints):
 
     length = len(constraints['models'])
 
+    LOGGER.debug('Number of models: %d', length)
+
     if len(constraints['experiments']) != length:
         raise ProcessError("Not the same number of experiments selected as models")
 
@@ -286,8 +288,10 @@ def check_constraints(constraints):
 
     for i in range(length):
         for j in range(i + 1, length):
-            if (constraints['models'][i] == constraints['models'][j]
-                and constraints['experiments'][i] == constraints['experiments'][j]
-                    and constraints['ensembles'][i] == constraints['ensembles'][j]):
+            if (constraints['models'][i].data == constraints['models'][j].data
+                and constraints['experiments'][i].data == constraints['experiments'][j].data
+                    and constraints['ensembles'][i].data == constraints['ensembles'][j].data):
                 raise ProcessError("Duplicate entry for %s %s %s. Please use unique entries for datasets" %
-                                   (constraints['models'][i], constraints['experiments'][i], constraints['ensembles'][i]))
+                                   (constraints['models'][i].data,
+                                    constraints['experiments'][i].data,
+                                    constraints['ensembles'][i].data))
