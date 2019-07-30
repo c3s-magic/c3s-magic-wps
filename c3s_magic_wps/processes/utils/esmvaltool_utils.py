@@ -15,7 +15,7 @@ from .data_finder import DataFinder
 LOGGER = logging.getLogger("PYWPS")
 
 
-def year_ranges(start_end_defaults, start_name='start_year', end_name='end_year'):
+def year_ranges(start_end_defaults, start_name='start_year', end_name='end_year', end_year=2100):
     default_start_year, default_end_year = start_end_defaults
 
     start_long_name = start_name.replace('_', ' ').capitalize()
@@ -27,32 +27,32 @@ def year_ranges(start_end_defaults, start_name='start_year', end_name='end_year'
                      abstract=('{} of model data. Valid minimum value is 1850 in case of historical,'
                                ' and 2005 in case of rcp experiments.'.format(start_long_name)),
                      default=default_start_year,
-                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100)),
+                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=end_year)),
         LiteralInput(end_name,
                      "{}".format(end_long_name),
                      data_type='integer',
                      abstract=('{} of model data. Valid maximum value is 2005 in case of historical,'
-                               ' and 2100 in case of rcp experiments.'.format(end_long_name)),
+                               ' and {} in case of rcp experiments.'.format(end_long_name, end_year)),
                      default=default_end_year,
-                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100))
+                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=end_year))
     ]
 
 
 # for now uses valid ranges from ERA-Interim only
-def reference_year_ranges(default_start_reference, default_end_reference):
+def reference_year_ranges(default_start_reference, default_end_reference, end_year=2018):
     return [
         LiteralInput("start_reference",
                      "Start reference",
                      data_type='integer',
                      abstract='Start year of reference period. Valid minimum value is 1979.',
                      default=default_start_reference,
-                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1979, maxval=2018)),
+                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1979, maxval=end_year)),
         LiteralInput("end_reference",
                      "End Reference",
                      data_type='integer',
-                     abstract='End year of reference period. Valid maximum value is 2018.',
+                     abstract='End year of reference period. Valid maximum value is {}.'.format(end_year),
                      default=default_end_reference,
-                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1979, maxval=2018))
+                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1979, maxval=end_year))
     ]
 
 
