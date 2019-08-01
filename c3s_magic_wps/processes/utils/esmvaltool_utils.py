@@ -16,7 +16,7 @@ from .data_finder import DataFinder
 LOGGER = logging.getLogger("PYWPS")
 
 
-def year_ranges(start_end_defaults, start_name='start_year', end_name='end_year', end_year=2100):
+def year_ranges(start_end_defaults, start_name='start_year', end_name='end_year', start_year=1850, end_year=2100):
     default_start_year, default_end_year = start_end_defaults
 
     start_long_name = start_name.replace('_', ' ').capitalize()
@@ -25,17 +25,19 @@ def year_ranges(start_end_defaults, start_name='start_year', end_name='end_year'
         LiteralInput(start_name,
                      "{}".format(start_long_name),
                      data_type='integer',
-                     abstract=('{} of model data. Valid minimum value is 1850 in case of historical,'
-                               ' and 2005 in case of rcp experiments.'.format(start_long_name)),
+                     abstract=('{} of model data. Valid minimum value is {} in case of historical,'
+                               ' and 2005 in case of rcp experiments.'.format(start_long_name, start_year)),
                      default=default_start_year,
-                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=end_year)),
+                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=start_year,
+                                                 maxval=end_year)),
         LiteralInput(end_name,
                      "{}".format(end_long_name),
                      data_type='integer',
                      abstract=('{} of model data. Valid maximum value is 2005 in case of historical,'
                                ' and {} in case of rcp experiments.'.format(end_long_name, end_year)),
                      default=default_end_year,
-                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=end_year))
+                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=start_year,
+                                                 maxval=end_year))
     ]
 
 

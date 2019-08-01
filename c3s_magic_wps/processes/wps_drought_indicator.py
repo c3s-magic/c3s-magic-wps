@@ -24,7 +24,7 @@ class DroughtIndicator(Process):
                                        max_occurs=1,
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
-            *year_ranges((1990, 1999)),
+            *year_ranges((1990, 1999), start_year=1979, end_year=2018),
             LiteralInput('ref_dataset',
                          'Reference Dataset',
                          abstract='Choose a reference dataset like ERA-Interim.',
@@ -33,7 +33,6 @@ class DroughtIndicator(Process):
                          default='ERA-Interim',
                          min_occurs=1,
                          max_occurs=1),
-            *reference_year_ranges(1980, 1989),
 
         ]
         self.plotlist = []
@@ -103,8 +102,6 @@ class DroughtIndicator(Process):
             experiment=request.inputs['experiment'][0].data,
             ensemble=request.inputs['ensemble'][0].data,
             reference=request.inputs['ref_dataset'][0].data,
-            start_year_reference=request.inputs['start_reference'][0].data,
-            end_year_reference=request.inputs['end_reference'][0].data,
         )
 
         options = dict()

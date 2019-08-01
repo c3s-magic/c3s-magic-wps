@@ -7,7 +7,8 @@ from pywps.response.status import WPS_STATUS
 from pywps.inout.literaltypes import AllowedValue
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
-from .utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
+from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names
+from .utils import historic_projection_year_ranges
 
 from .. import runner, util
 
@@ -26,8 +27,7 @@ class MultimodelProducts(Process):
                                        min_occurs=2,
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
-            *year_ranges((1961, 1990), start_name='start_historical', end_name='end_historical'),
-            *year_ranges((2006, 2099), start_name='start_projection', end_name='end_projection'),
+            *historic_projection_year_ranges(1961, 1990, 2006, 2100),
             LiteralInput(
                 'moninf',
                 'First month month of the seasonal mean period',

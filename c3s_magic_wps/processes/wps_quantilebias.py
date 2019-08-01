@@ -26,7 +26,7 @@ class QuantileBias(Process):
                                        max_occurs=1,
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
-            *year_ranges((1997, 1997)),
+            *year_ranges((1997, 1997), start_year=1979, end_year=2018),
             LiteralInput('ref_dataset',
                          'Reference Dataset',
                          abstract='Choose a reference dataset like GPCP-SG.',
@@ -35,7 +35,6 @@ class QuantileBias(Process):
                          default='GPCP-SG',
                          min_occurs=1,
                          max_occurs=1),
-            *reference_year_ranges(1997, 1997),
             LiteralInput('perc_lev',
                          'Quantile',
                          abstract='Quantile in percentage (%).',
@@ -88,8 +87,6 @@ class QuantileBias(Process):
             experiment=request.inputs['experiment'][0].data,
             ensemble=request.inputs['ensemble'][0].data,
             reference=request.inputs['ref_dataset'][0].data,
-            start_year_reference=request.inputs['start_reference'][0].data,
-            end_year_reference=request.inputs['end_reference'][0].data,
         )
 
         options = dict(perc_lev=request.inputs['perc_lev'][0].data)
