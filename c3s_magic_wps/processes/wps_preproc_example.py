@@ -26,7 +26,15 @@ class PreprocessExample(Process):
                                        min_occurs=2,
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
-            *year_ranges((2000, 2005)),
+            LiteralInput('ref_dataset',
+                         'Reference Dataset',
+                         abstract='Choose a reference dataset like ERA-Interim.',
+                         data_type='string',
+                         allowed_values=['ERA-Interim'],
+                         default='ERA-Interim',
+                         min_occurs=1,
+                         max_occurs=1),
+            *year_ranges((2000, 2005), start_year=1979, end_year=2018),
             LiteralInput(
                 'extract_levels',
                 'Extraction levels',
@@ -82,7 +90,8 @@ class PreprocessExample(Process):
 
                         This preprocessor example requires at least two models to be chosen. Any combination is valid,
                         however, only the first two models will return their output inline. The output of any models
-                        beyond the first two are included in the zip file.
+                        beyond the first two are included in the zip file. A reference observational dataset will also
+                        be added.
                         """,
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
