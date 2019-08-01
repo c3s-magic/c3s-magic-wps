@@ -23,7 +23,7 @@ class WeatherRegimes(Process):
                                        max_occurs=1,
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
-            *year_ranges((1980, 1989), end_year=2018),
+            *year_ranges((1980, 1989), start_year=1979, end_year=2018),
             LiteralInput('ref_model',
                          'Reference Model',
                          abstract='Choose a reference model like ERA-Interim.',
