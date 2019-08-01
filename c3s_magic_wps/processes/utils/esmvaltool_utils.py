@@ -271,13 +271,13 @@ def check_constraints(constraints):
     LOGGER.debug('Checking contraints: %s', constraints)
 
     # Check if settings are available at all
-    if not 'models' in constraints:
+    if 'models' not in constraints:
         raise ProcessError("No models found in input")
 
-    if not 'experiments' in constraints:
+    if 'experiments' not in constraints:
         raise ProcessError("No experiment found in input")
 
-    if not 'ensembles' in constraints:
+    if 'ensembles' not in constraints:
         raise ProcessError("No ensembles found in input")
 
     # Check if all model/experiment/ensemble setting arrays are of the same length
