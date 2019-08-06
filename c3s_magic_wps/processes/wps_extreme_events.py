@@ -89,6 +89,12 @@ class ExtremeEvents(Process):
             end_year_reference=request.inputs['end_reference'][0].data,
         )
 
+        # automatically determine OBS tier
+        if constraints['reference'] == 'ERA-Interim':
+            constraints['ref_tier'] = '3'
+        else:
+            constraints['ref_tier'] = '2'
+
         check_constraints(constraints)
 
         options = dict()

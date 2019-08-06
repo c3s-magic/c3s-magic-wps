@@ -90,6 +90,12 @@ class WeatherRegimes(Process):
             reference=request.inputs['ref_dataset'][0].data,
         )
 
+        # automatically determine OBS tier
+        if constraints['reference'] == 'ERA-Interim':
+            constraints['ref_tier'] = '3'
+        else:
+            constraints['ref_tier'] = '2'
+
         check_constraints(constraints)
 
         # Only DJF and 4 clusters is supported currently
