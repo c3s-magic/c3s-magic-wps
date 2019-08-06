@@ -10,7 +10,7 @@ from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .. import runner, util
 from .utils import (default_outputs, model_experiment_ensemble, outputs_from_data_names, outputs_from_plot_names,
-                    year_ranges)
+                    year_ranges, check_constraints)
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -26,7 +26,15 @@ class PreprocessExample(Process):
                                        min_occurs=2,
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
-            *year_ranges((2000, 2005)),
+            LiteralInput('ref_dataset',
+                         'Reference Dataset',
+                         abstract='Choose a reference dataset like ERA-Interim.',
+                         data_type='string',
+                         allowed_values=['ERA-Interim'],
+                         default='ERA-Interim',
+                         min_occurs=1,
+                         max_occurs=1),
+            *year_ranges((2000, 2005), start_year=1979, end_year=2018),
             LiteralInput(
                 'extract_levels',
                 'Extraction levels',
@@ -78,12 +86,12 @@ class PreprocessExample(Process):
                         diagnostics and metrics shown on this portal. It can be applied to
                         tailor the climate model data to the need of the user for its own
                         calculations.
-
                         The estimated calculation time of this process is 1 minute for the default values supplied.
 
                         This preprocessor example requires at least two models to be chosen. Any combination is valid,
                         however, only the first two models will return their output inline. The output of any models
-                        beyond the first two are included in the zip file.
+                        beyond the first two are included in the zip file. A reference observational dataset will also
+                        be added.
                         """,
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
@@ -107,6 +115,14 @@ class PreprocessExample(Process):
             ensembles=request.inputs['ensemble'],
             experiments=request.inputs['experiment'],
         )
+
+        # try:
+        check_constraints(constraints)
+        # except Exception as e:
+        #     response.update_status("invalid input settings: " + str(e), 100)
+        #     LOGGER.exception('Check contraints failed: ' + str(e))
+        #     response.outputs['success'].data = False
+        #     return response
 
         options = dict(extract_levels=request.inputs['extract_levels'][0].data)
 

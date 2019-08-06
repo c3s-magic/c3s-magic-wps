@@ -24,7 +24,6 @@ class DroughtIndicator(Process):
                                        max_occurs=1,
                                        required_variables=self.variables,
                                        required_frequency=self.frequency),
-            *year_ranges((1990, 1999), start_year=1979, end_year=2018),
             LiteralInput('ref_dataset',
                          'Reference Dataset',
                          abstract='Choose a reference dataset like ERA-Interim.',
@@ -33,7 +32,7 @@ class DroughtIndicator(Process):
                          default='ERA-Interim',
                          min_occurs=1,
                          max_occurs=1),
-
+            *year_ranges((1990, 1999), start_year=1979, end_year=2018),
         ]
         self.plotlist = []
         outputs = [

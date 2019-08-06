@@ -6,6 +6,7 @@ import re
 from pywps import (FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process)
 from pywps.app.Common import Metadata
 from pywps.inout.literaltypes import AllowedValue
+from pywps.app.exceptions import ProcessError
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from ...util import static_directory
@@ -25,7 +26,7 @@ def year_ranges(start_end_defaults, start_name='start_year', end_name='end_year'
                      "{}".format(start_long_name),
                      data_type='integer',
                      abstract=('{} of model data. Valid minimum value is {} in case of historical,'
-                               ' and 2005 in case of rcp experiments.'.format(start_long_name, start_year)),
+                               ' and 2006 in case of rcp experiments.'.format(start_long_name, start_year)),
                      default=default_start_year,
                      allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=start_year,
                                                  maxval=end_year)),
@@ -77,15 +78,15 @@ def historic_projection_year_ranges(default_start_historical, default_end_histor
         LiteralInput("start_projection",
                      "Start projection year",
                      data_type='integer',
-                     abstract='Start projection year of model data. Valid minimum value is 2005.',
+                     abstract='Start projection year of model data. Valid minimum value is 2006.',
                      default=default_start_projection,
-                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=2005, maxval=2100)),
+                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=2006, maxval=2100)),
         LiteralInput("end_projection",
                      "End projection year",
                      data_type='integer',
                      abstract='End projection year of model data. Valid maximum value is 2100.',
                      default=default_end_projection,
-                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=2005, maxval=2100))
+                     allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=2006, maxval=2100))
 
     ]
 
@@ -262,3 +263,58 @@ def outputs_from_data_names(datalist):
                           as_reference=True,
                           supported_formats=file_formats))
     return data_outputs
+
+# check for illegal combinations of contraints such as duplicate entries an uneven length values
+
+
+def check_constraints(constraints):
+    LOGGER.debug('Checking contraints: %s', constraints)
+
+    # Check if settings are available at all
+    if 'models' not in constraints:
+        raise ProcessError("No models found in input")
+
+    if 'experiments' not in constraints:
+        raise ProcessError("No experiment found in input")
+
+    if 'ensembles' not in constraints:
+        raise ProcessError("No ensembles found in input")
+
+    # Check if all model/experiment/ensemble setting arrays are of the same length
+
+    length = len(constraints['models'])
+
+    LOGGER.debug('Number of models: %d', length)
+
+    if len(constraints['experiments']) != length:
+        raise ProcessError("Not the same number of experiments selected as models")
+
+    if len(constraints['ensembles']) != length:
+        raise ProcessError("Not the same number of ensembles selected as models")
+
+    # checks done if lists are empty.
+    if (length == 0):
+        return
+
+    # Check for mixed-experiment problems (either all must be historical, or all must be rcp*)
+    if constraints['experiments'][0].data == 'historical':
+        for i in range(length):
+            if constraints['experiments'][i].data != 'historical':
+                raise ProcessError(
+                    "Either all experiments must be historical, or all experiments must be rcp experiments")
+    else:
+        for i in range(length):
+            if not constraints['experiments'][i].data.startswith('rcp'):
+                raise ProcessError(
+                    "Either all experiments must be historical, or all experiments must be rcp experiments")
+
+    # Check for duplicate model-experiment-ensemble entries
+    for i in range(length):
+        for j in range(i + 1, length):
+            if (constraints['models'][i].data == constraints['models'][j].data
+                and constraints['experiments'][i].data == constraints['experiments'][j].data
+                    and constraints['ensembles'][i].data == constraints['ensembles'][j].data):
+                raise ProcessError("Duplicate entry for %s %s %s. Please use unique entries for datasets" %
+                                   (constraints['models'][i].data,
+                                    constraints['experiments'][i].data,
+                                    constraints['ensembles'][i].data))
