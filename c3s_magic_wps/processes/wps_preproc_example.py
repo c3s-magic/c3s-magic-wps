@@ -116,13 +116,7 @@ class PreprocessExample(Process):
             experiments=request.inputs['experiment'],
         )
 
-        # try:
         check_constraints(constraints)
-        # except Exception as e:
-        #     response.update_status("invalid input settings: " + str(e), 100)
-        #     LOGGER.exception('Check contraints failed: ' + str(e))
-        #     response.outputs['success'].data = False
-        #     return response
 
         options = dict(extract_levels=request.inputs['extract_levels'][0].data)
 

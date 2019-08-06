@@ -7,8 +7,8 @@ from pywps.response.status import WPS_STATUS
 from pywps.inout.literaltypes import AllowedValue
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
-from .utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
-from .utils import historic_projection_year_ranges
+from .utils import (default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names,
+                    historic_projection_year_ranges, check_constraints)
 
 from .. import runner, util
 
@@ -103,6 +103,8 @@ class HeatwavesColdwaves(Process):
                            end_year_historical=request.inputs['end_historical'][0].data,
                            start_year_projection=request.inputs['start_projection'][0].data,
                            end_year_projection=request.inputs['end_projection'][0].data)
+
+        check_constraints(constraints)
 
         op = request.inputs['operator'][0].data
         if op == 'exceedances':

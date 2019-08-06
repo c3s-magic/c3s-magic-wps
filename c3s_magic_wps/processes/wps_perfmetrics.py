@@ -8,7 +8,7 @@ from pywps.response.status import WPS_STATUS
 
 from .. import runner, util
 from .utils import (default_outputs, model_experiment_ensemble, outputs_from_data_names, outputs_from_plot_names,
-                    year_ranges)
+                    year_ranges, check_constraints)
 
 LOGGER = logging.getLogger("PYWPS")
 

@@ -5,7 +5,8 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from .utils import default_outputs, model_experiment_ensemble, year_ranges, region, outputs_from_plot_names
+from .utils import (default_outputs, model_experiment_ensemble, year_ranges,
+                    region, outputs_from_plot_names, check_constraints)
 
 from .. import runner, util
 
@@ -85,6 +86,8 @@ class CapacityFactor(Process):
             experiment=request.inputs['experiment'][0].data,
             ensemble=request.inputs['ensemble'][0].data,
         )
+
+        check_constraints(constraints)
 
         options = dict(
             start_longitude=request.inputs['start_longitude'][0].data,

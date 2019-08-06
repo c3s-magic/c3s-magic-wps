@@ -5,7 +5,7 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 
 from .. import runner, util
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
+from .utils import (default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges, check_constraints)
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -88,6 +88,8 @@ class ShapeSelect(Process):
             experiment=request.inputs['experiment'][0].data,
             ensemble=request.inputs['ensemble'][0].data,
         )
+
+        check_constraints(constraints)
 
         options = dict(
             shape=request.inputs['shape'][0].data,

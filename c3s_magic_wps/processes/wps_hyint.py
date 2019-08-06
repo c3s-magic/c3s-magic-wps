@@ -7,7 +7,7 @@ from pywps.response.status import WPS_STATUS
 from pywps.inout.literaltypes import AllowedValue
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
+from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges, check_constraints
 
 from .. import runner, util
 
@@ -154,6 +154,8 @@ class HyInt(Process):
             ensembles=request.inputs['ensemble'],
             reference=request.inputs['ref_model'][0].data,
         )
+
+        check_constraints(constraints)
 
         options = dict(
             indices=request.inputs['indices'][0].data,

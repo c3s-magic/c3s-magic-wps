@@ -9,7 +9,7 @@ from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .. import runner, util
 
-from .utils import default_outputs, model_experiment_ensemble, year_ranges
+from .utils import default_outputs, model_experiment_ensemble, year_ranges, check_constraints
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -152,6 +152,8 @@ class EnsClus(Process):
             ensembles=request.inputs['ensemble'],
             experiments=request.inputs['experiment'],
         )
+
+        check_constraints(constraints)
 
         options = dict(
             season=request.inputs['season'][0].data,

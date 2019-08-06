@@ -7,8 +7,8 @@ from pywps.response.status import WPS_STATUS
 from pywps.inout.literaltypes import AllowedValue
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
-from .utils import default_outputs, model_experiment_ensemble, year_ranges, historic_projection_year_ranges, region
-from .utils import outputs_from_plot_names, outputs_from_data_names
+from .utils import (default_outputs, model_experiment_ensemble, year_ranges, historic_projection_year_ranges, region
+                    outputs_from_plot_names, outputs_from_data_names, check_constraints)
 
 from .. import runner, util
 
@@ -94,6 +94,8 @@ class ExtremeIndex(Process):
                            end_year_historical=request.inputs['end_historical'][0].data,
                            start_year_projection=request.inputs['start_projection'][0].data,
                            end_year_projection=request.inputs['end_projection'][0].data)
+
+        check_constraints(constraints)
 
         options = dict(
             running_mean=int(request.inputs['running_mean'][0].data),

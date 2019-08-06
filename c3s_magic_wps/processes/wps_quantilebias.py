@@ -8,8 +8,8 @@ from pywps.inout.literaltypes import AllowedValue
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .. import runner, util
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
-from .utils import reference_year_ranges
+from .utils import (default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges,
+                    reference_year_ranges, check_constraints)
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -88,6 +88,8 @@ class QuantileBias(Process):
             ensemble=request.inputs['ensemble'][0].data,
             reference=request.inputs['ref_dataset'][0].data,
         )
+
+        check_constraints(constraints)
 
         options = dict(perc_lev=request.inputs['perc_lev'][0].data)
 

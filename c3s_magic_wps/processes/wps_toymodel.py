@@ -7,8 +7,8 @@ from pywps.response.status import WPS_STATUS
 from pywps.inout.literaltypes import AllowedValue
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
-from .utils import default_outputs, year_ranges, model_experiment_ensemble, outputs_from_plot_names
-from .utils import region
+from .utils import (default_outputs, year_ranges, model_experiment_ensemble,
+                    outputs_from_plot_names, region, check_constraints)
 
 from .. import runner, util
 
@@ -99,6 +99,8 @@ class Toymodel(Process):
             experiment=request.inputs['experiment'][0].data,
             ensemble=request.inputs['ensemble'][0].data,
         )
+
+        check_constraints(constraints)
 
         options = dict(
             start_longitude=request.inputs['start_longitude'][0].data,

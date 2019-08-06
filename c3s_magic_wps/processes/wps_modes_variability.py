@@ -5,7 +5,7 @@ from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, Li
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
-from .utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
+from .utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names, check_constraints
 
 from .. import runner, util
 
@@ -144,6 +144,8 @@ class ModesVariability(Process):
                            end_year_historical=request.inputs['end_historical'][0].data,
                            start_year_projection=request.inputs['start_projection'][0].data,
                            end_year_projection=request.inputs['end_projection'][0].data)
+
+        check_constraints(constraints)
 
         options = dict(
             plot_type=request.inputs['plot_type'][0].data,

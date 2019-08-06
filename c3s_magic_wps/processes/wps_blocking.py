@@ -7,7 +7,7 @@ from pywps.response.status import WPS_STATUS
 
 from .. import runner, util
 from .utils import (default_outputs, model_experiment_ensemble, outputs_from_plot_names,
-                    year_ranges, reference_year_ranges)
+                    year_ranges, reference_year_ranges, check_constraints)
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -112,6 +112,8 @@ class Blocking(Process):
             constraints['ref_tier'] = '3'
         else:
             constraints['ref_tier'] = '2'
+
+        check_constraints(constraints)
 
         options = dict(season=request.inputs['season'][0].data)
 

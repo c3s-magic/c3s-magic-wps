@@ -6,8 +6,8 @@ from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
 from .. import runner, util
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
-from .utils import reference_year_ranges
+from .utils import (default_outputs, model_experiment_ensemble, outputs_from_plot_names,
+                    year_ranges, reference_year_ranges, check_constraints)
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -89,6 +89,8 @@ class WeatherRegimes(Process):
             ensemble=request.inputs['ensemble'][0].data,
             reference=request.inputs['ref_dataset'][0].data,
         )
+
+        check_constraints(constraints)
 
         # Only DJF and 4 clusters is supported currently
         options = dict(

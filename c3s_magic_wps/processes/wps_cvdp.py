@@ -6,7 +6,7 @@ from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
 from .. import runner, util
-from .utils import default_outputs, model_experiment_ensemble, year_ranges
+from .utils import default_outputs, model_experiment_ensemble, year_ranges, check_constraints
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -85,6 +85,8 @@ class CVDP(Process):
             start_year=request.inputs['start_year'][0].data,
             end_year=request.inputs['end_year'][0].data,
         )
+
+        check_constraints(constraints)
 
         # generate recipe
         response.update_status("generate recipe ...", 10)

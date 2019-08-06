@@ -7,7 +7,7 @@ from pywps.response.status import WPS_STATUS
 from pywps.inout.literaltypes import AllowedValue
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
-from .utils import default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names
+from .utils import (default_outputs, model_experiment_ensemble, year_ranges, outputs_from_plot_names, check_constraints)
 
 from .. import runner, util
 
@@ -108,6 +108,8 @@ class CombinedIndices(Process):
             experiment=request.inputs['experiment'][0].data,
             ensemble=request.inputs['ensemble'][0].data,
         )
+
+        check_constraints(constraints)
 
         options = dict(
             standardized=request.inputs['standardized'][0].data,

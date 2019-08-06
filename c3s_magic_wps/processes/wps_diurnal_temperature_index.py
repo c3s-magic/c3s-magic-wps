@@ -6,7 +6,7 @@ from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
 from .. import runner, util
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
+from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges, check_constraints
 from .utils import historic_projection_year_ranges, region
 
 LOGGER = logging.getLogger("PYWPS")
@@ -79,6 +79,8 @@ class DiurnalTemperatureIndex(Process):
                            end_year_historical=request.inputs['end_historical'][0].data,
                            start_year_projection=request.inputs['start_projection'][0].data,
                            end_year_projection=request.inputs['end_projection'][0].data)
+
+        check_constraints(constraints)
 
         options = dict(
             start_longitude=request.inputs['start_longitude'][0].data,

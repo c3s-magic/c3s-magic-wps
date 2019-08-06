@@ -8,8 +8,8 @@ from pywps.inout.literaltypes import AllowedValue
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .. import runner, util
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
-from .utils import region
+from .utils import (default_outputs, model_experiment_ensemble,
+                    outputs_from_plot_names, year_ranges, region, check_constraints)
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -136,6 +136,8 @@ class RainFARM(Process):
             experiment=request.inputs['experiment'][0].data,
             ensemble=request.inputs['ensemble'][0].data,
         )
+
+        check_constraints(constraints)
 
         options = dict(
             start_longitude=request.inputs['start_longitude'][0].data,

@@ -8,7 +8,7 @@ from pywps.inout.literaltypes import AllowedValue
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .. import runner, util
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
+from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges, check_constraints
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -100,6 +100,8 @@ class SMPI(Process):
             experiments=request.inputs['experiment'],
             ensembles=request.inputs['ensemble'],
         )
+
+        check_constraints(constraints)
 
         options = dict(
             region=request.inputs['region'][0].data,

@@ -7,8 +7,8 @@ from pywps.response.status import WPS_STATUS
 from pywps.inout.literaltypes import AllowedValue
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names
-from .utils import historic_projection_year_ranges
+from .utils import (default_outputs, model_experiment_ensemble, outputs_from_plot_names,
+                    check_constraints, historic_projection_year_ranges)
 
 from .. import runner, util
 
@@ -123,6 +123,8 @@ class MultimodelProducts(Process):
             start_projection=request.inputs['start_projection'][0].data,
             end_projection=request.inputs['end_projection'][0].data,
         )
+
+        check_constraints(constraints)
 
         options = dict(
             moninf=request.inputs['moninf'][0].data,

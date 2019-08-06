@@ -6,7 +6,7 @@ from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
 from .. import runner, util
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
+from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges, check_constraints
 from .utils import reference_year_ranges
 
 LOGGER = logging.getLogger("PYWPS")
@@ -88,6 +88,8 @@ class ExtremeEvents(Process):
             start_year_reference=request.inputs['start_reference'][0].data,
             end_year_reference=request.inputs['end_reference'][0].data,
         )
+
+        check_constraints(constraints)
 
         options = dict()
 

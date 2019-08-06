@@ -5,7 +5,7 @@ from pywps import FORMATS, ComplexOutput, Format, LiteralInput, Process
 from pywps.app.Common import Metadata
 
 from .. import runner, util
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
+from .utils import (default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges, check_constraints)
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -91,6 +91,8 @@ class ConsecDryDays(Process):
             cmor_table='day',
             ensemble=request.inputs['ensemble'][0].data,
         )
+
+        check_constraints(constraints)
 
         # build options
         options = dict(
