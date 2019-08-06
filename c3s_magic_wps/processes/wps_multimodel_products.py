@@ -94,8 +94,7 @@ class MultimodelProducts(Process):
             abstract="""For the 'generic multi-model diagnostic' the ensemble mean anomaly, and the ensemble
                         variance and agreement are calculated. The results are shown as maps and time series.
                         The estimated calculation time of this process is 1 minute for the default values supplied.
-                        The Multimodel Products metric requires at least one model to be chosen, but multiple models
-                        is supported. For each model choose a projection scenario (e.g. rcp26) and the relevant
+                        For each model choose a projection scenario (e.g. rcp26) and the relevant
                         historical experiment will be added by the WPS process. Also make sure to set the climatology
                         and anomaly start and end years correctly.""",
             metadata=[
