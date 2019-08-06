@@ -87,8 +87,6 @@ class CapacityFactor(Process):
             ensemble=request.inputs['ensemble'][0].data,
         )
 
-        check_constraints(constraints)
-
         options = dict(
             start_longitude=request.inputs['start_longitude'][0].data,
             end_longitude=request.inputs['end_longitude'][0].data,

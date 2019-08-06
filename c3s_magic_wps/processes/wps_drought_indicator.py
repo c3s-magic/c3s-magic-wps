@@ -109,8 +109,6 @@ class DroughtIndicator(Process):
         else:
             constraints['ref_tier'] = '2'
 
-        check_constraints(constraints)
-
         options = dict()
 
         # generate recipe

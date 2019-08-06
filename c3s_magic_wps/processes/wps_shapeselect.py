@@ -89,8 +89,6 @@ class ShapeSelect(Process):
             ensemble=request.inputs['ensemble'][0].data,
         )
 
-        check_constraints(constraints)
-
         options = dict(
             shape=request.inputs['shape'][0].data,
             weighting_method=request.inputs['weighting_method'][0].data,

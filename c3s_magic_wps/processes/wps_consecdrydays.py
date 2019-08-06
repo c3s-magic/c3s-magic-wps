@@ -92,8 +92,6 @@ class ConsecDryDays(Process):
             ensemble=request.inputs['ensemble'][0].data,
         )
 
-        check_constraints(constraints)
-
         # build options
         options = dict(
             frlim=request.inputs['frlim'][0].data,

@@ -96,8 +96,6 @@ class WeatherRegimes(Process):
         else:
             constraints['ref_tier'] = '2'
 
-        check_constraints(constraints)
-
         # Only DJF and 4 clusters is supported currently
         options = dict(
             season='DJF',  # request.inputs['season'][0].data,

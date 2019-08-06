@@ -80,8 +80,6 @@ class DiurnalTemperatureIndex(Process):
                            start_year_projection=request.inputs['start_projection'][0].data,
                            end_year_projection=request.inputs['end_projection'][0].data)
 
-        check_constraints(constraints)
-
         options = dict(
             start_longitude=request.inputs['start_longitude'][0].data,
             end_longitude=request.inputs['end_longitude'][0].data,

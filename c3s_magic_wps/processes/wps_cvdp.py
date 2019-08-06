@@ -86,8 +86,6 @@ class CVDP(Process):
             end_year=request.inputs['end_year'][0].data,
         )
 
-        check_constraints(constraints)
-
         # generate recipe
         response.update_status("generate recipe ...", 10)
         recipe_file, config_file = runner.generate_recipe(

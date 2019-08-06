@@ -104,8 +104,6 @@ class HeatwavesColdwaves(Process):
                            start_year_projection=request.inputs['start_projection'][0].data,
                            end_year_projection=request.inputs['end_projection'][0].data)
 
-        check_constraints(constraints)
-
         op = request.inputs['operator'][0].data
         if op == 'exceedances':
             operator = "'>'"

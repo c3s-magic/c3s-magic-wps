@@ -109,8 +109,6 @@ class CombinedIndices(Process):
             ensemble=request.inputs['ensemble'][0].data,
         )
 
-        check_constraints(constraints)
-
         options = dict(
             standardized=request.inputs['standardized'][0].data,
             region=request.inputs['region'][0].data,

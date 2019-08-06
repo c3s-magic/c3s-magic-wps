@@ -145,8 +145,6 @@ class ModesVariability(Process):
                            start_year_projection=request.inputs['start_projection'][0].data,
                            end_year_projection=request.inputs['end_projection'][0].data)
 
-        check_constraints(constraints)
-
         options = dict(
             plot_type=request.inputs['plot_type'][0].data,
             start_historical='{}-01-01'.format(request.inputs['start_historical'][0].data),

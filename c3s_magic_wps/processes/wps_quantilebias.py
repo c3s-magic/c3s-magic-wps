@@ -95,8 +95,6 @@ class QuantileBias(Process):
         else:
             constraints['ref_tier'] = '2'
 
-        check_constraints(constraints)
-
         options = dict(perc_lev=request.inputs['perc_lev'][0].data)
 
         # generate recipe

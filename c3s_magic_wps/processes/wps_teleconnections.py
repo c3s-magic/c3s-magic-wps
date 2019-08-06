@@ -98,8 +98,6 @@ class Teleconnections(Process):
         else:
             constraints['ref_tier'] = '2'
 
-        check_constraints(constraints)
-
         options = dict(season=request.inputs['season'][0].data, teles=request.inputs['teles'][0].data)
 
         # generate recipe
