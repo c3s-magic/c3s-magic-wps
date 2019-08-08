@@ -27,7 +27,7 @@ def test_wps_caps():
         'multimodel_products',
         'preproc',
         'shapefile_selection',
-        'sleep',
+        #        'sleep',
         'teleconnections',
         'weather_regimes',
         'zmnam',
