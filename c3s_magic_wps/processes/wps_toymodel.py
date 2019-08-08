@@ -36,6 +36,13 @@ class Toymodel(Process):
                          allowed_values=['psl', 'tas']),
             *region(-40, 40, 30, 50),
             LiteralInput(
+                'beta',
+                'Beta',
+                abstract='User defined underdispersion (beta >= 0).',
+                data_type='float',
+                default=0.7,
+            ),
+            LiteralInput(
                 'number_of_members',
                 'Number of members',
                 abstract='Number of members to be generated.',
