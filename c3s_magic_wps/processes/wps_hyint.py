@@ -1,7 +1,7 @@
 import logging
 import os
 
-from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process
+from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process, ProcessError
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 from pywps.inout.literaltypes import AllowedValue
@@ -64,7 +64,8 @@ class HyInt(Process):
             LiteralInput(
                 'norm_year_start',
                 'Norm year start',
-                abstract='First year of reference normalization period to be used for normalized indices. Must be inside of model data year range.',
+                abstract='First year of reference normalization period to be used for normalized indices. \
+                Must be inside of model data year range.',
                 data_type='integer',
                 default=1980,
                 allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100)
@@ -72,7 +73,8 @@ class HyInt(Process):
             LiteralInput(
                 'norm_year_end',
                 'Norm year end',
-                abstract='Last year of reference normalization period to be used for normalized indices. Must be inside of model data year range.',
+                abstract='Last year of reference normalization period to be used for normalized indices. \
+                    Must be inside of model data year range.',
                 data_type='integer',
                 default=1999,
                 allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100)
@@ -165,8 +167,8 @@ class HyInt(Process):
             norm_year_end=request.inputs['norm_year_end'][0].data,
         )
 
-        if ((request.inputs['norm_year_start'][0].data < request.inputs['start_year'][0].data) or
-                (request.inputs['norm_year_end'][0].data > request.inputs['end_year'][0].data)):
+        if ((request.inputs['norm_year_start'][0].data < request.inputs['start_year'][0].data)
+                or (request.inputs['norm_year_end'][0].data > request.inputs['end_year'][0].data)):
             raise ProcessError("Normalization year range not within model data range")
 
         # generate recipe
