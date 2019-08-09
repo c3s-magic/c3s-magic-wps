@@ -28,7 +28,7 @@ class HyInt(Process):
                                        required_variables=self.variables,
                                        required_frequency=self.frequency,
                                        exclude_historical=True),
-            *year_ranges((2005, 2020)),
+            *year_ranges((1980, 2020)),
             LiteralInput(
                 'ref_model',
                 'Reference Model',
@@ -64,7 +64,7 @@ class HyInt(Process):
             LiteralInput(
                 'norm_year_start',
                 'Norm year start',
-                abstract='First year of reference normalization period to be used for normalized indices.',
+                abstract='First year of reference normalization period to be used for normalized indices. Must be inside of model data year range',
                 data_type='integer',
                 default=1980,
                 allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100)
@@ -72,7 +72,7 @@ class HyInt(Process):
             LiteralInput(
                 'norm_year_end',
                 'Norm year end',
-                abstract='Last year of reference normalization period to be used for normalized indices.',
+                abstract='Last year of reference normalization period to be used for normalized indices. Must be inside of model data year range',
                 data_type='integer',
                 default=1999,
                 allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100)
@@ -164,6 +164,10 @@ class HyInt(Process):
             norm_year_start=request.inputs['norm_year_start'][0].data,
             norm_year_end=request.inputs['norm_year_end'][0].data,
         )
+
+        if ((request.inputs['norm_year_start'][0].data < request.inputs['start_year'][0].data) or
+                (request.inputs['norm_year_end'][0].data > request.inputs['end_year'][0].data)):
+            raise ProcessError("Normalization year range not within model data range")
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
