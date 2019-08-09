@@ -192,7 +192,7 @@ class RainFARM(Process):
 
         if result['success']:
             try:
-                self.get_outputs(result, response)
+                self.get_outputs(result, constraints, options, response)
             except Exception as e:
                 response.update_status("exception occured: " + str(e), 85)
         else:
