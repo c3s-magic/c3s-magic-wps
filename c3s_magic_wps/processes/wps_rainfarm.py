@@ -8,7 +8,7 @@ from pywps.inout.literaltypes import AllowedValue
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .. import runner, util
-from .utils import (default_outputs, model_experiment_ensemble,
+from .utils import (default_outputs, model_experiment_ensemble, outputs_from_data_names,
                     outputs_from_plot_names, year_ranges, region, check_constraints)
 
 LOGGER = logging.getLogger("PYWPS")
@@ -89,7 +89,12 @@ class RainFARM(Process):
             ),
         ]
 
+        self.datalist = [
+            ('downscaled_data_ensemble_member_1', [FORMATS.NETCDF]),
+            ('downscaled_data_ensemble_member_2', [FORMATS.NETCDF]),
+        ]
         outputs = [
+            *outputs_from_data_names(self.datalist),
             ComplexOutput('archive',
                           'Archive',
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
@@ -205,6 +210,20 @@ class RainFARM(Process):
         response.update_status("done.", 100)
         return response
 
-    def get_outputs(self, result, response):
+    def get_outputs(self, result, constraints, options, response):
         # result plot
         response.update_status("collecting output ...", 80)
+
+        number_of_outputs = min(options['nens'], 2)
+
+        # get first two ensemble members
+        for ensemble_member in range(1, number_of_outputs):
+            datakey = 'downscaled_data_ensemble_member_{}'.format(ensemble_member)
+
+            LOGGER.info('Setting response for: {}'.format(datakey))
+
+            response.outputs[datakey].output_format = FORMATS.NETCDF
+            response.outputs[datakey].file = runner.get_output(result['work_dir'],
+                                                               path_filter=os.path.join('rainfarm', 'rainfarm'),
+                                                               name_filter="*{:03d}".format(ensemble_member),
+                                                               output_format="nc")
