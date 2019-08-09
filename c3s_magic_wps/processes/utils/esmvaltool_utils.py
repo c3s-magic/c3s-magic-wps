@@ -181,7 +181,9 @@ def model_experiment_ensemble(model: str,
 
     finder = DataFinder.get_instance()
     available_models, available_experiments, available_ensembles = finder.get_model_experiment_ensemble(
-        required_variables=required_variables, required_frequency=required_frequency, exclude_historical=exclude_historical)
+        required_variables=required_variables,
+        required_frequency=required_frequency,
+        exclude_historical=exclude_historical)
 
     available_models = sorted(available_models, key=str.lower)
     available_experiments = sorted(available_experiments)
