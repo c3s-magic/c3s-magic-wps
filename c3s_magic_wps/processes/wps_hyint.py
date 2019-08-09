@@ -64,7 +64,7 @@ class HyInt(Process):
             LiteralInput(
                 'norm_year_start',
                 'Norm year start',
-                abstract='First year of reference normalization period to be used for normalized indices. Must be inside of model data year range',
+                abstract='First year of reference normalization period to be used for normalized indices. Must be inside of model data year range.',
                 data_type='integer',
                 default=1980,
                 allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100)
@@ -72,7 +72,7 @@ class HyInt(Process):
             LiteralInput(
                 'norm_year_end',
                 'Norm year end',
-                abstract='Last year of reference normalization period to be used for normalized indices. Must be inside of model data year range',
+                abstract='Last year of reference normalization period to be used for normalized indices. Must be inside of model data year range.',
                 data_type='integer',
                 default=1999,
                 allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100)
