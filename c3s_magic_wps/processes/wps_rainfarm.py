@@ -217,7 +217,7 @@ class RainFARM(Process):
         number_of_outputs = min(options['nens'], 2)
 
         # get first two ensemble members
-        for ensemble_member in range(1, number_of_outputs):
+        for ensemble_member in range(1, number_of_outputs + 1):
             datakey = 'downscaled_data_ensemble_member_{}_data'.format(ensemble_member)
 
             LOGGER.info('Setting response for: {}'.format(datakey))
