@@ -26,7 +26,8 @@ class MultimodelProducts(Process):
                                        ensemble='r1i1p1',
                                        min_occurs=2,
                                        required_variables=self.variables,
-                                       required_frequency=self.frequency),
+                                       required_frequency=self.frequency,
+                                       exclude_historical=True),
             *historic_projection_year_ranges(1961, 1990, 2006, 2100),
             LiteralInput(
                 'moninf',

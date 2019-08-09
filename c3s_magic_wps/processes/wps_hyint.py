@@ -26,7 +26,8 @@ class HyInt(Process):
                                        min_occurs=2,
                                        max_occurs=100,
                                        required_variables=self.variables,
-                                       required_frequency=self.frequency),
+                                       required_frequency=self.frequency,
+                                       exclude_historical=True),
             *year_ranges((2005, 2020)),
             LiteralInput(
                 'ref_model',

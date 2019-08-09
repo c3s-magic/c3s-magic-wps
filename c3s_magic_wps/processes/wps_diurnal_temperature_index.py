@@ -23,7 +23,8 @@ class DiurnalTemperatureIndex(Process):
                                        ensemble='r1i1p1',
                                        max_occurs=1,
                                        required_variables=self.variables,
-                                       required_frequency=self.frequency),
+                                       required_frequency=self.frequency,
+                                       exclude_historical=True),
             *historic_projection_year_ranges(1990, 2000, 2070, 2080),
             *region(-10, 40, 27, 70)
         ]
