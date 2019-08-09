@@ -26,7 +26,8 @@ class ExtremeIndex(Process):
                                        ensemble='r1i1p1',
                                        max_occurs=1,
                                        required_variables=self.variables,
-                                       required_frequency=self.frequency),
+                                       required_frequency=self.frequency,
+                                       exclude_historical=True),  # historical experiment not selectable
             *historic_projection_year_ranges(1971, 2000, 2020, 2040),
             LiteralInput('running_mean',
                          'Running Mean',
