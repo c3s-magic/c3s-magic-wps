@@ -169,7 +169,7 @@ class RainFARM(Process):
         response.outputs['recipe'].file = recipe_file
 
         # run diag
-        response.update_status("running diagnostic ...", 20)
+        response.update_status("running diagnostic (this could take a while)...", 20)
         # Disable HDF5 library version mismatched error for rainfarm metric
         os.environ["HDF5_DISABLE_VERSION_CHECK"] = "1"
         result = runner.run(recipe_file, config_file)
