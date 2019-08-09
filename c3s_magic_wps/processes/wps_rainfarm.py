@@ -116,8 +116,9 @@ class RainFARM(Process):
                         (Rebora et al, 2006). With this aim, the Rainfall Filtered Autoregressive Model (RainFARM)was
                         developed to apply the stochastic precipitation downscaling method to climate models. The
                         selected region needs to have equal and even number of longitude (in any case it is cut) and
-                        latitude grid points (e.g., 2x2, 4x4, ...). Warning: downcaling can reach very high resolution,
-                        so select a limited area.
+                        latitude grid points (e.g., 2x2, 4x4). Warning: downscaling can reach very high resolution,
+                        so select a limited area. Note that only the first two ensemble members are returned as data
+                        fields. If applicable, others are available in the output archive.
 
                         The estimated calculation time of this process is 3 minutes for the default values supplied.
                         """,
