@@ -29,7 +29,7 @@ __all__ = sorted(
     [
         "CVDP",
         "EnsClus",
-        "Sleep",
+        # "Sleep",
         "Blocking",
         "PreprocessExample",
         "ZMNAM",
@@ -57,7 +57,7 @@ processes = sorted(
         Meta(),
         CVDP(),
         EnsClus(),
-        Sleep(),
+        # Sleep(),
         Blocking(),
         PreprocessExample(),
         ZMNAM(),

@@ -7,8 +7,8 @@ from pywps.response.status import WPS_STATUS
 from pywps.inout.literaltypes import AllowedValue
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
-from .utils import default_outputs, year_ranges, model_experiment_ensemble, outputs_from_plot_names
-from .utils import region
+from .utils import (default_outputs, year_ranges, model_experiment_ensemble,
+                    outputs_from_plot_names, region, check_constraints)
 
 from .. import runner, util
 
@@ -35,6 +35,13 @@ class Toymodel(Process):
                          default='psl',
                          allowed_values=['psl', 'tas']),
             *region(-40, 40, 30, 50),
+            LiteralInput(
+                'beta',
+                'Beta',
+                abstract='User defined underdispersion (beta >= 0).',
+                data_type='float',
+                default=0.7,
+            ),
             LiteralInput(
                 'number_of_members',
                 'Number of members',
@@ -129,7 +136,7 @@ class Toymodel(Process):
         response.outputs['recipe'].file = recipe_file
 
         # run diag
-        response.update_status("running diagnostic ...", 20)
+        response.update_status("running diagnostic (this could take a while)...", 20)
         result = runner.run(recipe_file, config_file)
 
         response.outputs['success'].data = result['success']

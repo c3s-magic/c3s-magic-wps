@@ -6,7 +6,7 @@ from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
 from .. import runner, util
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
+from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges, check_constraints
 from .utils import historic_projection_year_ranges, region
 
 LOGGER = logging.getLogger("PYWPS")
@@ -23,7 +23,8 @@ class DiurnalTemperatureIndex(Process):
                                        ensemble='r1i1p1',
                                        max_occurs=1,
                                        required_variables=self.variables,
-                                       required_frequency=self.frequency),
+                                       required_frequency=self.frequency,
+                                       exclude_historical=True),
             *historic_projection_year_ranges(1990, 2000, 2070, 2080),
             *region(-10, 40, 27, 70)
         ]
@@ -104,7 +105,7 @@ class DiurnalTemperatureIndex(Process):
         response.outputs['recipe'].file = recipe_file
 
         # run diag
-        response.update_status("running diagnostic ...", 20)
+        response.update_status("running diagnostic (this could take a while)...", 20)
         result = runner.run(recipe_file, config_file)
 
         response.outputs['success'].data = result['success']

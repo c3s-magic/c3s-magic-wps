@@ -6,7 +6,7 @@ from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
 
 from .. import runner, util
-from .utils import default_outputs, model_experiment_ensemble, year_ranges
+from .utils import default_outputs, model_experiment_ensemble, year_ranges, check_constraints
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -61,7 +61,7 @@ class CVDP(Process):
                         is an analysis tool that documents the major modes of climate variability in models and
                         observations, including ENSO, Pacific Decadal Oscillation, Atlantic Multi-decadal Oscillation,
                         Northern and Southern Annular Modes, North Atlantic Oscillation, Pacific North and South
-                        American teleconnection patterns. The estimated calculation time of this process is 14 minutes
+                        American teleconnection patterns. The estimated calculation time of this process is 15 minutes
                         for the default values supplied.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
@@ -102,7 +102,7 @@ class CVDP(Process):
         response.outputs['recipe'].file = recipe_file
 
         # run diag
-        response.update_status("running diagnostic ...", 20)
+        response.update_status("running diagnostic (this could take a while)...", 20)
         result = runner.run(recipe_file, config_file)
 
         response.outputs['success'].data = result['success']

@@ -8,7 +8,7 @@ from pywps.inout.literaltypes import AllowedValue
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .. import runner, util
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
+from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges, check_constraints
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -101,6 +101,8 @@ class SMPI(Process):
             ensembles=request.inputs['ensemble'],
         )
 
+        check_constraints(constraints)
+
         options = dict(
             region=request.inputs['region'][0].data,
             smpi_n_bootstrap=request.inputs['smpi_n_bootstrap'][0].data,
@@ -123,7 +125,7 @@ class SMPI(Process):
         response.outputs['recipe'].file = recipe_file
 
         # run diag
-        response.update_status("running diagnostic ...", 20)
+        response.update_status("running diagnostic (this could take a while)...", 20)
         result = runner.run(recipe_file, config_file)
 
         response.outputs['success'].data = result['success']

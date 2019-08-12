@@ -174,13 +174,16 @@ def model_experiment_ensemble(model: str,
                               min_occurs=1,
                               max_occurs=150,
                               required_variables=[],
-                              required_frequency='mon'):
+                              required_frequency='mon',
+                              exclude_historical=False):
     # if not hasattr(model_experiment_ensemble, 'available_models'):
     #     parse_model_lists()
 
     finder = DataFinder.get_instance()
     available_models, available_experiments, available_ensembles = finder.get_model_experiment_ensemble(
-        required_variables=required_variables, required_frequency=required_frequency)
+        required_variables=required_variables,
+        required_frequency=required_frequency,
+        exclude_historical=exclude_historical)
 
     available_models = sorted(available_models, key=str.lower)
     available_experiments = sorted(available_experiments)

@@ -4,10 +4,11 @@ import os
 from pywps import FORMATS, ComplexInput, ComplexOutput, Format, LiteralInput, LiteralOutput, Process
 from pywps.app.Common import Metadata
 from pywps.response.status import WPS_STATUS
+from pywps.app.exceptions import ProcessError
 from pywps.inout.literaltypes import AllowedValue
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
+from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges, check_constraints
 
 from .. import runner, util
 
@@ -26,8 +27,9 @@ class HyInt(Process):
                                        min_occurs=2,
                                        max_occurs=100,
                                        required_variables=self.variables,
-                                       required_frequency=self.frequency),
-            *year_ranges((2005, 2020)),
+                                       required_frequency=self.frequency,
+                                       exclude_historical=True),
+            *year_ranges((1980, 2020)),
             LiteralInput(
                 'ref_model',
                 'Reference Model',
@@ -63,7 +65,8 @@ class HyInt(Process):
             LiteralInput(
                 'norm_year_start',
                 'Norm year start',
-                abstract='First year of reference normalization period to be used for normalized indices.',
+                abstract='First year of reference normalization period to be used for normalized indices. \
+                Must be inside of model data year range.',
                 data_type='integer',
                 default=1980,
                 allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100)
@@ -71,7 +74,8 @@ class HyInt(Process):
             LiteralInput(
                 'norm_year_end',
                 'Norm year end',
-                abstract='Last year of reference normalization period to be used for normalized indices.',
+                abstract='Last year of reference normalization period to be used for normalized indices. \
+                    Must be inside of model data year range.',
                 data_type='integer',
                 default=1999,
                 allowed_values=AllowedValue(allowed_type=ALLOWEDVALUETYPE.RANGE, minval=1850, maxval=2100)
@@ -155,12 +159,18 @@ class HyInt(Process):
             reference=request.inputs['ref_model'][0].data,
         )
 
+        check_constraints(constraints)
+
         options = dict(
             indices=request.inputs['indices'][0].data,
             regions=request.inputs['regions'][0].data,
             norm_year_start=request.inputs['norm_year_start'][0].data,
             norm_year_end=request.inputs['norm_year_end'][0].data,
         )
+
+        if ((request.inputs['norm_year_start'][0].data < request.inputs['start_year'][0].data)
+                or (request.inputs['norm_year_end'][0].data > request.inputs['end_year'][0].data)):
+            raise ProcessError("Normalization year range not within model data range")
 
         # generate recipe
         response.update_status("generate recipe ...", 10)
@@ -179,7 +189,7 @@ class HyInt(Process):
         response.outputs['recipe'].file = recipe_file
 
         # run diag
-        response.update_status("running diagnostic ...", 20)
+        response.update_status("running diagnostic (this could take a while)...", 20)
         result = runner.run(recipe_file, config_file)
 
         response.outputs['success'].data = result['success']

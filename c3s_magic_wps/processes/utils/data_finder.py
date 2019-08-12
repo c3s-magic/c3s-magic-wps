@@ -132,7 +132,7 @@ class DataFinder():
         return result
 
     # Obtain a list of all valid models, experiments, and esemble members for the wps.
-    def get_model_experiment_ensemble(self, required_variables=[], required_frequency='mon'):
+    def get_model_experiment_ensemble(self, required_variables=[], required_frequency='mon', exclude_historical=False):
         models = set()
         experiments = set()
         ensembles = set()
@@ -140,23 +140,24 @@ class DataFinder():
         for organization in _get_children_of(self.data):
             for model in _get_children_of(organization):
                 for experiment in _get_children_of(model):
-                    for frequency in _get_children_of(experiment):
-                        if frequency['name'] == required_frequency:
-                            for mip in _get_children_of(frequency):
-                                for realm in _get_children_of(mip):
-                                    for ensemble in _get_children_of(realm):
-                                        available_variables = []
-                                        for variable in _get_children_of(ensemble):
-                                            available_variables.append(variable['name'])
+                    if not (experiment['name'] == 'historical' and exclude_historical):
+                        for frequency in _get_children_of(experiment):
+                            if frequency['name'] == required_frequency:
+                                for mip in _get_children_of(frequency):
+                                    for realm in _get_children_of(mip):
+                                        for ensemble in _get_children_of(realm):
+                                            available_variables = []
+                                            for variable in _get_children_of(ensemble):
+                                                available_variables.append(variable['name'])
 
-                                        LOGGER.debug('required_variables ' + str(required_variables))
-                                        LOGGER.debug('available variables ' + str(available_variables))
+                                            LOGGER.debug('required_variables ' + str(required_variables))
+                                            LOGGER.debug('available variables ' + str(available_variables))
 
-                                        if all(required_variable in available_variables
-                                               for required_variable in required_variables):
-                                            models.add(model['name'])
-                                            experiments.add(experiment['name'])
-                                            ensembles.add(ensemble['name'])
+                                            if all(required_variable in available_variables
+                                                   for required_variable in required_variables):
+                                                models.add(model['name'])
+                                                experiments.add(experiment['name'])
+                                                ensembles.add(ensemble['name'])
 
         return (list(models), list(experiments), list(ensembles))
 

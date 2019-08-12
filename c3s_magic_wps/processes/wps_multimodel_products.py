@@ -7,8 +7,8 @@ from pywps.response.status import WPS_STATUS
 from pywps.inout.literaltypes import AllowedValue
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names
-from .utils import historic_projection_year_ranges
+from .utils import (default_outputs, model_experiment_ensemble, outputs_from_plot_names,
+                    check_constraints, historic_projection_year_ranges)
 
 from .. import runner, util
 
@@ -26,7 +26,8 @@ class MultimodelProducts(Process):
                                        ensemble='r1i1p1',
                                        min_occurs=2,
                                        required_variables=self.variables,
-                                       required_frequency=self.frequency),
+                                       required_frequency=self.frequency,
+                                       exclude_historical=True),
             *historic_projection_year_ranges(1961, 1990, 2006, 2100),
             LiteralInput(
                 'moninf',
@@ -94,8 +95,7 @@ class MultimodelProducts(Process):
             abstract="""For the 'generic multi-model diagnostic' the ensemble mean anomaly, and the ensemble
                         variance and agreement are calculated. The results are shown as maps and time series.
                         The estimated calculation time of this process is 1 minute for the default values supplied.
-                        The Multimodel Products metric requires at least one model to be chosen, but multiple models
-                        is supported. For each model choose a projection scenario (e.g. rcp26) and the relevant
+                        For each model choose a projection scenario (e.g. rcp26) and the relevant
                         historical experiment will be added by the WPS process. Also make sure to set the climatology
                         and anomaly start and end years correctly.""",
             metadata=[
@@ -124,6 +124,8 @@ class MultimodelProducts(Process):
             end_projection=request.inputs['end_projection'][0].data,
         )
 
+        check_constraints(constraints)
+
         options = dict(
             moninf=request.inputs['moninf'][0].data,
             monsup=request.inputs['monsup'][0].data,
@@ -149,7 +151,7 @@ class MultimodelProducts(Process):
         response.outputs['recipe'].file = recipe_file
 
         # run diag
-        response.update_status("running diagnostic ...", 20)
+        response.update_status("running diagnostic (this could take a while)...", 20)
         result = runner.run(recipe_file, config_file)
 
         response.outputs['success'].data = result['success']

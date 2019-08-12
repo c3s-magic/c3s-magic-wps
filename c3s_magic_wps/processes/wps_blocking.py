@@ -7,7 +7,7 @@ from pywps.response.status import WPS_STATUS
 
 from .. import runner, util
 from .utils import (default_outputs, model_experiment_ensemble, outputs_from_plot_names,
-                    year_ranges, reference_year_ranges)
+                    year_ranges, reference_year_ranges, check_constraints)
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -134,7 +134,7 @@ class Blocking(Process):
         response.outputs['recipe'].file = recipe_file
 
         # run diag
-        response.update_status("running diagnostic ...", 20)
+        response.update_status("running diagnostic (this could take a while)...", 20)
         result = runner.run(recipe_file, config_file)
 
         response.outputs['success'].data = result['success']

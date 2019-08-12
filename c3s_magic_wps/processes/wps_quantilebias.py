@@ -8,8 +8,8 @@ from pywps.inout.literaltypes import AllowedValue
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .. import runner, util
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
-from .utils import reference_year_ranges
+from .utils import (default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges,
+                    reference_year_ranges, check_constraints)
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -89,6 +89,12 @@ class QuantileBias(Process):
             reference=request.inputs['ref_dataset'][0].data,
         )
 
+        # automatically determine OBS tier
+        if constraints['reference'] == 'ERA-Interim':
+            constraints['ref_tier'] = '3'
+        else:
+            constraints['ref_tier'] = '2'
+
         options = dict(perc_lev=request.inputs['perc_lev'][0].data)
 
         # generate recipe
@@ -110,7 +116,7 @@ class QuantileBias(Process):
         response.outputs['recipe'].file = recipe_file
 
         # run diag
-        response.update_status("running diagnostic ...", 20)
+        response.update_status("running diagnostic (this could take a while)...", 20)
         result = runner.run(recipe_file, config_file)
 
         response.outputs['success'].data = result['success']

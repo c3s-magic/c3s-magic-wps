@@ -8,7 +8,7 @@ from pywps.response.status import WPS_STATUS
 
 from .. import runner, util
 from .utils import (default_outputs, model_experiment_ensemble, outputs_from_data_names, outputs_from_plot_names,
-                    year_ranges)
+                    year_ranges, check_constraints)
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -41,8 +41,11 @@ class Perfmetrics(Process):
             abstract="""The goal is to create a standard recipe for the calculation of performance metrics to quantify
                         the ability of the models to reproduce the climatological mean annual cycle for selected
                         Essential Climate Variables (ECVs) plus some additional corresponding diagnostics and plots
-                        to better understand and interpret the results. The estimated calculation time of this process
-                        is 20 minutes for the default values supplied.""",
+                        to better understand and interpret the results. As this process is meant to provide an
+                        authoritative answer, changes of settings by users is not supported. Running of this metric
+                        is provided as a means to verify the supplied output, and to re-calculate the metric in case
+                        the underlying datasets have been updated. The estimated calculation time of this process
+                        is 20 minutes.""",
             metadata=[
                 Metadata('ESMValTool', 'http://www.esmvaltool.org/'),
                 Metadata('Documentation',
@@ -69,7 +72,7 @@ class Perfmetrics(Process):
         response.outputs['recipe'].file = recipe_file
 
         # run diag
-        response.update_status("running diagnostic ...", 20)
+        response.update_status("running diagnostic (this could take a while)...", 20)
         result = runner.run(recipe_file, config_file, skip_nonexistent=True)
 
         response.outputs['success'].data = result['success']

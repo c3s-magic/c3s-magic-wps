@@ -9,7 +9,7 @@ from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .. import runner, util
 
-from .utils import default_outputs, model_experiment_ensemble, year_ranges
+from .utils import default_outputs, model_experiment_ensemble, year_ranges, check_constraints
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -153,6 +153,8 @@ class EnsClus(Process):
             experiments=request.inputs['experiment'],
         )
 
+        check_constraints(constraints)
+
         options = dict(
             season=request.inputs['season'][0].data,
             area=request.inputs['area'][0].data,
@@ -180,7 +182,7 @@ class EnsClus(Process):
         response.outputs['recipe'].file = recipe_file
 
         # run diag
-        response.update_status("running diagnostic ...", 20)
+        response.update_status("running diagnostic (this could take a while)...", 20)
         result = runner.run(recipe_file, config_file)
 
         # log output

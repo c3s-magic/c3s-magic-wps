@@ -7,8 +7,8 @@ from pywps.response.status import WPS_STATUS
 from pywps.inout.literaltypes import AllowedValue
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
-from .utils import default_outputs, model_experiment_ensemble, year_ranges, historic_projection_year_ranges, region
-from .utils import outputs_from_plot_names, outputs_from_data_names
+from .utils import (default_outputs, model_experiment_ensemble, year_ranges, historic_projection_year_ranges, region,
+                    outputs_from_plot_names, outputs_from_data_names, check_constraints)
 
 from .. import runner, util
 
@@ -26,7 +26,8 @@ class ExtremeIndex(Process):
                                        ensemble='r1i1p1',
                                        max_occurs=1,
                                        required_variables=self.variables,
-                                       required_frequency=self.frequency),
+                                       required_frequency=self.frequency,
+                                       exclude_historical=True),  # historical experiment not selectable
             *historic_projection_year_ranges(1971, 2000, 2020, 2040),
             LiteralInput('running_mean',
                          'Running Mean',
@@ -124,7 +125,7 @@ class ExtremeIndex(Process):
         response.outputs['recipe'].file = recipe_file
 
         # run diag
-        response.update_status("running diagnostic ...", 20)
+        response.update_status("running diagnostic (this could take a while)...", 20)
         result = runner.run(recipe_file, config_file)
 
         response.outputs['success'].data = result['success']

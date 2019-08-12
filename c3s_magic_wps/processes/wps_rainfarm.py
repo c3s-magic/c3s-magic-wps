@@ -8,8 +8,8 @@ from pywps.inout.literaltypes import AllowedValue
 from pywps.validator.allowed_value import ALLOWEDVALUETYPE
 
 from .. import runner, util
-from .utils import default_outputs, model_experiment_ensemble, outputs_from_plot_names, year_ranges
-from .utils import region
+from .utils import (default_outputs, model_experiment_ensemble, outputs_from_data_names,
+                    outputs_from_plot_names, year_ranges, region, check_constraints)
 
 LOGGER = logging.getLogger("PYWPS")
 
@@ -89,7 +89,12 @@ class RainFARM(Process):
             ),
         ]
 
+        self.datalist = [
+            ('downscaled_data_ensemble_member_1', [FORMATS.NETCDF]),
+            ('downscaled_data_ensemble_member_2', [FORMATS.NETCDF]),
+        ]
         outputs = [
+            *outputs_from_data_names(self.datalist),
             ComplexOutput('archive',
                           'Archive',
                           abstract='The complete output of the ESMValTool processing as an zip archive.',
@@ -111,8 +116,9 @@ class RainFARM(Process):
                         (Rebora et al, 2006). With this aim, the Rainfall Filtered Autoregressive Model (RainFARM)was
                         developed to apply the stochastic precipitation downscaling method to climate models. The
                         selected region needs to have equal and even number of longitude (in any case it is cut) and
-                        latitude grid points (e.g., 2x2, 4x4, ...). Warning: downcaling can reach very high resolution,
-                        so select a limited area.
+                        latitude grid points (e.g., 2x2, 4x4). Warning: downscaling can reach very high resolution,
+                        so select a limited area. Note that only the first two ensemble members are returned as data
+                        fields. If applicable, others are available in the output archive.
 
                         The estimated calculation time of this process is 3 minutes for the default values supplied.
                         """,
@@ -169,7 +175,7 @@ class RainFARM(Process):
         response.outputs['recipe'].file = recipe_file
 
         # run diag
-        response.update_status("running diagnostic ...", 20)
+        response.update_status("running diagnostic (this could take a while)...", 20)
         # Disable HDF5 library version mismatched error for rainfarm metric
         os.environ["HDF5_DISABLE_VERSION_CHECK"] = "1"
         result = runner.run(recipe_file, config_file)
@@ -187,7 +193,7 @@ class RainFARM(Process):
 
         if result['success']:
             try:
-                self.get_outputs(result, response)
+                self.get_outputs(result, constraints, options, response)
             except Exception as e:
                 response.update_status("exception occured: " + str(e), 85)
         else:
@@ -205,6 +211,20 @@ class RainFARM(Process):
         response.update_status("done.", 100)
         return response
 
-    def get_outputs(self, result, response):
+    def get_outputs(self, result, constraints, options, response):
         # result plot
         response.update_status("collecting output ...", 80)
+
+        number_of_outputs = min(options['nens'], 2)
+
+        # get first two ensemble members
+        for ensemble_member in range(1, number_of_outputs + 1):
+            datakey = 'downscaled_data_ensemble_member_{}_data'.format(ensemble_member)
+
+            LOGGER.info('Setting response for: {}'.format(datakey))
+
+            response.outputs[datakey].output_format = FORMATS.NETCDF
+            response.outputs[datakey].file = runner.get_output(result['work_dir'],
+                                                               path_filter=os.path.join('rainfarm', 'rainfarm'),
+                                                               name_filter="*{:03d}".format(ensemble_member),
+                                                               output_format="nc")
