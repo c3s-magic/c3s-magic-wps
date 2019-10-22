@@ -20,7 +20,7 @@ C3S MAGIC WPS
 
 .. inclusion-marker-start-do-not-remove
 
-Web Processing Service for Climate Data Analysis in the MAGIC project. The software in this WPS powers the processes behind the C3S-MAGIC portal. The processes are run on CP4CDS infrastructure.
+Web Processing Service for Climate Data Analysis in the MAGIC project. The software in this WPS powers the processes behind the C3S-MAGIC portal. This software was designed to be run on a resource with access to data produced by the CP4CDS project.
 
 .. inclusion-marker-end-do-not-remove
 
