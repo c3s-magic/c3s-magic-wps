@@ -90,6 +90,8 @@ todo_include_todos = False
 
 # -- Options for HTML output -------------------------------------------
 
+html_use_index = False
+
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 html_theme = 'sphinx_rtd_theme'
@@ -143,6 +145,8 @@ latex_elements = {
     #
     # 'figure_align': 'htbp',
 }
+
+latex_domain_indices = False
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass
