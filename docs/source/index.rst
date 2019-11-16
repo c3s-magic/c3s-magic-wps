@@ -12,4 +12,3 @@ C3S MAGIC WPS
    installation
    configuration
    processes
-   changes
