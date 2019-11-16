@@ -7,7 +7,7 @@ C3S MAGIC WPS
 
 .. toctree::
    :maxdepth: 1
-   :caption: Contents:
+   :caption: Contents
 
    installation
    configuration
