@@ -1,9 +1,7 @@
 C3S MAGIC WPS
 =============
 
-.. include:: ../../README.rst
-  :start-after: inclusion-marker-start-do-not-remove
-  :end-before: inclusion-marker-end-do-not-remove
+This is the documentation for the Web Processing Services for Climate Data Analysis developed in the MAGIC project.
 
 .. toctree::
    :maxdepth: 1
